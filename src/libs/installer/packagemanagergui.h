@@ -93,12 +93,19 @@ public:
     void updateButtonLayout();
     static QWizard::WizardStyle getStyle(const QString &name);
 
+#ifdef LUMIT_INSTALLER
+    PackageManagerCore *core() { return m_core; }
+#endif
+
 Q_SIGNALS:
     void interrupted();
     void languageChanged();
     void finishButtonClicked();
     void gotRestarted();
     void settingsButtonClicked();
+#ifdef LUMIT_INSTALLER
+    void customWizardButtonClicked(int which);
+#endif
 
 public Q_SLOTS:
     void cancelButtonClicked();
@@ -188,6 +195,7 @@ protected:
     virtual void entering() {} // called on entering
     virtual void leaving() {}  // called on leaving
 
+    void setupTopBanner();
 private:
     bool m_complete;
     QString m_titleColor;

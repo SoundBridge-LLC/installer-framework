@@ -43,6 +43,9 @@
 #include <QDesktopServices>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QTextBrowser>
+#include <QTextDocument>
+#include <QtPrintSupport>
 
 namespace QInstaller {
 
@@ -102,11 +105,28 @@ public:
     QDesktopServicesProxy() {}
 
 public slots :
-    bool openUrl(const QString &url) const {
+    bool openUrl(const QString &url, const QString &workingDirectory = QString()) const {
         QString urlToOpen = url;
         urlToOpen.replace(QLatin1String("\\\\"), QLatin1String("/"));
         urlToOpen.replace(QLatin1String("\\"), QLatin1String("/"));
-        return QDesktopServices::openUrl(QUrl::fromUserInput(urlToOpen));
+
+        // Change current directory if needed, then restore
+        if(!workingDirectory.isEmpty())
+        {
+            QString workingDir = workingDirectory;
+            workingDir.replace(QLatin1String("\\\\"), QLatin1String("/"));
+            workingDir.replace(QLatin1String("\\"), QLatin1String("/"));
+
+            const QString currentPath = QDir::currentPath();
+            QDir::setCurrent(workingDir);
+            bool result = QDesktopServices::openUrl(QUrl::fromUserInput(urlToOpen));
+            QDir::setCurrent(currentPath);
+            return result;
+        }
+        else
+        {
+            return QDesktopServices::openUrl(QUrl::fromUserInput(urlToOpen));
+        }
     }
     QString displayName(qint32 location) const {
         return QStandardPaths::displayName(QStandardPaths::StandardLocation(location));
@@ -159,12 +179,31 @@ public:
     Q_INVOKABLE QJSValue findChild(QObject *parent, const QString &objectName);
     Q_INVOKABLE QList<QJSValue> findChildren(QObject *parent, const QString &objectName);
 
+#ifdef LUMIT_INSTALLER
+    Q_INVOKABLE void changeButtonText(int wizardButton, const QString &text);
+    Q_INVOKABLE void changeButtonVisibility(int wizardButton, bool visible);
+
+    Q_INVOKABLE void setupTextBrowserMargins(const QString &widgetName, const QString &textBrowserName, int margin);
+    Q_INVOKABLE void printTextBrowserContents(const QString &widgetName, const QString &textBrowserName);
+
+    Q_INVOKABLE void addItem(const QString &widgetName, const QString &listWidgetName, const QString &value);
+    Q_INVOKABLE void removeSelectedItems(const QString &widgetName, const QString &listWidgetName);
+    Q_INVOKABLE void loadVST(const QString &widgetName, const QString &listWidgetName);
+    Q_INVOKABLE void saveVST(const QString &widgetName, const QString &listWidgetName);
+
+    Q_INVOKABLE bool createDesktopShortcut();
+
+#endif
+
 signals:
     void interrupted();
     void languageChanged();
     void finishButtonClicked();
     void gotRestarted();
     void settingsButtonClicked();
+#ifdef LUMIT_INSTALLER
+    void customWizardButtonClicked();
+#endif
 
 public slots:
     void cancelButtonClicked();

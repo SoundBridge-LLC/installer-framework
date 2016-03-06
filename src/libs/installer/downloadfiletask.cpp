@@ -61,10 +61,12 @@ Downloader::Downloader()
 Downloader::~Downloader()
 {
     m_nam.disconnect();
-    for (const auto &pair : m_downloads) {
-        pair.first->disconnect();
-        pair.first->abort();
-        pair.first->deleteLater();
+    auto it = m_downloads.cbegin();
+    auto iend = m_downloads.cend();
+    for (; it != iend; it++) {
+        it->first->disconnect();
+        it->first->abort();
+        it->first->deleteLater();
     }
 }
 
@@ -174,8 +176,10 @@ void Downloader::onReadyRead()
         data.observer->addCheckSumData(buffer.data(), read);
 
         int progress = m_finished * 100;
-        for (const auto &pair : m_downloads)
-            progress += pair.second->observer->progressValue();
+        auto it = m_downloads.cbegin();
+        auto iend = m_downloads.cend();
+        for (; it != iend; it++)
+            progress += it->second->observer->progressValue();
         if (!reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
             m_futureInterface->setProgressValueAndText(progress / m_items.count(),
                 data.observer->progressText());

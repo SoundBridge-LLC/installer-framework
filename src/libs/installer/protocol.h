@@ -42,14 +42,14 @@ QT_FORWARD_DECLARE_CLASS(QIODevice)
 namespace QInstaller {
 namespace Protocol {
 
-enum struct Mode {
+enum Mode {
     Debug,
     Production
 };
 const char ModeDebug[] = "DEBUG";
 const char ModeProduction[] = "PRODUCTION";
 
-enum struct StartAs {
+enum StartAs {
     User,
     SuperUser
 };

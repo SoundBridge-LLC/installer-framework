@@ -57,13 +57,10 @@ struct Data
     Q_DISABLE_COPY(Data)
 
     Data()
-        : file(Q_NULLPTR)
-        , observer(Q_NULLPTR)
     {}
 
     Data(const FileTaskItem &fti)
         : taskItem(fti)
-        , file(Q_NULLPTR)
         , observer(new FileTaskObserver(QCryptographicHash::Sha1))
     {}
 

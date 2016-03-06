@@ -73,6 +73,7 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 #include <QShowEvent>
+#include <QFontDatabase>
 
 #ifdef Q_OS_WIN
 # include <qt_windows.h>
@@ -298,7 +299,11 @@ PackageManagerGui::PackageManagerGui(PackageManagerCore *core, QWidget *parent)
     , m_core(core)
 {
     if (m_core->isInstaller())
+#ifdef LUMIT_INSTALLER
+        setWindowTitle(tr("%1 Setup Wizard").arg(m_core->value(scPublisher)));
+#else
         setWindowTitle(tr("%1 Setup").arg(m_core->value(scTitle)));
+#endif
     else
         setWindowTitle(tr("Maintain %1").arg(m_core->value(scTitle)));
     setWindowFlags(windowFlags() &~ Qt::WindowContextHelpButtonHint);
@@ -315,6 +320,23 @@ PackageManagerGui::PackageManagerGui(PackageManagerCore *core, QWidget *parent)
 
     if (!m_core->settings().wizardStyle().isEmpty())
         setWizardStyle(getStyle(m_core->settings().wizardStyle()));
+
+    // load custom fonts
+    if (!m_core->settings().customFont1().isEmpty())
+        QFontDatabase::addApplicationFont(m_core->settings().customFont1());
+    if (!m_core->settings().customFont2().isEmpty())
+        QFontDatabase::addApplicationFont(m_core->settings().customFont2());
+
+    // load stylesheet
+    if(!m_core->settings().styleSheet().isEmpty())
+    {
+        QFile stylesheet(m_core->settings().styleSheet());
+        if(stylesheet.open(QIODevice::ReadOnly))
+        {
+            setStyleSheet(QLatin1String(stylesheet.readAll()));
+            stylesheet.close();
+        }
+    }
 
     setOption(QWizard::NoBackButtonOnStartPage);
     setOption(QWizard::NoBackButtonOnLastPage);
@@ -358,11 +380,16 @@ PackageManagerGui::PackageManagerGui(PackageManagerCore *core, QWidget *parent)
         SLOT(setAutomatedPageSwitchEnabled(bool)));
 
     connect(this, SIGNAL(customButtonClicked(int)), this, SLOT(customButtonClicked(int)));
+#ifdef LUMIT_INSTALLER
+    connect(this, SIGNAL(customButtonClicked(int)), this, SIGNAL(customWizardButtonClicked(int)));
+#endif
 
     for (int i = QWizard::BackButton; i < QWizard::CustomButton1; ++i)
         d->m_defaultButtonText.insert(i, buttonText(QWizard::WizardButton(i)));
 
     m_core->setGuiObject(this);
+
+	updateButtonLayout();
 }
 
 /*!
@@ -578,11 +605,17 @@ void PackageManagerGui::showEvent(QShowEvent *event)
                 }
             }
         }
+#ifdef LUMIT_INSTALLER
+        QSize fixedSize(m_core->settings().wizardDefaultWidth(), m_core->settings().wizardDefaultHeight());
+        if(fixedSize.width() && fixedSize.height())
+            setFixedSize(fixedSize);
+#else
         setMinimumSize(size());
         if (minimumWidth() < m_core->settings().wizardDefaultWidth())
             resize(m_core->settings().wizardDefaultWidth(), height());
         if (minimumHeight() < m_core->settings().wizardDefaultHeight())
             resize(width(), m_core->settings().wizardDefaultHeight());
+#endif
     }
     QWizard::showEvent(event);
     QMetaObject::invokeMethod(this, "dependsOnLocalInstallerBinary", Qt::QueuedConnection);
@@ -820,34 +853,54 @@ void PackageManagerGui::showSettingsButton(bool show)
 */
 void PackageManagerGui::updateButtonLayout()
 {
-    QVector<QWizard::WizardButton> buttons(12, QWizard::NoButton);
-    if (options() & QWizard::HaveHelpButton)
-        buttons[(options() & QWizard::HelpButtonOnRight) ? 11 : 0] = QWizard::HelpButton;
+#ifdef LUMIT_INSTALLER
+	setOption(QWizard::IgnoreSubTitles);
+	setOption(QWizard::NoBackButtonOnLastPage);
+	setOption(QWizard::NoBackButtonOnStartPage);
+	setOption(QWizard::NoCancelButtonOnLastPage);
 
-    buttons[1] = QWizard::Stretch;
-    if (options() & QWizard::HaveCustomButton1) {
-        buttons[1] = QWizard::CustomButton1;
-        buttons[2] = QWizard::Stretch;
-    }
+	QList<QWizard::WizardButton> buttons;
+	buttons << QWizard::CancelButton
+            << QWizard::HelpButton
+			<< QWizard::Stretch
+            << QWizard::CustomButton1
+            << QWizard::CustomButton2
+            << QWizard::CustomButton3
+			<< QWizard::BackButton
+			<< QWizard::NextButton
+			<< QWizard::CommitButton
+			<< QWizard::FinishButton;
+	setButtonLayout(buttons);
+#else
+	QVector<QWizard::WizardButton> buttons(12, QWizard::NoButton);
+	if (options() & QWizard::HaveHelpButton)
+		buttons[(options() & QWizard::HelpButtonOnRight) ? 11 : 0] = QWizard::HelpButton;
 
-    if (options() & QWizard::HaveCustomButton2)
-        buttons[3] = QWizard::CustomButton2;
+	buttons[1] = QWizard::Stretch;
+	if (options() & QWizard::HaveCustomButton1) {
+		buttons[1] = QWizard::CustomButton1;
+		buttons[2] = QWizard::Stretch;
+	}
 
-    if (options() & QWizard::HaveCustomButton3)
-        buttons[4] = QWizard::CustomButton3;
+	if (options() & QWizard::HaveCustomButton2)
+		buttons[3] = QWizard::CustomButton2;
 
-    if (!(options() & QWizard::NoCancelButton))
-        buttons[(options() & QWizard::CancelButtonOnLeft) ? 5 : 10] = QWizard::CancelButton;
+	if (options() & QWizard::HaveCustomButton3)
+		buttons[4] = QWizard::CustomButton3;
 
-    buttons[6] = QWizard::BackButton;
-    buttons[7] = QWizard::NextButton;
-    buttons[8] = QWizard::CommitButton;
-    buttons[9] = QWizard::FinishButton;
+	if (!(options() & QWizard::NoCancelButton))
+		buttons[(options() & QWizard::CancelButtonOnLeft) ? 5 : 10] = QWizard::CancelButton;
 
-    setOption(QWizard::NoBackButtonOnLastPage, true);
-    setOption(QWizard::NoBackButtonOnStartPage, true);
+	buttons[6] = QWizard::BackButton;
+	buttons[7] = QWizard::NextButton;
+	buttons[8] = QWizard::CommitButton;
+	buttons[9] = QWizard::FinishButton;
 
-    setButtonLayout(buttons.toList());
+	setOption(QWizard::NoBackButtonOnLastPage, true);
+	setOption(QWizard::NoBackButtonOnStartPage, true);
+
+	setButtonLayout(buttons.toList());
+#endif
 }
 
 /*!
@@ -1055,7 +1108,10 @@ QString PackageManagerPage::productName() const
 */
 void PackageManagerPage::setColoredTitle(const QString &title)
 {
-    setTitle(QString::fromLatin1("<font color=\"%1\">%2</font>").arg(m_titleColor, title));
+    if(m_core->settings().ignoreTitles())
+        setTitle(QString());
+    else
+        setTitle(QString::fromLatin1("<font color=\"%1\">%2</font>").arg(m_titleColor, title));
 }
 
 /*!
@@ -1168,6 +1224,33 @@ int PackageManagerPage::nextId() const
     return next;    // default, show the next page
 }
 
+#ifdef LUMIT_INSTALLER
+/*!
+    Setup top banner using pixmap from settings
+	Call it only if layout isn't empty
+ */
+void PackageManagerPage::setupTopBanner()
+{
+    QPixmap topBannerPixmap(QLatin1String(":/lumit/topbanner.png"));
+
+    QLabel *topBannerLabel = new QLabel(this);
+    topBannerLabel->setPixmap(topBannerPixmap);
+    topBannerLabel->setFixedHeight(topBannerPixmap.height());
+
+    QHBoxLayout *bannerLayout = new QHBoxLayout();
+    bannerLayout->setMargin(0);
+    bannerLayout->addStretch(1);
+    bannerLayout->addWidget(topBannerLabel);
+    bannerLayout->addStretch(1);
+
+    QWidget *bannerContainer = new QWidget();
+    bannerContainer->setLayout(bannerLayout);
+    QHBoxLayout *mainLayout = (QHBoxLayout*)layout();
+    if(mainLayout)
+        mainLayout->insertWidget(0, bannerContainer);
+}
+#endif
+
 // -- IntroductionPage
 
 /*!
@@ -1203,6 +1286,9 @@ IntroductionPage::IntroductionPage(PackageManagerCore *core)
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     setLayout(layout);
+#ifdef LUMIT_INSTALLER
+    setupTopBanner();
+#endif
 
     m_msgLabel = new QLabel(this);
     m_msgLabel->setWordWrap(true);
@@ -1546,7 +1632,6 @@ void IntroductionPage::entering()
     showWidgets(false);
     setMessage(QString());
     setErrorMessage(QString());
-    setButtonText(QWizard::CancelButton, tr("Quit"));
 
     m_progressBar->setValue(0);
     m_progressBar->setRange(0, 0);
@@ -1693,7 +1778,16 @@ LicenseAgreementPage::LicenseAgreementPage(PackageManagerCore *core)
     connect(m_acceptRadioButton, SIGNAL(toggled(bool)), this, SIGNAL(completeChanged()));
     connect(m_rejectRadioButton, SIGNAL(toggled(bool)), this, SIGNAL(completeChanged()));
 
+#ifdef LUMIT_INSTALLER
+    m_acceptRadioButton->setChecked(true);
+
+    m_acceptLabel->hide();
+    m_rejectLabel->hide();
+    m_acceptRadioButton->hide();
+    m_rejectRadioButton->hide();
+#else
     m_rejectRadioButton->setChecked(true);
+#endif
 }
 
 /*!
@@ -2573,6 +2667,10 @@ void ReadyForInstallationPage::entering()
                 QDir::toNativeSeparators(QDir(packageManagerCore()->value(scTargetDir))
             .absolutePath())));
         setComplete(true);
+#ifdef LUMIT_INSTALLER
+        wizard()->button(QWizard::BackButton)->setVisible(false);
+        setupTopBanner();
+#endif
         return;
     } else if (packageManagerCore()->isPackageManager() || packageManagerCore()->isUpdater()) {
         setButtonText(QWizard::CommitButton, tr("U&pdate"));
@@ -2774,6 +2872,9 @@ PerformInstallationPage::PerformInstallationPage(PackageManagerCore *core)
     setObjectName(QLatin1String("PerformInstallationPage"));
 
     m_performInstallationForm->setupUi(this);
+#ifdef LUMIT_INSTALLER
+    setupTopBanner();
+#endif
 
     connect(ProgressCoordinator::instance(), SIGNAL(detailTextChanged(QString)),
         m_performInstallationForm, SLOT(appendProgressDetails(QString)));
@@ -2835,6 +2936,10 @@ void PerformInstallationPage::entering()
 
         QTimer::singleShot(30, packageManagerCore(), SLOT(runPackageUpdater()));
     } else {
+#ifdef LUMIT_INSTALLER
+        gui()->button(QWizard::CancelButton)->setVisible(false);
+        gui()->button(QWizard::BackButton)->setVisible(false);
+#endif
         setButtonText(QWizard::CommitButton, tr("&Install"));
         setColoredTitle(tr("Installing %1").arg(productName()));
 
@@ -2882,7 +2987,13 @@ void PerformInstallationPage::installationFinished()
         m_performInstallationForm->setDetailsButtonEnabled(false);
 
         setComplete(true);
+#ifdef LUMIT_INSTALLER
+        gui()->button(QWizard::CancelButton)->setVisible(false);
+        gui()->button(QWizard::BackButton)->setVisible(false);
+        setButtonText(QWizard::CommitButton, tr("Next"));
+#else
         setButtonText(QWizard::CommitButton, gui()->defaultButtonText(QWizard::NextButton));
+#endif
     }
 }
 
@@ -2990,7 +3101,20 @@ void FinishedPage::entering()
             cancel->setVisible(false);
     }
 
-    gui()->updateButtonLayout();
+#ifdef LUMIT_INSTALLER
+    if (packageManagerCore()->isUninstaller())
+    {
+        setupTopBanner();
+        wizard()->button(QWizard::HelpButton)->setVisible(false);
+        wizard()->button(QWizard::CustomButton1)->setVisible(false);
+        wizard()->button(QWizard::CustomButton2)->setVisible(false);
+        wizard()->button(QWizard::CustomButton3)->setVisible(false);
+    }
+    else
+    {
+        gui()->updateButtonLayout();
+    }
+#endif
 
     if (m_commitButton) {
         disconnect(m_commitButton, SIGNAL(clicked()), this, SLOT(handleFinishClicked()));

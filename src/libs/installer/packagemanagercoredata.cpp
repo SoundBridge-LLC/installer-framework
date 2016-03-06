@@ -124,6 +124,16 @@ PackageManagerCoreData::PackageManagerCoreData(const QHash<QString, QString> &va
 
     m_variables.insert(scTargetDir, replaceVariables(m_settings.targetDir()));
     m_variables.insert(scRemoveTargetDir, replaceVariables(m_settings.removeTargetDir()));
+#ifdef LUMIT_INSTALLER
+    m_variables.insert(scSoundBankDir, replaceVariables(m_settings.soundBankDir()));
+#endif
+}
+
+PackageManagerCoreData::~PackageManagerCoreData()
+{
+#ifdef LUMIT_INSTALLER
+    m_settings.saveQtSettings(m_variables);
+#endif
 }
 
 void PackageManagerCoreData::clear()

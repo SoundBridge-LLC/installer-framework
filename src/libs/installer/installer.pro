@@ -34,7 +34,8 @@ QT += \
     xml \
     concurrent \
     widgets \
-    core-private
+    core-private \
+    printsupport
 win32:QT += winextras
 
 HEADERS += packagemanagercore.h \

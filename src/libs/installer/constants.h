@@ -88,6 +88,10 @@ static const QLatin1String scTitleColor("TitleColor");
 static const QLatin1String scWizardDefaultWidth("WizardDefaultWidth");
 static const QLatin1String scWizardDefaultHeight("WizardDefaultHeight");
 static const QLatin1String scProductUUID("ProductUUID");
+
+#ifdef LUMIT_INSTALLER
+static const QLatin1String scSoundBankDir("SoundBankDir");
+#endif
 }
 
 #endif  // CONSTANTS_H

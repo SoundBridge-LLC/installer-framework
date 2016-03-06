@@ -66,7 +66,7 @@ using namespace KDUpdater;
 class UpdateFinder::Private
 {
 public:
-    enum struct Resolution {
+    enum Resolution {
         AddPackage,
         KeepExisting,
         RemoveExisting

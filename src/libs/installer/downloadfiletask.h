@@ -53,7 +53,7 @@ enum
 class AuthenticationRequiredException : public TaskException
 {
 public:
-    enum struct Type {
+    enum Type {
         Proxy,
         Server
     };

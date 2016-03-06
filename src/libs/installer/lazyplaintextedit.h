@@ -41,7 +41,7 @@ class LazyPlainTextEdit : public QPlainTextEdit
 {
     Q_OBJECT
 public:
-    enum struct TextCursorPosition {
+    enum TextCursorPosition {
         Keep,
         ForceEnd
     };

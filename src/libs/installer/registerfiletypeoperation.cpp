@@ -37,6 +37,10 @@
 #include "packagemanagercore.h"
 #include "qsettingswrapper.h"
 
+#ifdef LUMIT_INSTALLER
+#include <QSettings>
+#endif
+
 using namespace QInstaller;
 
 #ifdef Q_OS_WIN
@@ -90,6 +94,53 @@ void RegisterFileTypeOperation::backup()
 
 bool RegisterFileTypeOperation::performOperation()
 {
+#ifdef LUMIT_INSTALLER
+    QStringList argList = arguments();
+    QString argAppFilePath = argList[0];
+    QString argAppDirPath = argList[1];
+
+    // Original setup code
+    {
+        const QString defaultKey = QLatin1String("Default");
+
+        const QString appFilePath = QDir::toNativeSeparators(argAppFilePath);
+        const QString appExecName = QFileInfo(appFilePath).fileName();
+        const QString appDirPath = QDir::toNativeSeparators(argAppDirPath);
+        const QString appName = QLatin1String("Lumit Audio Project");
+        const QString appProgId = QLatin1String("Lumit.AudioProject.1");
+
+        // register project open command in HKEY_CLASSES_ROOT
+        QSettings settingsRoot(QLatin1String("HKEY_CLASSES_ROOT"), QSettings::NativeFormat);
+
+        settingsRoot.beginGroup(appProgId);
+        settingsRoot.setValue(defaultKey, appName);
+        settingsRoot.beginGroup(QLatin1String("CurVer"));
+        settingsRoot.setValue(defaultKey, appProgId);
+        settingsRoot.endGroup();
+
+        settingsRoot.beginGroup(QLatin1String("DefaultIcon"));
+        const QString defaultIconPath = QLatin1String("\"") + appFilePath + QLatin1String("\"") + QLatin1String(",0");
+        settingsRoot.setValue(defaultKey, defaultIconPath);
+        settingsRoot.endGroup();
+
+        settingsRoot.beginGroup(QLatin1String(QLatin1String("/shell/open/command")));
+        const QString openWith = QLatin1String("\"") + appFilePath + QLatin1String("\"") + QLatin1String(" \"%1\"");
+        settingsRoot.setValue(defaultKey, openWith);
+        settingsRoot.endGroup();
+        settingsRoot.endGroup();
+
+        settingsRoot.beginGroup(QLatin1String(".lmt"));
+        settingsRoot.setValue(defaultKey, appProgId);
+        settingsRoot.setValue(QLatin1String("PerceivedType"), QLatin1String("Audio"));
+        settingsRoot.setValue(QLatin1String("Content Type"), QLatin1String("Audio/Lumit"));
+        settingsRoot.endGroup();
+
+        SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
+    }
+
+    return true;
+#endif
+
 #ifdef Q_OS_WIN
     QStringList args = arguments();
     QString progId = takeProgIdArgument(args);
@@ -156,6 +207,10 @@ bool RegisterFileTypeOperation::performOperation()
 
 bool RegisterFileTypeOperation::undoOperation()
 {
+#ifdef LUMIT_INSTALLER
+    return true;
+#endif
+
 #ifdef Q_OS_WIN
     QStringList args = arguments();
     QString progId = takeProgIdArgument(args);

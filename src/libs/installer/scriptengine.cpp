@@ -37,11 +37,17 @@
 #include "errors.h"
 #include "scriptengine_p.h"
 #include "systeminfo.h"
+#ifdef LUMIT_INSTALLER
+#include "settings.h"
+#include "createdesktopentryoperation.h"
+#include "kdupdaterupdateoperationfactory.h"
+#endif
 
 #include <QMetaEnum>
 #include <QQmlEngine>
 #include <QUuid>
 #include <QWizard>
+#include <QAbstractButton>
 
 namespace QInstaller {
 
@@ -93,6 +99,9 @@ void GuiProxy::setPackageManagerGui(PackageManagerGui *gui)
         disconnect(m_gui, &PackageManagerGui::finishButtonClicked, this, &GuiProxy::finishButtonClicked);
         disconnect(m_gui, &PackageManagerGui::gotRestarted, this, &GuiProxy::gotRestarted);
         disconnect(m_gui, &PackageManagerGui::settingsButtonClicked, this, &GuiProxy::settingsButtonClicked);
+#ifdef LUMIT_INSTALLER
+        disconnect(m_gui, &PackageManagerGui::customWizardButtonClicked, this, &GuiProxy::customWizardButtonClicked);
+#endif
     }
 
     m_gui = gui;
@@ -103,6 +112,9 @@ void GuiProxy::setPackageManagerGui(PackageManagerGui *gui)
         connect(m_gui, &PackageManagerGui::finishButtonClicked, this, &GuiProxy::finishButtonClicked);
         connect(m_gui, &PackageManagerGui::gotRestarted, this, &GuiProxy::gotRestarted);
         connect(m_gui, &PackageManagerGui::settingsButtonClicked, this, &GuiProxy::settingsButtonClicked);
+#ifdef LUMIT_INSTALLER
+        connect(m_gui, &PackageManagerGui::customWizardButtonClicked, this, &GuiProxy::customWizardButtonClicked);
+#endif
     }
 }
 
@@ -203,6 +215,105 @@ QList<QJSValue> GuiProxy::findChildren(QObject *parent, const QString &objectNam
         children.append(m_engine->newQObject(child));
     return children;
 }
+
+#ifdef LUMIT_INSTALLER
+
+void GuiProxy::changeButtonText(int wizardButton, const QString &text)
+{
+    if (m_gui)
+        m_gui->setButtonText((QWizard::WizardButton)wizardButton, text);
+}
+
+void GuiProxy::changeButtonVisibility(int wizardButton, bool visible)
+{
+    if (m_gui)
+        m_gui->button((QWizard::WizardButton)wizardButton)->setVisible(visible);
+}
+
+void GuiProxy::setupTextBrowserMargins(const QString &widgetName, const QString &textBrowserName, int margin)
+{
+    if(!m_gui) return;
+    if(QWidget *widget = m_gui->pageWidgetByObjectName(widgetName))
+        if(QTextBrowser *browser = widget->findChild<QTextBrowser*>(textBrowserName))
+            browser->document()->setDocumentMargin(margin);
+}
+
+void GuiProxy::printTextBrowserContents(const QString &widgetName, const QString &textBrowserName)
+{
+    if(!m_gui) return;
+    if(QWidget *widget = m_gui->pageWidgetByObjectName(widgetName))
+        if(QTextBrowser *browser = widget->findChild<QTextBrowser*>(textBrowserName))
+        {
+            if(QPrinterInfo::availablePrinters().isEmpty())
+            {
+                QMessageBox::warning(m_gui, tr("Error"), tr("There are no available printers"));
+                return;
+            }
+
+            QPrinter printer;
+            printer.setOutputFormat(QPrinter::NativeFormat);
+            QPrintDialog dlg(&printer);
+            if(dlg.exec())
+                browser->print(&printer);
+        }
+}
+
+void GuiProxy::addItem(const QString &widgetName, const QString &listWidgetName, const QString &value)
+{
+    if(!m_gui) return;
+    if(QWidget *widget = m_gui->pageWidgetByObjectName(widgetName))
+        if(QListWidget *listWidget = widget->findChild<QListWidget*>(listWidgetName))
+            listWidget->addItem(value);
+}
+
+void GuiProxy::removeSelectedItems(const QString &widgetName, const QString &listWidgetName)
+{
+    if(!m_gui) return;
+    if(QWidget *widget = m_gui->pageWidgetByObjectName(widgetName))
+        if(QListWidget *listWidget = widget->findChild<QListWidget*>(listWidgetName))
+            qDeleteAll(listWidget->selectedItems());
+}
+
+void GuiProxy::loadVST(const QString &widgetName, const QString &listWidgetName)
+{
+    if(!m_gui) return;
+    if(QWidget *widget = m_gui->pageWidgetByObjectName(widgetName))
+        if(QListWidget *listWidget = widget->findChild<QListWidget*>(listWidgetName))
+        {
+            listWidget->clear();
+            foreach(QString plugin, m_gui->core()->settings().VSTPlugins())
+                listWidget->addItem(plugin);
+        }
+}
+
+void GuiProxy::saveVST(const QString &widgetName, const QString &listWidgetName)
+{
+    if(!m_gui) return;
+    if(QWidget *widget = m_gui->pageWidgetByObjectName(widgetName))
+        if(QListWidget *listWidget = widget->findChild<QListWidget*>(listWidgetName))
+        {
+            QStringList plugins;
+            for(uint i = 0; i < listWidget->count(); i++)
+                plugins.push_back(listWidget->item(i)->text());
+            m_gui->core()->settings().setVSTPlugins(plugins);
+        }
+}
+
+bool GuiProxy::createDesktopShortcut()
+{
+    QScopedPointer<QInstaller::Operation> operation;
+    operation.reset(KDUpdater::UpdateOperationFactory::instance().create(QLatin1String("CreateShortcut")));
+    QStringList args = QStringList()
+            << QLatin1String("@TargetDir@/Lumit.exe")
+            << QLatin1String("@DesktopDir@/Lumit.lnk")
+            << QLatin1String("workingDirectory=@TargetDir@")
+            << QLatin1String("iconPath=@TargetDir@/Lumit.exe")
+            << QLatin1String("iconId=0");
+    operation->setArguments(m_gui->core()->replaceVariables(args));
+    return operation->performOperation();
+}
+
+#endif
 
 void GuiProxy::cancelButtonClicked()
 {
@@ -525,6 +636,9 @@ QJSValue ScriptEngine::generateQInstallerObject()
     // register ::WizardPage enum in the script connection
     QJSValue qinstaller = m_engine.newArray();
     SETPROPERTY(qinstaller, Introduction, PackageManagerCore)
+#ifdef LUMIT_INSTALLER
+    SETPROPERTY(qinstaller, CustomIntroduction, PackageManagerCore)
+#endif
     SETPROPERTY(qinstaller, LicenseCheck, PackageManagerCore)
     SETPROPERTY(qinstaller, TargetDirectory, PackageManagerCore)
     SETPROPERTY(qinstaller, ComponentSelection, PackageManagerCore)

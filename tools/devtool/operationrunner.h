@@ -50,7 +50,7 @@ class OperationRunner : public QObject
     Q_DISABLE_COPY(OperationRunner)
 
 public:
-    enum struct RunMode {
+    enum RunMode {
         Do,
         Undo
     };

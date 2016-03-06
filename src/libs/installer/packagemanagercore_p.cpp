@@ -981,6 +981,10 @@ void PackageManagerCorePrivate::writeMaintenanceToolBinary(QFile *const input, q
     qDebug() << "Writing maintenance tool:" << maintenanceToolRenamedName;
     ProgressCoordinator::instance()->emitLabelAndDetailTextChanged(tr("Writing maintenance tool."));
 
+#ifdef LUMIT_INSTALLER
+    return;
+#endif
+
     QTemporaryFile out;
     QInstaller::openForWrite(&out); // throws an exception in case of error
 
@@ -1369,9 +1373,11 @@ void PackageManagerCorePrivate::writeMaintenanceTool(OperationList performedOper
         deferredRename(dataFile + QLatin1String(".new"), dataFile, false);
 
         if (newBinaryWritten) {
+#ifndef LUMIT_INSTALLER
             const bool restart = replacementExists && isUpdater() && (!statusCanceledOrFailed()) && m_needsHardRestart;
             deferredRename(maintenanceToolName() + QLatin1String(".new"), maintenanceToolName(), restart);
             qDebug() << "Maintenance tool restart:" << (restart ? "true." : "false.");
+#endif
         }
     } catch (const Error &err) {
         setStatus(PackageManagerCore::Failure);
@@ -1804,6 +1810,11 @@ bool PackageManagerCorePrivate::runUninstaller()
         // No operation delete here, as all old undo operations are deleted in the destructor.
 
         deleteMaintenanceTool();    // this will also delete the TargetDir on Windows
+
+#ifdef LUMIT_INSTALLER
+        QString shortcutLocation = m_core->value(QLatin1String("DesktopDir")) + QLatin1String("/Lumit.lnk");
+        QFile::remove(shortcutLocation);
+#endif
 
         // If not on Windows, we need to remove TargetDir manually.
         if (QVariant(m_core->value(scRemoveTargetDir)).toBool() && !targetDir().isEmpty()) {

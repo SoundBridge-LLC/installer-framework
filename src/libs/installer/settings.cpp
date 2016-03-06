@@ -62,12 +62,29 @@ static const QLatin1String scRemoteRepositories("RemoteRepositories");
 static const QLatin1String scDependsOnLocalInstallerBinary("DependsOnLocalInstallerBinary");
 static const QLatin1String scTranslations("Translations");
 static const QLatin1String scCreateLocalRepository("CreateLocalRepository");
+static const QLatin1String scStyleSheet("StyleSheet");
+static const QLatin1String scIgnoreTitles("IgnoreTitles");
+static const QLatin1String scCustomFont1("CustomFont1");
+static const QLatin1String scCustomFont2("CustomFont2");
 
 static const QLatin1String scFtpProxy("FtpProxy");
 static const QLatin1String scHttpProxy("HttpProxy");
 static const QLatin1String scProxyType("ProxyType");
 
 const char scControlScript[] = "ControlScript";
+
+#ifdef LUMIT_INSTALLER
+
+const QString kOrganizationName(QLatin1String("Lumit Audio"));
+const QString kApplicationName(QLatin1String("Lumit"));
+
+const QString kPluginFormatsGroup(QLatin1String("PluginFormats"));
+const QString kVSTKey(QLatin1String("VST"));
+const QString kInstallerGroup(QLatin1String("Installer"));
+
+const QString scSoundBankDir(QLatin1String("SoundBankDir"));
+
+#endif
 
 template <typename T>
 static QSet<T> variantListToSet(const QVariantList &list)
@@ -257,7 +274,8 @@ Settings Settings::fromFileAndPrefix(const QString &path, const QString &prefix,
                 << scWizardDefaultWidth << scWizardDefaultHeight
                 << scRepositorySettingsPageVisible << scTargetConfigurationFile
                 << scRemoteRepositories << scTranslations << QLatin1String(scControlScript)
-                << scCreateLocalRepository;
+                << scCreateLocalRepository
+                << scStyleSheet << scIgnoreTitles << scProductUUID << scCustomFont1 << scCustomFont2;
 
     Settings s;
     s.d->m_data.insert(scPrefix, prefix);
@@ -324,6 +342,10 @@ Settings Settings::fromFileAndPrefix(const QString &path, const QString &prefix,
         s.d->m_data.insert(scRepositorySettingsPageVisible, true);
     if (!s.d->m_data.contains(scCreateLocalRepository))
         s.d->m_data.insert(scCreateLocalRepository, false);
+
+#ifdef LUMIT_INSTALLER
+    s.loadQtSettings();
+#endif
 
     return s;
 }
@@ -705,3 +727,101 @@ QString Settings::controlScript() const
 {
     return d->m_data.value(QLatin1String(scControlScript)).toString();
 }
+
+#ifdef LUMIT_INSTALLER
+
+QString Settings::styleSheet() const
+{
+    return d->absolutePathFromKey(scStyleSheet);
+}
+
+bool Settings::ignoreTitles() const
+{
+    return d->m_data.value(scIgnoreTitles, false).toBool();
+}
+
+QString Settings::customFont1() const
+{
+    return d->absolutePathFromKey(scCustomFont1);
+}
+
+QString Settings::customFont2() const
+{
+    return d->absolutePathFromKey(scCustomFont2);
+}
+
+QStringList Settings::VSTPlugins() const
+{
+    QStringList result;
+
+    QScopedPointer<QSettings> settings(createQtSettings());
+    settings->beginGroup(kPluginFormatsGroup);
+    QStringList keys = settings->childKeys();
+	if(!keys.isEmpty())
+	{
+        QStringList values = settings->value(kVSTKey).toStringList();
+        foreach(QString value, values)
+            result.push_back(value);
+    }
+    settings->endGroup();
+
+    return result;
+}
+
+void Settings::setVSTPlugins(const QStringList &plugins)
+{
+    QScopedPointer<QSettings> settings(createQtSettings());
+    settings->beginGroup(kPluginFormatsGroup);
+    settings->setValue(kVSTKey, plugins);
+    settings->endGroup();
+}
+
+QString Settings::soundBankDir()
+{
+    return d->m_data[scSoundBankDir].toString();
+}
+
+QSettings *Settings::createQtSettings() const
+{
+    return new QSettings(kOrganizationName, kApplicationName);
+}
+
+void Settings::loadQtSettings()
+{
+    QScopedPointer<QSettings> settings(createQtSettings());
+    settings->beginGroup(kInstallerGroup);
+    {
+        QString targetDir = settings->value(scTargetDir).toString();
+        if(targetDir.isEmpty())
+        {
+            targetDir = d->m_data[scTargetDir].toString();
+            settings->setValue(scTargetDir, targetDir);
+        }
+        else
+        {
+            d->m_data.insert(scTargetDir, targetDir);
+        }
+
+        QString soundBankDir = settings->value(scSoundBankDir).toString();
+        if(soundBankDir.isEmpty())
+        {
+            soundBankDir = targetDir;
+            settings->setValue(scSoundBankDir, soundBankDir);
+        }
+        d->m_data.insert(scSoundBankDir, soundBankDir);
+    }
+    settings->endGroup();
+}
+
+void Settings::saveQtSettings(QHash<QString, QString> &variables)
+{
+    QScopedPointer<QSettings> settings(createQtSettings());
+    settings->beginGroup(kInstallerGroup);
+    {
+        settings->setValue(scTargetDir, variables[scTargetDir]);
+        settings->setValue(scSoundBankDir, variables[scSoundBankDir]);
+    }
+    settings->endGroup();
+}
+
+#endif

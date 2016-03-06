@@ -68,6 +68,16 @@ public:
         int removedCounter = 0;
         foreach (const QString &file, m_files) {
             removedCounter++;
+#ifdef LUMIT_INSTALLER
+            {
+                // Delete readonly flag for file
+                QFile qFile(file);
+                QFile::Permissions permissions = qFile.permissions();
+                bool writeable = permissions & QFile::WriteOther;
+                if (!writeable)
+                    qFile.setPermissions(permissions | QFile::WriteOther);
+            }
+#endif
             const QFileInfo fi(file);
             emit currentFileChanged(file);
             emit progressChanged(double(removedCounter) / m_files.count());

@@ -45,7 +45,7 @@ class KDTOOLS_EXPORT KDRunOnceChecker
     Q_DISABLE_COPY(KDRunOnceChecker)
 
 public:
-    enum struct ConditionFlag {
+    enum ConditionFlag {
         Lockfile = 0x01,
         ProcessList = 0x02
     };
