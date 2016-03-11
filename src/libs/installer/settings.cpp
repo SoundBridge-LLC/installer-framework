@@ -788,6 +788,7 @@ QSettings *Settings::createQtSettings() const
 
 void Settings::loadQtSettings()
 {
+	/*
     QScopedPointer<QSettings> settings(createQtSettings());
     settings->beginGroup(kInstallerGroup);
     {
@@ -811,10 +812,12 @@ void Settings::loadQtSettings()
         d->m_data.insert(scSoundBankDir, soundBankDir);
     }
     settings->endGroup();
+	*/
 }
 
 void Settings::saveQtSettings(QHash<QString, QString> &variables)
 {
+	/*
     QScopedPointer<QSettings> settings(createQtSettings());
     settings->beginGroup(kInstallerGroup);
     {
@@ -822,6 +825,7 @@ void Settings::saveQtSettings(QHash<QString, QString> &variables)
         settings->setValue(scSoundBankDir, variables[scSoundBankDir]);
     }
     settings->endGroup();
+	*/
 }
 
 #endif

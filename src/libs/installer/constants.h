@@ -90,6 +90,7 @@ static const QLatin1String scWizardDefaultHeight("WizardDefaultHeight");
 static const QLatin1String scProductUUID("ProductUUID");
 
 #ifdef LUMIT_INSTALLER
+// TODO(vova.y): remove this constant as unused
 static const QLatin1String scSoundBankDir("SoundBankDir");
 #endif
 }
