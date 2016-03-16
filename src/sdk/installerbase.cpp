@@ -61,6 +61,9 @@
 #include <QTranslator>
 #include <QUuid>
 #include <QLoggingCategory>
+#include <QLocalSocket>
+
+const QString kApplicationId = QLatin1String("Lumit");
 
 InstallerBase::InstallerBase(int &argc, char *argv[])
     : SDKApp<QApplication>(argc, argv)
@@ -76,6 +79,23 @@ InstallerBase::~InstallerBase()
 
 int InstallerBase::run()
 {
+    bool connectedToServer = false;
+    {
+        QLocalSocket socket(this);
+        socket.setServerName(kApplicationId);
+        socket.connectToServer(QIODevice::WriteOnly);
+        connectedToServer = socket.waitForConnected(1000);
+        socket.close();
+    }
+    if(connectedToServer)
+    {
+        QInstaller::MessageBoxHandler::warning(0, QLatin1String("AlreadyRunning"),
+            QLatin1String("Lumit Setup"),
+            QLatin1String("Lumit application is running.\n"
+            "Close the instance and try to launch setup again."));
+        return EXIT_FAILURE;
+    }
+
     KDRunOnceChecker runCheck(qApp->applicationDirPath() + QLatin1String("/lockmyApp1234865.lock"));
     if (runCheck.isRunning(KDRunOnceChecker::ConditionFlag::Lockfile)) {
         // It is possible to install an application and thus the maintenance tool into a

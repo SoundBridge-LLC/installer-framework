@@ -305,7 +305,11 @@ bool GuiProxy::createDesktopShortcut()
     operation.reset(KDUpdater::UpdateOperationFactory::instance().create(QLatin1String("CreateShortcut")));
     QStringList args = QStringList()
             << QLatin1String("@TargetDir@/Lumit.exe")
+#ifdef _WIN64
+            << QLatin1String("@DesktopDir@/Lumit (64 bit).lnk")
+#else
             << QLatin1String("@DesktopDir@/Lumit.lnk")
+#endif
             << QLatin1String("workingDirectory=@TargetDir@")
             << QLatin1String("iconPath=@TargetDir@/Lumit.exe")
             << QLatin1String("iconId=0");
