@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -31,6 +31,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <IntermediateDirectory>release\</IntermediateDirectory>
     <PrimaryOutput>7z</PrimaryOutput>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <OutputDirectory>..\..\..\lib\</OutputDirectory>
@@ -39,6 +40,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <IntermediateDirectory>release\</IntermediateDirectory>
     <PrimaryOutput>7z</PrimaryOutput>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <OutputDirectory>..\..\..\lib\</OutputDirectory>
@@ -47,6 +49,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <IntermediateDirectory>debug\</IntermediateDirectory>
     <PrimaryOutput>7z</PrimaryOutput>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <OutputDirectory>..\..\..\lib\</OutputDirectory>
@@ -55,6 +58,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <IntermediateDirectory>debug\</IntermediateDirectory>
     <PrimaryOutput>7z</PrimaryOutput>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -91,7 +95,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;.;..\kdtools;..\installer;win\CPP;.;..;win\C;win\CPP;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiTools;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiPlugin;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWidgets;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWinExtras;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtGui;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtANGLE;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.5.1;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.5.1\QtCore;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtConcurrent;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtQml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtNetwork;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtXml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore;release;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\mkspecs\win32-msvc2010;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\kdtools;..\installer;win\CPP;..;win\C;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiTools;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiPlugin;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWidgets;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWinExtras;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtGui;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtANGLE;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.6.0;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.6.0\QtCore;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtConcurrent;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtQml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtNetwork;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtXml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore;release;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-w34100 -w34189 -w44996 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -122,7 +126,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;.;..\kdtools;..\installer;win\CPP;.;..;win\C;win\CPP;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiTools;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiPlugin;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWidgets;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWinExtras;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtGui;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtANGLE;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.5.1;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.5.1\QtCore;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtConcurrent;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtQml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtNetwork;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtXml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore;release;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\mkspecs\win32-msvc2010;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\kdtools;..\installer;win\CPP;..;win\C;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiTools;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiPlugin;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWidgets;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWinExtras;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtGui;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtANGLE;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.6.0;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.6.0\QtCore;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtConcurrent;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtQml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtNetwork;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtXml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore;release;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-w34100 -w34189 -w44996 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -153,7 +157,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;.;..\kdtools;..\installer;win\CPP;.;..;win\C;win\CPP;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiTools;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiPlugin;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWidgets;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWinExtras;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtGui;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtANGLE;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.5.1;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.5.1\QtCore;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtConcurrent;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtQml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtNetwork;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtXml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore;debug;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\mkspecs\win32-msvc2010;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\kdtools;..\installer;win\CPP;..;win\C;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiTools;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiPlugin;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWidgets;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWinExtras;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtGui;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtANGLE;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.6.0;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.6.0\QtCore;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtConcurrent;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtQml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtNetwork;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtXml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore;debug;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-w34100 -w34189 -w44996 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -185,7 +189,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.;.;..\kdtools;..\installer;win\CPP;.;..;win\C;win\CPP;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiTools;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiPlugin;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWidgets;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWinExtras;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtGui;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtANGLE;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.5.1;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.5.1\QtCore;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtConcurrent;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtQml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtNetwork;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtXml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore;debug;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\mkspecs\win32-msvc2010;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\kdtools;..\installer;win\CPP;..;win\C;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiTools;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtUiPlugin;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWidgets;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtWinExtras;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtGui;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtANGLE;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.6.0;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore\5.6.0\QtCore;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtConcurrent;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtQml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtNetwork;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtXml;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\include\QtCore;debug;$(SolutionDir)..\..\Dependencies\Win$(PlatformArchitecture)\Qt\mkspecs\win32-msvc2015;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-w34100 -w34189 -w44996 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
