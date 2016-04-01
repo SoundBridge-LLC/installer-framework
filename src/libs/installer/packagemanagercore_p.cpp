@@ -1812,7 +1812,11 @@ bool PackageManagerCorePrivate::runUninstaller()
         deleteMaintenanceTool();    // this will also delete the TargetDir on Windows
 
 #ifdef LUMIT_INSTALLER
+#ifdef _WIN64
+        QString shortcutLocation = m_core->value(QLatin1String("DesktopDir")) + QLatin1String("/Lumit (64 bit).lnk");
+#else
         QString shortcutLocation = m_core->value(QLatin1String("DesktopDir")) + QLatin1String("/Lumit.lnk");
+#endif
         QFile::remove(shortcutLocation);
 #endif
 
