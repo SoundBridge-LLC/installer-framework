@@ -981,7 +981,7 @@ void PackageManagerCorePrivate::writeMaintenanceToolBinary(QFile *const input, q
     qDebug() << "Writing maintenance tool:" << maintenanceToolRenamedName;
     ProgressCoordinator::instance()->emitLabelAndDetailTextChanged(tr("Writing maintenance tool."));
 
-#ifdef LUMIT_INSTALLER
+#if defined(LUMIT_INSTALLER) && defined(Q_OS_WIN)
     return;
 #endif
 
@@ -1201,6 +1201,16 @@ void PackageManagerCorePrivate::writeMaintenanceTool(OperationList performedOper
         performOperationThreaded(op, Backup);
         performOperationThreaded(op);
 
+#ifdef LUMIT_INSTALLER
+        // copy qt.conf if it exists
+        const QString configFileName = QLatin1String("qt.conf");
+        op = createOwnedOperation(QLatin1String("Copy"));
+        op->setArguments(QStringList() << (sourceAppDirPath + QLatin1String("/../Resources/") + configFileName)
+            << (targetAppDirPath + QLatin1String("/../Resources/") + configFileName));
+        performOperationThreaded(op, Backup);
+        performOperationThreaded(op);
+#endif
+
         // finally, copy everything within Frameworks and plugins
         op = createOwnedOperation(QLatin1String("CopyDirectory"));
         op->setArguments(QStringList() << (sourceAppDirPath + QLatin1String("/../Frameworks"))
@@ -1373,7 +1383,7 @@ void PackageManagerCorePrivate::writeMaintenanceTool(OperationList performedOper
         deferredRename(dataFile + QLatin1String(".new"), dataFile, false);
 
         if (newBinaryWritten) {
-#ifndef LUMIT_INSTALLER
+#if !defined(LUMIT_INSTALLER) || defined(Q_OS_DARWIN)
             const bool restart = replacementExists && isUpdater() && (!statusCanceledOrFailed()) && m_needsHardRestart;
             deferredRename(maintenanceToolName() + QLatin1String(".new"), maintenanceToolName(), restart);
             qDebug() << "Maintenance tool restart:" << (restart ? "true." : "false.");
@@ -1563,9 +1573,15 @@ bool PackageManagerCorePrivate::runInstaller()
             }
         }
 
+#if defined(LUMIT_INSTALLER) && defined(Q_OS_OSX)
+        // On Mac, we are installing Lumit.app directly to /Applications
+        // User can just delete Lumit.app from there for uninstallation
+        // We don't want to have Uninstaller.app
+#else
         emit m_core->titleMessageChanged(tr("Creating Maintenance Tool"));
 
         writeMaintenanceTool(m_performedOperationsOld + m_performedOperationsCurrentSession);
+#endif
 
         // fake a possible wrong value to show a full progress bar
         const int progress = ProgressCoordinator::instance()->progressInPercentage();
@@ -1787,6 +1803,15 @@ bool PackageManagerCorePrivate::runUninstaller()
 
         OperationList undoOperations = m_performedOperationsOld;
         std::reverse(undoOperations.begin(), undoOperations.end());
+
+#if defined(LUMIT_INSTALLER) && defined(Q_OS_OSX)
+        // Manually add CreateDockIconOperation because this operation is not added in Installer phase.
+        // Note that this is for Uninstaller so CreateDockIconOperation will remove the dock icon.
+        QInstaller::Operation *removeDockIconOperation = KDUpdater::UpdateOperationFactory::instance().create(QLatin1String("CreateDockIcon"));
+        QStringList removeDockIconArgs = QStringList() << m_core->value(scBundleId);
+        removeDockIconOperation->setArguments(removeDockIconArgs);
+        undoOperations.push_back(removeDockIconOperation);
+#endif
 
         bool updateAdminRights = false;
         if (!adminRightsGained) {

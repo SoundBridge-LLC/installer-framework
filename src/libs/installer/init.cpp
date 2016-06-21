@@ -54,6 +54,9 @@
 #include "settingsoperation.h"
 #include "consumeoutputoperation.h"
 
+#if defined(LUMIT_INSTALLER) && defined(Q_OS_OSX)
+#   include "CreateDockIconOperation.h"
+#endif
 
 #include "utils.h"
 
@@ -225,6 +228,10 @@ void QInstaller::init()
     factory.registerUpdateOperation<LicenseOperation>(QLatin1String("License"));
     factory.registerUpdateOperation<ConsumeOutputOperation>(QLatin1String("ConsumeOutput"));
     factory.registerUpdateOperation<SettingsOperation>(QLatin1String("Settings"));
+
+#if defined(LUMIT_INSTALLER) && defined(Q_OS_OSX)
+    factory.registerUpdateOperation<CreateDockIconOperation>(QLatin1String("CreateDockIcon"));
+#endif
 
     FileDownloaderFactory::setFollowRedirects(true);
 

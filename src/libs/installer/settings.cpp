@@ -761,9 +761,22 @@ QStringList Settings::VSTPlugins() const
 	{
         QStringList values = settings->value(kVSTKey).toStringList();
         foreach(QString value, values)
-            result.push_back(value);
+        {
+            const QString &trimmedPath = value.trimmed();
+            if(!trimmedPath.isEmpty()) // We use trimmed path for checking purpose only
+                result.push_back(value);
+        }
     }
     settings->endGroup();
+
+#ifdef Q_OS_OSX
+    if(result.isEmpty())
+    {
+        // Add default VST2 and VST3 directores on Mac
+        result << QLatin1String("/Library/Audio/Plug-Ins/VST");
+        result << QLatin1String("/Library/Audio/Plug-Ins/VST3");
+    }
+#endif
 
     return result;
 }

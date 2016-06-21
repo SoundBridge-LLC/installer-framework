@@ -317,6 +317,19 @@ bool GuiProxy::createDesktopShortcut()
     return operation->performOperation();
 }
 
+bool GuiProxy::createDockIcon(const QString &bundleId, const QString &appPath)
+{
+#ifdef Q_OS_OSX
+    QScopedPointer<QInstaller::Operation> operation;
+    operation.reset(KDUpdater::UpdateOperationFactory::instance().create(QLatin1String("CreateDockIcon")));
+    QStringList args = QStringList() << bundleId << appPath;
+    operation->setArguments(m_gui->core()->replaceVariables(args));
+    return operation->performOperation();
+#else
+    return false;
+#endif
+}
+
 #endif
 
 void GuiProxy::cancelButtonClicked()

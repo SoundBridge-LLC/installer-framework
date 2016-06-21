@@ -134,6 +134,13 @@ public slots :
     QString storageLocation(qint32 location) const {
         return QStandardPaths::writableLocation(QStandardPaths::StandardLocation(location));
     }
+
+#if defined(LUMIT_INSTALLER) && defined(Q_OS_DARWIN)
+    bool startDetached(const QString &executable, const QStringList &arguments) const
+    {
+        return QProcess::startDetached(executable, arguments);
+    }
+#endif
 };
 
 #if QT_VERSION < 0x050400
@@ -192,7 +199,7 @@ public:
     Q_INVOKABLE void saveVST(const QString &widgetName, const QString &listWidgetName);
 
     Q_INVOKABLE bool createDesktopShortcut();
-
+    Q_INVOKABLE bool createDockIcon(const QString &bundleId, const QString &appPath);
 #endif
 
 signals:

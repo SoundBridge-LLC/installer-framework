@@ -95,6 +95,7 @@ void RegisterFileTypeOperation::backup()
 bool RegisterFileTypeOperation::performOperation()
 {
 #ifdef LUMIT_INSTALLER
+#   ifdef Q_OS_WIN
     QStringList argList = arguments();
     QString argAppFilePath = argList[0];
     QString argAppDirPath = argList[1];
@@ -139,6 +140,11 @@ bool RegisterFileTypeOperation::performOperation()
     }
 
     return true;
+#   else
+    setError(UserDefinedError);
+    setErrorString(tr("Registering file types is only supported on Windows."));
+    return false;
+#   endif
 #endif
 
 #ifdef Q_OS_WIN

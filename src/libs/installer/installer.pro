@@ -1,6 +1,7 @@
 TEMPLATE = lib
 TARGET = installer
 INCLUDEPATH += . ..
+CONFIG += shared_and_static build_all
 
 include(../7zip/7zip.pri)
 include(../kdtools/kdtools.pri)
@@ -221,4 +222,10 @@ win32 {
 
     win32-g++*:LIBS += -lmpr -luuid
     win32-g++*:QMAKE_CXXFLAGS += -Wno-missing-field-initializers
+}
+
+osx {
+    HEADERS += CreateDockIconOperation.h
+    OBJECTIVE_SOURCES += CreateDockIconOperation.mm
+    LIBS += -framework AppKit
 }
