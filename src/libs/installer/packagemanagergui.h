@@ -40,8 +40,12 @@
 #include <QtCore/QEvent>
 #include <QtCore/QMetaType>
 
+#ifdef LUMIT_INSTALLER
+#include "VectorWizard.h"
+#else
 #include <QWizard>
 #include <QWizardPage>
+#endif
 
 // FIXME: move to private classes
 QT_BEGIN_NAMESPACE
@@ -65,6 +69,11 @@ class PerformInstallationForm;
 
 
 // -- PackageManagerGui
+
+#ifdef LUMIT_INSTALLER
+using QWizard = VectorWizard;
+using QWizardPage = VectorWizardPage;
+#endif
 
 class INSTALLER_EXPORT PackageManagerGui : public QWizard
 {
