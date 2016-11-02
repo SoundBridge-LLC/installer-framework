@@ -33,6 +33,9 @@
 
 #include "VectorWizard.h"
 
+#include "BackgroundWidget.h"
+#include "Button.h"
+
 #define QT_NO_STYLE_WINDOWSVISTA
 
 #ifndef QT_NO_WIZARD
@@ -71,6 +74,11 @@ extern bool qt_wince_is_mobile();     //defined in qguifunctions_wce.cpp
 
 #include <string.h>     // for memset()
 #include <algorithm>
+
+// Lumit Installer
+static const QSize kButtonSize(120, 30);
+static const int kSidebarMargin = 10; // from edge of sidebar to label
+static const int kLabelMargin = 8; // from edge of label to text
 
 QT_BEGIN_NAMESPACE
 
@@ -600,9 +608,7 @@ public:
     void removeFieldAt(int index);
     void switchToPage(int newId, Direction direction);
     QWizardLayoutInfo layoutInfoForCurrentPage();
-    void recreateLayout(const QWizardLayoutInfo &info);
     void updateLayout();
-    void updateMinMaxSizes(const QWizardLayoutInfo &info);
     void updateCurrentPage();
     bool ensureButton(VectorWizard::WizardButton which) const;
     void connectButton(VectorWizard::WizardButton which) const;
@@ -626,6 +632,10 @@ public:
 #ifdef Q_OS_MACX
     static QPixmap findDefaultBackgroundPixmap();
 #endif
+
+	void setSidebarItems(const QList<QString> &items);
+	void highlightSidebarItem(const QString &item);
+	void setVersionInfo(const QString &versionInfo);
 
     PageMap pageMap;
     QVector<QWizardField> fields;
@@ -675,7 +685,11 @@ public:
 
     QVBoxLayout *pageVBoxLayout;
     QHBoxLayout *buttonLayout;
-    QGridLayout *mainLayout;
+
+	QVBoxLayout *mSidebarItemsLayout;
+	BackgroundWidget *mHighlightWidget;
+	QList<QLabel*> mSidebarLabels;
+	QLabel *mVersionInfoLabel;
 
 #if !defined(QT_NO_STYLE_WINDOWSVISTA)
     QVistaHelper *vistaHelper;
@@ -722,8 +736,98 @@ void VectorWizardPrivate::init()
 {
     Q_Q(VectorWizard);
 
-    antiFlickerWidget = new QWizardAntiFlickerWidget(q, this);
-    wizStyle = VectorWizard::WizardStyle(q->style()->styleHint(QStyle::SH_WizardStyle, 0, q));
+	// TODO: installer has some white background at corners. Need to make them transparent.
+
+	// installer background
+	BackgroundWidget *installerBackground = new BackgroundWidget(q);
+	installerBackground->setBackground(QString::fromLatin1(":/vector/installer_bg.svg"), 0, false);
+	QSize installerSize = installerBackground->sizeHint();
+	installerBackground->setFixedSize(installerSize);
+	q->setFixedSize(installerSize);
+
+	antiFlickerWidget = new QWizardAntiFlickerWidget(q, this);
+	antiFlickerWidget->setFixedSize(installerSize);
+
+	// layout structure:
+	// main layout is horizontal: sidebar on the left and everything else on the right
+	// left sidebar is vertical: logo at top, sidebar items in the middle and version info at bottom
+	// right area is vertical: page at top and button area at bottom
+	// button area is horizontal
+
+	// main horizontal layout
+	QHBoxLayout *hMainLayout = new QHBoxLayout(antiFlickerWidget);
+
+	// left
+	BackgroundWidget *leftPanelBackground = new BackgroundWidget(antiFlickerWidget);
+	leftPanelBackground->setBackground(QString::fromLatin1(":/vector/navigation_bg.svg"), 0, false);
+	leftPanelBackground->setFixedSize(leftPanelBackground->sizeHint());
+	hMainLayout->addWidget(leftPanelBackground);
+	QVBoxLayout *leftLayout = new QVBoxLayout(leftPanelBackground);
+	leftLayout->setSpacing(0);
+	leftLayout->setContentsMargins(kSidebarMargin, kSidebarMargin, kSidebarMargin, kSidebarMargin);
+	hMainLayout->addStretch();
+
+	// right
+	QVBoxLayout *rightLayout = new QVBoxLayout;
+	hMainLayout->addLayout(rightLayout);
+
+	// page background
+	BackgroundWidget *pageBackground = new BackgroundWidget(antiFlickerWidget);
+	pageBackground->setBackground(QString::fromLatin1(":/vector/right_bg.svg"), 0, false);
+	pageBackground->setFixedSize(pageBackground->sizeHint());
+	rightLayout->addWidget(pageBackground);
+	QVBoxLayout *pageLayout = new QVBoxLayout(pageBackground);
+	pageLayout->setContentsMargins(16, 16, 16, 16);
+	pageLayout->setSpacing(0);
+
+	// page content
+	pageFrame = new QFrame;
+	pageFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	pageLayout->addWidget(pageFrame);
+	pageVBoxLayout = new QVBoxLayout(pageFrame);
+	pageVBoxLayout->setSpacing(0);
+	pageVBoxLayout->addSpacing(0);
+	QSpacerItem *spacerItem = new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding);
+	pageVBoxLayout->addItem(spacerItem);
+
+	// buttons
+	buttonLayout = new QHBoxLayout;
+	rightLayout->addLayout(buttonLayout);
+	
+	// build left panel
+	BackgroundWidget *logo = new BackgroundWidget(antiFlickerWidget);
+	logo->setBackground(QString::fromLatin1(":/vector/installer_logo.svg"), 0, false);
+	logo->setFixedSize(logo->sizeHint());
+	QHBoxLayout *logoLayout = new QHBoxLayout;
+	logoLayout->setSpacing(0);
+	logoLayout->setContentsMargins(0, 0, 0, 0);
+	logoLayout->addStretch();
+	logoLayout->addWidget(logo);
+	logoLayout->addStretch();
+	leftLayout->addLayout(logoLayout);
+
+	leftLayout->addSpacing(kSidebarMargin * 2);
+
+	mSidebarItemsLayout = new QVBoxLayout;
+	mSidebarItemsLayout->setContentsMargins(0, 0, 0, 0);
+	mSidebarItemsLayout->setSpacing(4);
+	leftLayout->addLayout(mSidebarItemsLayout);
+
+	leftLayout->addStretch();
+
+	mVersionInfoLabel = new QLabel(antiFlickerWidget);
+	mVersionInfoLabel->setStyleSheet(QString::fromLatin1("QLabel { color: white; font-size: 7pt; }"));
+	mVersionInfoLabel->setContentsMargins(kLabelMargin, 0, kLabelMargin, 0);
+	mVersionInfoLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+	leftLayout->addWidget(mVersionInfoLabel);
+
+	//
+	mHighlightWidget = new BackgroundWidget;
+	mHighlightWidget->setBackground(QString::fromLatin1(":/vector/navigation_highlight.svg"), 0, false);
+	mHighlightWidget->setFixedSize(mHighlightWidget->sizeHint());
+
+	//
+	wizStyle = VectorWizard::WizardStyle(q->style()->styleHint(QStyle::SH_WizardStyle, 0, q));
     if (wizStyle == VectorWizard::MacStyle) {
         opts = (VectorWizard::NoDefaultButton | VectorWizard::NoCancelButton);
     } else if (wizStyle == VectorWizard::ModernStyle) {
@@ -740,19 +844,6 @@ void VectorWizardPrivate::init()
     ensureButton(VectorWizard::CommitButton);
     ensureButton(VectorWizard::FinishButton);
 
-    pageFrame = new QFrame(antiFlickerWidget);
-    pageFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-
-    pageVBoxLayout = new QVBoxLayout(pageFrame);
-    pageVBoxLayout->setSpacing(0);
-    pageVBoxLayout->addSpacing(0);
-    QSpacerItem *spacerItem = new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding);
-    pageVBoxLayout->addItem(spacerItem);
-
-    buttonLayout = new QHBoxLayout;
-    mainLayout = new QGridLayout(antiFlickerWidget);
-    mainLayout->setSizeConstraint(QLayout::SetNoConstraint);
-
     updateButtonLayout();
 
     defaultPropertyTable.reserve(NFallbackDefaultProperties);
@@ -760,6 +851,46 @@ void VectorWizardPrivate::init()
         defaultPropertyTable.append(QWizardDefaultProperty(fallbackProperties[i].className,
                                                            fallbackProperties[i].property,
                                                            changed_signal(i)));
+}
+
+void VectorWizardPrivate::setSidebarItems(const QList<QString> &items)
+{
+	for(const QString &item : items)
+	{
+		QLabel *label = new QLabel;
+		label->setStyleSheet(QString::fromLatin1("QLabel { color: white; font-weight: bold; font-size: 11pt; }"));
+		label->setText(item);
+		label->setFixedSize(mHighlightWidget->size());
+		label->setContentsMargins(kLabelMargin, 0, kLabelMargin, 0);
+		label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+		mSidebarLabels.append(label);
+
+		// push label to the left
+		QHBoxLayout *layout = new QHBoxLayout;
+		layout->setSpacing(0);
+		layout->setContentsMargins(0, 0, 0, 0);
+		layout->addWidget(label);
+		layout->addStretch();
+		mSidebarItemsLayout->addLayout(layout);
+	}
+}
+
+void VectorWizardPrivate::highlightSidebarItem(const QString &item)
+{
+	for(QLabel *label : mSidebarLabels)
+	{
+		if(label->text() == item)
+		{
+			mHighlightWidget->setParent(label);
+			mHighlightWidget->show(); // after re-parenting we need to explicitly show it, otherwise it won't be visible
+			break;
+		}
+	}
+}
+
+void VectorWizardPrivate::setVersionInfo(const QString &versionInfo)
+{
+	mVersionInfoLabel->setText(versionInfo);
 }
 
 void VectorWizardPrivate::reset()
@@ -989,288 +1120,6 @@ QWizardLayoutInfo VectorWizardPrivate::layoutInfoForCurrentPage()
     return info;
 }
 
-void VectorWizardPrivate::recreateLayout(const QWizardLayoutInfo &info)
-{
-    Q_Q(VectorWizard);
-
-    /*
-        Start by undoing the main layout.
-    */
-    for (int i = mainLayout->count() - 1; i >= 0; --i) {
-        QLayoutItem *item = mainLayout->takeAt(i);
-        if (item->layout()) {
-            item->layout()->setParent(0);
-        } else {
-            delete item;
-        }
-    }
-    for (int i = mainLayout->columnCount() - 1; i >= 0; --i)
-        mainLayout->setColumnMinimumWidth(i, 0);
-    for (int i = mainLayout->rowCount() - 1; i >= 0; --i)
-        mainLayout->setRowMinimumHeight(i, 0);
-
-    /*
-        Now, recreate it.
-    */
-
-    bool mac = (info.wizStyle == VectorWizard::MacStyle);
-    bool classic = (info.wizStyle == VectorWizard::ClassicStyle);
-    bool modern = (info.wizStyle == VectorWizard::ModernStyle);
-    bool aero = (info.wizStyle == VectorWizard::AeroStyle);
-    int deltaMarginLeft = info.topLevelMarginLeft - info.childMarginLeft;
-    int deltaMarginRight = info.topLevelMarginRight - info.childMarginRight;
-    int deltaMarginTop = info.topLevelMarginTop - info.childMarginTop;
-    int deltaMarginBottom = info.topLevelMarginBottom - info.childMarginBottom;
-    int deltaVSpacing = info.topLevelMarginBottom - info.vspacing;
-
-    int row = 0;
-    int numColumns;
-    if (mac) {
-        numColumns = 3;
-    } else if (info.watermark || info.sideWidget) {
-        numColumns = 2;
-    } else {
-        numColumns = 1;
-    }
-    int pageColumn = qMin(1, numColumns - 1);
-
-    if (mac) {
-        mainLayout->setMargin(0);
-        mainLayout->setSpacing(0);
-        buttonLayout->setContentsMargins(MacLayoutLeftMargin, MacButtonTopMargin, MacLayoutRightMargin, MacLayoutBottomMargin);
-        pageVBoxLayout->setMargin(7);
-    } else {
-        if (modern) {
-            mainLayout->setMargin(0);
-            mainLayout->setSpacing(0);
-            pageVBoxLayout->setContentsMargins(deltaMarginLeft, deltaMarginTop,
-                                               deltaMarginRight, deltaMarginBottom);
-            buttonLayout->setContentsMargins(info.topLevelMarginLeft, info.topLevelMarginTop,
-                                             info.topLevelMarginRight, info.topLevelMarginBottom);
-        } else {
-            mainLayout->setContentsMargins(info.topLevelMarginLeft, info.topLevelMarginTop,
-                                           info.topLevelMarginRight, info.topLevelMarginBottom);
-            mainLayout->setHorizontalSpacing(info.hspacing);
-            mainLayout->setVerticalSpacing(info.vspacing);
-            pageVBoxLayout->setContentsMargins(0, 0, 0, 0);
-            buttonLayout->setContentsMargins(0, 0, 0, 0);
-        }
-    }
-    buttonLayout->setSpacing(info.buttonSpacing);
-
-    if (info.header) {
-        if (!headerWidget)
-            headerWidget = new QWizardHeader(antiFlickerWidget);
-        headerWidget->setAutoFillBackground(modern);
-        mainLayout->addWidget(headerWidget, row++, 0, 1, numColumns);
-    }
-    if (headerWidget)
-        headerWidget->setVisible(info.header);
-
-    int watermarkStartRow = row;
-
-    if (mac)
-        mainLayout->setRowMinimumHeight(row++, 10);
-
-    if (info.title) {
-        if (!titleLabel) {
-            titleLabel = new QLabel(antiFlickerWidget);
-            titleLabel->setBackgroundRole(QPalette::Base);
-            titleLabel->setWordWrap(true);
-        }
-
-        QFont titleFont = q->font();
-        titleFont.setPointSize(titleFont.pointSize() + (mac ? 3 : 4));
-        titleFont.setBold(true);
-        titleLabel->setPalette(QPalette());
-
-        if (aero) {
-            // ### hardcoded for now:
-            titleFont = QFont(QLatin1String("Segoe UI"), 12);
-            QPalette pal(titleLabel->palette());
-            pal.setColor(QPalette::Text, "#003399");
-            titleLabel->setPalette(pal);
-        }
-
-        titleLabel->setFont(titleFont);
-        const int aeroTitleIndent = 25; // ### hardcoded for now - should be calculated somehow
-        if (aero)
-            titleLabel->setIndent(aeroTitleIndent);
-        else if (mac)
-            titleLabel->setIndent(2);
-        else if (classic)
-            titleLabel->setIndent(info.childMarginLeft);
-        else
-            titleLabel->setIndent(info.topLevelMarginLeft);
-        if (modern) {
-            if (!placeholderWidget1) {
-                placeholderWidget1 = new QWidget(antiFlickerWidget);
-                placeholderWidget1->setBackgroundRole(QPalette::Base);
-            }
-            placeholderWidget1->setFixedHeight(info.topLevelMarginLeft + 2);
-            mainLayout->addWidget(placeholderWidget1, row++, pageColumn);
-        }
-        mainLayout->addWidget(titleLabel, row++, pageColumn);
-        if (modern) {
-            if (!placeholderWidget2) {
-                placeholderWidget2 = new QWidget(antiFlickerWidget);
-                placeholderWidget2->setBackgroundRole(QPalette::Base);
-            }
-            placeholderWidget2->setFixedHeight(5);
-            mainLayout->addWidget(placeholderWidget2, row++, pageColumn);
-        }
-        if (mac)
-            mainLayout->setRowMinimumHeight(row++, 7);
-    }
-    if (placeholderWidget1)
-        placeholderWidget1->setVisible(info.title && modern);
-    if (placeholderWidget2)
-        placeholderWidget2->setVisible(info.title && modern);
-
-    if (info.subTitle) {
-        if (!subTitleLabel) {
-            subTitleLabel = new QLabel(pageFrame);
-            subTitleLabel->setWordWrap(true);
-
-            subTitleLabel->setContentsMargins(info.childMarginLeft , 0,
-                                              info.childMarginRight , 0);
-
-            pageVBoxLayout->insertWidget(1, subTitleLabel);
-        }
-    }
-
-    // ### try to replace with margin.
-    changeSpacerSize(pageVBoxLayout, 0, 0, info.subTitle ? info.childMarginLeft : 0);
-
-    int hMargin = mac ? 1 : 0;
-    int vMargin = hMargin;
-
-    pageFrame->setFrameStyle(mac ? (QFrame::Box | QFrame::Raised) : QFrame::NoFrame);
-    pageFrame->setLineWidth(0);
-    pageFrame->setMidLineWidth(hMargin);
-
-    if (info.header) {
-        if (modern) {
-            hMargin = info.topLevelMarginLeft;
-            vMargin = deltaMarginBottom;
-        } else if (classic) {
-            hMargin = deltaMarginLeft + ClassicHMargin;
-            vMargin = 0;
-        }
-    }
-
-    if (aero) {
-        int leftMargin   = 18; // ### hardcoded for now - should be calculated somehow
-        int topMargin    = vMargin;
-        int rightMargin  = hMargin; // ### for now
-        int bottomMargin = vMargin;
-        pageFrame->setContentsMargins(leftMargin, topMargin, rightMargin, bottomMargin);
-    } else {
-        pageFrame->setContentsMargins(hMargin, vMargin, hMargin, vMargin);
-    }
-
-    if ((info.watermark || info.sideWidget) && !watermarkLabel) {
-        watermarkLabel = new QWatermarkLabel(antiFlickerWidget, sideWidget);
-        watermarkLabel->setBackgroundRole(QPalette::Base);
-        watermarkLabel->setMinimumHeight(1);
-        watermarkLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
-        watermarkLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    }
-
-    //bool wasSemiTransparent = pageFrame->testAttribute(Qt::WA_SetPalette);
-    const bool wasSemiTransparent =
-        pageFrame->palette().brush(QPalette::Window).color().alpha() < 255
-        || pageFrame->palette().brush(QPalette::Base).color().alpha() < 255;
-    if (mac) {
-        if (!wasSemiTransparent) {
-            QPalette pal = pageFrame->palette();
-            pal.setBrush(QPalette::Window, QColor(255, 255, 255, 153));
-            // ### The next line is required to ensure visual semitransparency when
-            // ### switching from ModernStyle to MacStyle. See TAG1 below.
-            pal.setBrush(QPalette::Base, QColor(255, 255, 255, 153));
-            pageFrame->setPalette(pal);
-            pageFrame->setAutoFillBackground(true);
-            antiFlickerWidget->setAutoFillBackground(false);
-        }
-    } else {
-        if (wasSemiTransparent)
-            pageFrame->setPalette(QPalette());
-
-        bool baseBackground = (modern && !info.header); // ### TAG1
-        pageFrame->setBackgroundRole(baseBackground ? QPalette::Base : QPalette::Window);
-
-        if (titleLabel)
-            titleLabel->setAutoFillBackground(baseBackground);
-        pageFrame->setAutoFillBackground(baseBackground);
-        if (watermarkLabel)
-            watermarkLabel->setAutoFillBackground(baseBackground);
-        if (placeholderWidget1)
-            placeholderWidget1->setAutoFillBackground(baseBackground);
-        if (placeholderWidget2)
-            placeholderWidget2->setAutoFillBackground(baseBackground);
-
-        if (aero) {
-            QPalette pal = pageFrame->palette();
-            pal.setBrush(QPalette::Window, QColor(255, 255, 255));
-            pageFrame->setPalette(pal);
-            pageFrame->setAutoFillBackground(true);
-            pal = antiFlickerWidget->palette();
-            pal.setBrush(QPalette::Window, QColor(255, 255, 255));
-            antiFlickerWidget->setPalette(pal);
-            antiFlickerWidget->setAutoFillBackground(true);
-        }
-    }
-
-    mainLayout->addWidget(pageFrame, row++, pageColumn);
-
-    int watermarkEndRow = row;
-    if (classic)
-        mainLayout->setRowMinimumHeight(row++, deltaVSpacing);
-
-    if (aero) {
-        buttonLayout->setContentsMargins(9, 9, 9, 9);
-        mainLayout->setContentsMargins(0, 11, 0, 0);
-    }
-
-    int buttonStartColumn = info.extension ? 1 : 0;
-    int buttonNumColumns = info.extension ? 1 : numColumns;
-
-    if (classic || modern) {
-        if (!bottomRuler)
-            bottomRuler = new QWizardRuler(antiFlickerWidget);
-        mainLayout->addWidget(bottomRuler, row++, buttonStartColumn, 1, buttonNumColumns);
-    }
-
-    if (classic)
-        mainLayout->setRowMinimumHeight(row++, deltaVSpacing);
-
-    mainLayout->addLayout(buttonLayout, row++, buttonStartColumn, 1, buttonNumColumns);
-
-    if (info.watermark || info.sideWidget) {
-        if (info.extension)
-            watermarkEndRow = row;
-        mainLayout->addWidget(watermarkLabel, watermarkStartRow, 0,
-                              watermarkEndRow - watermarkStartRow, 1);
-    }
-
-    mainLayout->setColumnMinimumWidth(0, mac && !info.watermark ? 181 : 0);
-    if (mac)
-        mainLayout->setColumnMinimumWidth(2, 21);
-
-    if (headerWidget)
-        headerWidget->setVisible(info.header);
-    if (titleLabel)
-        titleLabel->setVisible(info.title);
-    if (subTitleLabel)
-        subTitleLabel->setVisible(info.subTitle);
-    if (bottomRuler)
-        bottomRuler->setVisible(classic || modern);
-    if (watermarkLabel)
-        watermarkLabel->setVisible(info.watermark || info.sideWidget);
-
-    layoutInfo = info;
-}
-
 void VectorWizardPrivate::updateLayout()
 {
     Q_Q(VectorWizard);
@@ -1278,8 +1127,9 @@ void VectorWizardPrivate::updateLayout()
     disableUpdates();
 
     QWizardLayoutInfo info = layoutInfoForCurrentPage();
-    if (layoutInfo != info)
-        recreateLayout(info);
+	if(layoutInfo != info)
+		layoutInfo = info;
+
     VectorWizardPage *page = q->currentPage();
 
     // If the page can expand vertically, let it stretch "infinitely" more
@@ -1329,43 +1179,6 @@ void VectorWizardPrivate::updateLayout()
     }
 
     enableUpdates();
-    updateMinMaxSizes(info);
-}
-
-void VectorWizardPrivate::updateMinMaxSizes(const QWizardLayoutInfo &info)
-{
-    Q_Q(VectorWizard);
-
-    int extraHeight = 0;
-#if !defined(QT_NO_STYLE_WINDOWSVISTA)
-    if (isVistaThemeEnabled())
-        extraHeight = vistaHelper->titleBarSize() + vistaHelper->topOffset();
-#endif
-    QSize minimumSize = mainLayout->totalMinimumSize() + QSize(0, extraHeight);
-    QSize maximumSize = mainLayout->totalMaximumSize();
-    if (info.header && headerWidget->maximumWidth() != QWIDGETSIZE_MAX) {
-        minimumSize.setWidth(headerWidget->maximumWidth());
-        maximumSize.setWidth(headerWidget->maximumWidth());
-    }
-    if (info.watermark && !info.sideWidget) {
-        minimumSize.setHeight(mainLayout->totalSizeHint().height());
-    }
-    if (q->minimumWidth() == minimumWidth) {
-        minimumWidth = minimumSize.width();
-        q->setMinimumWidth(minimumWidth);
-    }
-    if (q->minimumHeight() == minimumHeight) {
-        minimumHeight = minimumSize.height();
-        q->setMinimumHeight(minimumHeight);
-    }
-    if (q->maximumWidth() == maximumWidth) {
-        maximumWidth = maximumSize.width();
-        q->setMaximumWidth(maximumWidth);
-    }
-    if (q->maximumHeight() == maximumHeight) {
-        maximumHeight = maximumSize.height();
-        q->setMaximumHeight(maximumHeight);
-    }
 }
 
 void VectorWizardPrivate::updateCurrentPage()
@@ -1416,7 +1229,9 @@ bool VectorWizardPrivate::ensureButton(VectorWizard::WizardButton which) const
         return false;
 
     if (!btns[which]) {
-        QPushButton *pushButton = new QPushButton(antiFlickerWidget);
+        Button *pushButton = new Button(antiFlickerWidget);
+		pushButton->setFixedSize(kButtonSize);
+
         QStyle *style = q->style();
         if (style != QApplication::style()) // Propagate style
             pushButton->setStyle(style);
@@ -2226,6 +2041,24 @@ VectorWizard::~VectorWizard()
     delete d->buttonLayout;
 }
 
+void VectorWizard::setSidebarItems(const QList<QString> &items)
+{
+	Q_D(VectorWizard);
+	d->setSidebarItems(items);
+}
+
+void VectorWizard::highlightSidebarItem(const QString &item)
+{
+	Q_D(VectorWizard);
+	d->highlightSidebarItem(item);
+}
+
+void VectorWizard::setVersionInfo(const QString &versionInfo)
+{
+	Q_D(VectorWizard);
+	d->setVersionInfo(versionInfo);
+}
+
 /*!
     Adds the given \a page to the wizard, and returns the page's ID.
 
@@ -3015,26 +2848,7 @@ void VectorWizard::setVisible(bool visible)
 */
 QSize VectorWizard::sizeHint() const
 {
-    Q_D(const VectorWizard);
-    QSize result = d->mainLayout->totalSizeHint();
-    QSize extra(500, 360);
-    if (d->wizStyle == MacStyle && d->current != -1) {
-        QSize pixmap(currentPage()->pixmap(BackgroundPixmap).size());
-        extra.setWidth(616);
-        if (!pixmap.isNull()) {
-            extra.setHeight(pixmap.height());
-
-            /*
-                The width isn't always reliable as a size hint, as
-                some wizard backgrounds just cover the leftmost area.
-                Use a rule of thumb to determine if the width is
-                reliable or not.
-            */
-            if (pixmap.width() >= pixmap.height())
-                extra.setWidth(pixmap.width());
-        }
-    }
-    return result.expandedTo(extra);
+	return QDialog::sizeHint();
 }
 
 /*!

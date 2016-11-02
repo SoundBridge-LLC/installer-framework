@@ -200,6 +200,10 @@ public:
 
     Q_INVOKABLE bool createDesktopShortcut();
     Q_INVOKABLE bool createDockIcon(const QString &bundleId, const QString &appPath);
+
+	Q_INVOKABLE void setSidebarItems(const QList<QString> &items);
+	Q_INVOKABLE void highlightSidebarItem(const QString &item);
+	Q_INVOKABLE void setVersionInfo(const QString &versionInfo);
 #endif
 
 signals:

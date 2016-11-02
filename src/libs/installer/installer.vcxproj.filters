@@ -1001,6 +1001,9 @@
     <CustomBuild Include="Debug\packagemanagergui.moc">
       <Filter>Generated Files\Debug</Filter>
     </CustomBuild>
+    <CustomBuild Include="VectorWizard.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\kdtools\authenticationdialog.ui">
@@ -1036,9 +1039,6 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_serverauthenticationdialog.h">
       <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VectorWizard.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

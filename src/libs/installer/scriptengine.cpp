@@ -330,6 +330,21 @@ bool GuiProxy::createDockIcon(const QString &bundleId, const QString &appPath)
 #endif
 }
 
+void GuiProxy::setSidebarItems(const QList<QString> &items)
+{
+	m_gui->setSidebarItems(items);
+}
+
+void GuiProxy::highlightSidebarItem(const QString &item)
+{
+	m_gui->highlightSidebarItem(item);
+}
+
+void GuiProxy::setVersionInfo(const QString &versionInfo)
+{
+	m_gui->setVersionInfo(versionInfo);
+}
+
 #endif
 
 void GuiProxy::cancelButtonClicked()

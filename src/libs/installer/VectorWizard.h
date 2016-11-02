@@ -35,6 +35,7 @@
 #define VectorWizard_H
 
 #include <QtWidgets/qdialog.h>
+#include "installer_global.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -45,7 +46,7 @@ class QAbstractButton;
 class VectorWizardPage;
 class VectorWizardPrivate;
 
-class VectorWizard : public QDialog
+class INSTALLER_EXPORT VectorWizard : public QDialog
 {
     Q_OBJECT
     Q_FLAGS(WizardOptions)
@@ -114,8 +115,12 @@ public:
 
     Q_DECLARE_FLAGS(WizardOptions, WizardOption)
 
-    explicit VectorWizard(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
+    explicit VectorWizard(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::Dialog | Qt::FramelessWindowHint);
     ~VectorWizard();
+
+	void setSidebarItems(const QList<QString> &items);
+	void highlightSidebarItem(const QString &item);
+	void setVersionInfo(const QString &versionInfo);
 
     int addPage(VectorWizardPage *page);
     void setPage(int id, VectorWizardPage *page);
@@ -202,7 +207,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(VectorWizard::WizardOptions)
 
 class VectorWizardPagePrivate;
 
-class VectorWizardPage : public QWidget
+class INSTALLER_EXPORT VectorWizardPage : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(QString title READ title WRITE setTitle)

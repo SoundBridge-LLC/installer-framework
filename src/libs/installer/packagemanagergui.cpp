@@ -605,11 +605,7 @@ void PackageManagerGui::showEvent(QShowEvent *event)
                 }
             }
         }
-#ifdef LUMIT_INSTALLER
-        QSize fixedSize(m_core->settings().wizardDefaultWidth(), m_core->settings().wizardDefaultHeight());
-        if(fixedSize.width() && fixedSize.height())
-            setFixedSize(fixedSize);
-#else
+#ifndef LUMIT_INSTALLER
         setMinimumSize(size());
         if (minimumWidth() < m_core->settings().wizardDefaultWidth())
             resize(m_core->settings().wizardDefaultWidth(), height());
@@ -1224,33 +1220,6 @@ int PackageManagerPage::nextId() const
     return next;    // default, show the next page
 }
 
-#ifdef LUMIT_INSTALLER
-/*!
-    Setup top banner using pixmap from settings
-	Call it only if layout isn't empty
- */
-void PackageManagerPage::setupTopBanner()
-{
-    QPixmap topBannerPixmap(QLatin1String(":/lumit/topbanner.png"));
-
-    QLabel *topBannerLabel = new QLabel(this);
-    topBannerLabel->setPixmap(topBannerPixmap);
-    topBannerLabel->setFixedHeight(topBannerPixmap.height());
-
-    QHBoxLayout *bannerLayout = new QHBoxLayout();
-    bannerLayout->setMargin(0);
-    bannerLayout->addStretch(1);
-    bannerLayout->addWidget(topBannerLabel);
-    bannerLayout->addStretch(1);
-
-    QWidget *bannerContainer = new QWidget();
-    bannerContainer->setLayout(bannerLayout);
-    QHBoxLayout *mainLayout = (QHBoxLayout*)layout();
-    if(mainLayout)
-        mainLayout->insertWidget(0, bannerContainer);
-}
-#endif
-
 // -- IntroductionPage
 
 /*!
@@ -1286,9 +1255,6 @@ IntroductionPage::IntroductionPage(PackageManagerCore *core)
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     setLayout(layout);
-#ifdef LUMIT_INSTALLER
-    setupTopBanner();
-#endif
 
     m_msgLabel = new QLabel(this);
     m_msgLabel->setWordWrap(true);
@@ -2667,10 +2633,11 @@ void ReadyForInstallationPage::entering()
                 QDir::toNativeSeparators(QDir(packageManagerCore()->value(scTargetDir))
             .absolutePath())));
         setComplete(true);
+
 #ifdef LUMIT_INSTALLER
         wizard()->button(QWizard::BackButton)->setVisible(false);
-        setupTopBanner();
 #endif
+
         return;
     } else if (packageManagerCore()->isPackageManager() || packageManagerCore()->isUpdater()) {
         setButtonText(QWizard::CommitButton, tr("U&pdate"));
@@ -2872,9 +2839,6 @@ PerformInstallationPage::PerformInstallationPage(PackageManagerCore *core)
     setObjectName(QLatin1String("PerformInstallationPage"));
 
     m_performInstallationForm->setupUi(this);
-#ifdef LUMIT_INSTALLER
-    setupTopBanner();
-#endif
 
     connect(ProgressCoordinator::instance(), SIGNAL(detailTextChanged(QString)),
         m_performInstallationForm, SLOT(appendProgressDetails(QString)));
@@ -3104,7 +3068,6 @@ void FinishedPage::entering()
 #ifdef LUMIT_INSTALLER
     if (packageManagerCore()->isUninstaller())
     {
-        setupTopBanner();
         wizard()->button(QWizard::HelpButton)->setVisible(false);
         wizard()->button(QWizard::CustomButton1)->setVisible(false);
         wizard()->button(QWizard::CustomButton2)->setVisible(false);

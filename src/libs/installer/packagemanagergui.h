@@ -204,7 +204,6 @@ protected:
     virtual void entering() {} // called on entering
     virtual void leaving() {}  // called on leaving
 
-    void setupTopBanner();
 private:
     bool m_complete;
     QString m_titleColor;
