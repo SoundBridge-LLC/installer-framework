@@ -81,6 +81,11 @@
 # include <QWinTaskbarProgress>
 #endif
 
+#ifdef LUMIT_INSTALLER
+#include "MessageDialog.h"
+#endif
+
+
 using namespace KDUpdater;
 using namespace QInstaller;
 
@@ -777,6 +782,15 @@ void PackageManagerGui::cancelButtonClicked()
             question = tr("Do you want to quit the maintenance application?");
     }
 
+#ifdef LUMIT_INSTALLER
+	if(MessageDialog::question(MessageBoxHandler::currentBestSuitParent(), question) == MessageDialog::BT_Yes)
+	{
+		if(interrupt)
+			emit interrupted();
+		else
+			QDialog::reject();
+	}
+#else
     const QMessageBox::StandardButton button =
         MessageBoxHandler::question(MessageBoxHandler::currentBestSuitParent(),
         QLatin1String("cancelInstallation"), tr("Question"), question,
@@ -788,6 +802,7 @@ void PackageManagerGui::cancelButtonClicked()
         else
             QDialog::reject();
     }
+#endif
 }
 
 /*!
@@ -1322,6 +1337,18 @@ IntroductionPage::IntroductionPage(PackageManagerCore *core)
     } else {
         m_taskButton = 0;
     }
+#endif
+
+#ifdef LUMIT_INSTALLER
+	// this page flashes for less than a second
+	// we don't need to display this page
+	int count = layout->count();
+	for(int i = 0; i < count; i++)
+	{
+		QWidget *child = layout->itemAt(i)->widget();
+		if(child)
+			child->hide();
+	}
 #endif
 }
 
@@ -2470,10 +2497,14 @@ QString TargetDirectoryPage::targetDirWarning() const
 */
 bool TargetDirectoryPage::askQuestion(const QString &identifier, const QString &message)
 {
+#ifdef LUMIT_INSTALLER
+	return MessageDialog::warning(MessageBoxHandler::currentBestSuitParent(), message) == MessageDialog::BT_Yes;
+#else
     QMessageBox::StandardButton bt =
         MessageBoxHandler::warning(MessageBoxHandler::currentBestSuitParent(), identifier,
         tr("Warning"), message, QMessageBox::Yes | QMessageBox::No);
     return bt == QMessageBox::Yes;
+#endif
 }
 
 bool TargetDirectoryPage::failWithError(const QString &identifier, const QString &message)
@@ -2903,8 +2934,10 @@ void PerformInstallationPage::entering()
 #ifdef LUMIT_INSTALLER
         gui()->button(QWizard::CancelButton)->setVisible(false);
         gui()->button(QWizard::BackButton)->setVisible(false);
+		setButtonText(QWizard::CommitButton, tr("Install"));
+#else
+		setButtonText(QWizard::CommitButton, tr("&Install"));
 #endif
-        setButtonText(QWizard::CommitButton, tr("&Install"));
         setColoredTitle(tr("Installing %1").arg(productName()));
 
         QTimer::singleShot(30, packageManagerCore(), SLOT(runInstaller()));

@@ -63,6 +63,8 @@
 #include <QLoggingCategory>
 #include <QLocalSocket>
 
+#include "VectorStyle.h"
+
 const QString kApplicationId = QLatin1String("Lumit");
 
 InstallerBase::InstallerBase(int &argc, char *argv[])
@@ -70,6 +72,7 @@ InstallerBase::InstallerBase(int &argc, char *argv[])
     , m_core(0)
 {
     QInstaller::init(); // register custom operations
+	setStyle(new VectorStyle(false));
 }
 
 InstallerBase::~InstallerBase()

@@ -35,6 +35,7 @@
 
 #include "BackgroundWidget.h"
 #include "Button.h"
+#include "StepIndicatorWidget.h"
 
 #define QT_NO_STYLE_WINDOWSVISTA
 
@@ -76,7 +77,6 @@ extern bool qt_wince_is_mobile();     //defined in qguifunctions_wce.cpp
 #include <algorithm>
 
 // Lumit Installer
-static const QSize kButtonSize(120, 30);
 static const int kSidebarMargin = 10; // from edge of sidebar to label
 static const int kLabelMargin = 8; // from edge of label to text
 
@@ -690,6 +690,7 @@ public:
 	BackgroundWidget *mHighlightWidget;
 	QList<QLabel*> mSidebarLabels;
 	QLabel *mVersionInfoLabel;
+	StepIndicatorWidget *mStepIndicatorWidget;
 
 #if !defined(QT_NO_STYLE_WINDOWSVISTA)
     QVistaHelper *vistaHelper;
@@ -736,7 +737,8 @@ void VectorWizardPrivate::init()
 {
     Q_Q(VectorWizard);
 
-	// TODO: installer has some white background at corners. Need to make them transparent.
+	// the installer background svg has some cutoff at corners, so we need the dialog to be transparent
+	q->setAttribute(Qt::WA_TranslucentBackground);
 
 	// installer background
 	BackgroundWidget *installerBackground = new BackgroundWidget(q);
@@ -751,7 +753,7 @@ void VectorWizardPrivate::init()
 	// layout structure:
 	// main layout is horizontal: sidebar on the left and everything else on the right
 	// left sidebar is vertical: logo at top, sidebar items in the middle and version info at bottom
-	// right area is vertical: page at top and button area at bottom
+	// right area is vertical: page at top, then step indicator, and button area at bottom
 	// button area is horizontal
 
 	// main horizontal layout
@@ -769,6 +771,8 @@ void VectorWizardPrivate::init()
 
 	// right
 	QVBoxLayout *rightLayout = new QVBoxLayout;
+	rightLayout->setContentsMargins(0, 0, 0, 0);
+	rightLayout->setSpacing(kSidebarMargin);
 	hMainLayout->addLayout(rightLayout);
 
 	// page background
@@ -777,7 +781,7 @@ void VectorWizardPrivate::init()
 	pageBackground->setFixedSize(pageBackground->sizeHint());
 	rightLayout->addWidget(pageBackground);
 	QVBoxLayout *pageLayout = new QVBoxLayout(pageBackground);
-	pageLayout->setContentsMargins(16, 16, 16, 16);
+	pageLayout->setContentsMargins(2, 2, 2, 2); // border of background
 	pageLayout->setSpacing(0);
 
 	// page content
@@ -785,10 +789,14 @@ void VectorWizardPrivate::init()
 	pageFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	pageLayout->addWidget(pageFrame);
 	pageVBoxLayout = new QVBoxLayout(pageFrame);
+	pageVBoxLayout->setContentsMargins(0, 0, 0, 0);
 	pageVBoxLayout->setSpacing(0);
 	pageVBoxLayout->addSpacing(0);
-	QSpacerItem *spacerItem = new QSpacerItem(0, 0, QSizePolicy::Ignored, QSizePolicy::MinimumExpanding);
-	pageVBoxLayout->addItem(spacerItem);
+
+	// step indicator
+	mStepIndicatorWidget = new StepIndicatorWidget(antiFlickerWidget);
+	rightLayout->addWidget(mStepIndicatorWidget);
+	rightLayout->addStretch();
 
 	// buttons
 	buttonLayout = new QHBoxLayout;
@@ -816,7 +824,7 @@ void VectorWizardPrivate::init()
 	leftLayout->addStretch();
 
 	mVersionInfoLabel = new QLabel(antiFlickerWidget);
-	mVersionInfoLabel->setStyleSheet(QString::fromLatin1("QLabel { color: white; font-size: 7pt; }"));
+	mVersionInfoLabel->setObjectName(QLatin1String("versionInfoLabel")); // this name is used in stylesheet.css, so don't change it
 	mVersionInfoLabel->setContentsMargins(kLabelMargin, 0, kLabelMargin, 0);
 	mVersionInfoLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 	leftLayout->addWidget(mVersionInfoLabel);
@@ -858,7 +866,7 @@ void VectorWizardPrivate::setSidebarItems(const QList<QString> &items)
 	for(const QString &item : items)
 	{
 		QLabel *label = new QLabel;
-		label->setStyleSheet(QString::fromLatin1("QLabel { color: white; font-weight: bold; font-size: 11pt; }"));
+		label->setObjectName(QLatin1String("sidebarItemLabel")); // this name is used in stylesheet.css, so don't change it
 		label->setText(item);
 		label->setFixedSize(mHighlightWidget->size());
 		label->setContentsMargins(kLabelMargin, 0, kLabelMargin, 0);
@@ -984,6 +992,10 @@ void VectorWizardPrivate::switchToPage(int newId, Direction direction)
     }
 
     current = newId;
+
+	// update step indicator
+	QList<int> pageIds = q->pageIds();
+	mStepIndicatorWidget->setCurrentStep(pageIds.indexOf(current));
 
     VectorWizardPage *newPage = q->currentPage();
     if (newPage) {
@@ -1230,7 +1242,6 @@ bool VectorWizardPrivate::ensureButton(VectorWizard::WizardButton which) const
 
     if (!btns[which]) {
         Button *pushButton = new Button(antiFlickerWidget);
-		pushButton->setFixedSize(kButtonSize);
 
         QStyle *style = q->style();
         if (style != QApplication::style()) // Propagate style
@@ -2118,6 +2129,9 @@ void VectorWizard::setPage(int theid, VectorWizardPage *page)
     d->pageMap.insert(theid, page);
     page->d_func()->wizard = this;
 
+	// update step indicator
+	d->mStepIndicatorWidget->setNumSteps(d->pageMap.count());
+
     int n = d->pageVBoxLayout->count();
 
     // disable layout to prevent layout updates while adding
@@ -2193,6 +2207,9 @@ void VectorWizard::removePage(int id)
     }
 
     if (removedPage) {
+		// update step indicator
+		d->mStepIndicatorWidget->setNumSteps(d->pageMap.count());
+
         if (d->initialized.contains(id)) {
             cleanupPage(id);
             d->initialized.remove(id);
