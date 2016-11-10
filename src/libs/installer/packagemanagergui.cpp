@@ -299,18 +299,27 @@ public:
     and \a parent as parent.
 */
 PackageManagerGui::PackageManagerGui(PackageManagerCore *core, QWidget *parent)
-    : QWizard(parent)
-    , d(new Private)
-    , m_core(core)
+	: QWizard(parent)
+	, d(new Private)
+	, m_core(core)
 {
-    if (m_core->isInstaller())
 #ifdef LUMIT_INSTALLER
-        setWindowTitle(tr("%1 Setup Wizard").arg(m_core->value(scPublisher)));
+	if(m_core->isInstaller())
+	{
+		setWindowTitle(tr("%1 Setup Wizard").arg(m_core->value(scPublisher)));
+	}
+	else
+	{
+		setWindowTitle(tr("Uninstall %1").arg(m_core->value(scPublisher)));
+		hideStepIndicator(); // Uninstaller looks better when this is hidden
+	}
 #else
-        setWindowTitle(tr("%1 Setup").arg(m_core->value(scTitle)));
+	if (m_core->isInstaller())
+		setWindowTitle(tr("%1 Setup").arg(m_core->value(scTitle)));
+	else
+		setWindowTitle(tr("Maintain %1").arg(m_core->value(scTitle)));
 #endif
-    else
-        setWindowTitle(tr("Maintain %1").arg(m_core->value(scTitle)));
+
     setWindowFlags(windowFlags() &~ Qt::WindowContextHelpButtonHint);
 
 #ifndef Q_OS_OSX
@@ -838,7 +847,7 @@ void PackageManagerGui::showFinishedPage()
     if (d->m_autoSwitchPage)
         next();
     else
-        qobject_cast<QPushButton*>(button(QWizard::CancelButton))->setEnabled(false);
+        qobject_cast<QAbstractButton*>(button(QWizard::CancelButton))->setEnabled(false);
 }
 
 /*!
@@ -2655,7 +2664,11 @@ void ReadyForInstallationPage::entering()
 
     if (packageManagerCore()->isUninstaller()) {
         m_taskDetailsBrowser->setVisible(false);
+#ifdef LUMIT_INSTALLER
+		setButtonText(QWizard::CommitButton, tr("Uninstall"));
+#else
         setButtonText(QWizard::CommitButton, tr("U&ninstall"));
+#endif
         setColoredTitle(tr("Ready to Uninstall"));
         m_msgLabel->setText(tr("Setup is now ready to begin removing %1 from your computer.<br>"
             "<font color=\"red\">The program directory %2 will be deleted completely</font>, "
@@ -2921,7 +2934,11 @@ void PerformInstallationPage::entering()
     setComplete(false);
 
     if (packageManagerCore()->isUninstaller()) {
+#ifdef LUMIT_INSTALLER
+		setButtonText(QWizard::CommitButton, tr("Uninstall"));
+#else
         setButtonText(QWizard::CommitButton, tr("U&ninstall"));
+#endif
         setColoredTitle(tr("Uninstalling %1").arg(productName()));
 
         QTimer::singleShot(30, packageManagerCore(), SLOT(runUninstaller()));

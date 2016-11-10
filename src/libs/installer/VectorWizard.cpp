@@ -636,6 +636,7 @@ public:
 	void setSidebarItems(const QList<QString> &items);
 	void highlightSidebarItem(const QString &item);
 	void setVersionInfo(const QString &versionInfo);
+	void hideStepIndicator();
 
     PageMap pageMap;
     QVector<QWizardField> fields;
@@ -899,6 +900,11 @@ void VectorWizardPrivate::highlightSidebarItem(const QString &item)
 void VectorWizardPrivate::setVersionInfo(const QString &versionInfo)
 {
 	mVersionInfoLabel->setText(versionInfo);
+}
+
+void VectorWizardPrivate::hideStepIndicator()
+{
+	mStepIndicatorWidget->hide();
 }
 
 void VectorWizardPrivate::reset()
@@ -2068,6 +2074,12 @@ void VectorWizard::setVersionInfo(const QString &versionInfo)
 {
 	Q_D(VectorWizard);
 	d->setVersionInfo(versionInfo);
+}
+
+void VectorWizard::hideStepIndicator()
+{
+	Q_D(VectorWizard);
+	d->hideStepIndicator();
 }
 
 /*!

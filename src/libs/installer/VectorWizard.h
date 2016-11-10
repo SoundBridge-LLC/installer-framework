@@ -121,6 +121,7 @@ public:
 	void setSidebarItems(const QList<QString> &items);
 	void highlightSidebarItem(const QString &item);
 	void setVersionInfo(const QString &versionInfo);
+	void hideStepIndicator();
 
     int addPage(VectorWizardPage *page);
     void setPage(int id, VectorWizardPage *page);
