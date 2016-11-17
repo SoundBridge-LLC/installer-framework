@@ -37,6 +37,8 @@
 #include <QtWidgets/qdialog.h>
 #include "installer_global.h"
 
+#include <BackgroundWidget.h>
+
 QT_BEGIN_NAMESPACE
 
 
@@ -46,7 +48,7 @@ class QAbstractButton;
 class VectorWizardPage;
 class VectorWizardPrivate;
 
-class INSTALLER_EXPORT VectorWizard : public QDialog
+class INSTALLER_EXPORT VectorWizard : public BackgroundWindow
 {
     Q_OBJECT
     Q_FLAGS(WizardOptions)
@@ -115,7 +117,7 @@ public:
 
     Q_DECLARE_FLAGS(WizardOptions, WizardOption)
 
-    explicit VectorWizard(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::Dialog | Qt::FramelessWindowHint);
+    explicit VectorWizard(QWidget *parent = Q_NULLPTR);
     ~VectorWizard();
 
 	void setSidebarItems(const QList<QString> &items);

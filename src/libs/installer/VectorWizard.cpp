@@ -738,27 +738,25 @@ void VectorWizardPrivate::init()
 {
     Q_Q(VectorWizard);
 
-	// the installer background svg has some cutoff at corners, so we need the dialog to be transparent
-	q->setAttribute(Qt::WA_TranslucentBackground);
+	// installer size will be fixed to the size of this image
+	q->setBackground(QString::fromLatin1(":/vector/installer_bg.svg"), 0, false);
 
-	// installer background
-	BackgroundWidget *installerBackground = new BackgroundWidget(q);
-	installerBackground->setBackground(QString::fromLatin1(":/vector/installer_bg.svg"), 0, false);
-	QSize installerSize = installerBackground->sizeHint();
-	installerBackground->setFixedSize(installerSize);
-	q->setFixedSize(installerSize);
-
+	// content holder
 	antiFlickerWidget = new QWizardAntiFlickerWidget(q, this);
-	antiFlickerWidget->setFixedSize(installerSize);
 
 	// layout structure:
+	// outermost layout is of the wizard, and it contains main layout (of content holder)
 	// main layout is horizontal: sidebar on the left and everything else on the right
 	// left sidebar is vertical: logo at top, sidebar items in the middle and version info at bottom
 	// right area is vertical: page at top, then step indicator, and button area at bottom
 	// button area is horizontal
 
+	// outermost layout
+	QHBoxLayout *dialogLayout = new QHBoxLayout(q);
+
 	// main horizontal layout
 	QHBoxLayout *hMainLayout = new QHBoxLayout(antiFlickerWidget);
+	dialogLayout->addLayout(hMainLayout);
 
 	// left
 	BackgroundWidget *leftPanelBackground = new BackgroundWidget(antiFlickerWidget);
@@ -860,6 +858,11 @@ void VectorWizardPrivate::init()
         defaultPropertyTable.append(QWizardDefaultProperty(fallbackProperties[i].className,
                                                            fallbackProperties[i].property,
                                                            changed_signal(i)));
+
+	//
+	antiFlickerWidget->setFixedSize(antiFlickerWidget->minimumSizeHint());
+	q->setFixedSize(q->sizeHint());
+	q->addShadow();
 }
 
 void VectorWizardPrivate::setSidebarItems(const QList<QString> &items)
@@ -2038,8 +2041,8 @@ void QWizardAntiFlickerWidget::paintEvent(QPaintEvent *)
 
     \sa parent(), windowFlags()
 */
-VectorWizard::VectorWizard(QWidget *parent, Qt::WindowFlags flags)
-    : QDialog(*new VectorWizardPrivate, parent, flags)
+VectorWizard::VectorWizard(QWidget *parent)
+    : BackgroundWindow(*new VectorWizardPrivate, parent)
 {
     Q_D(VectorWizard);
     d->init();
@@ -2877,7 +2880,7 @@ void VectorWizard::setVisible(bool visible)
 */
 QSize VectorWizard::sizeHint() const
 {
-	return QDialog::sizeHint();
+	return BackgroundWindow::sizeHint();
 }
 
 /*!
@@ -3056,6 +3059,10 @@ bool VectorWizard::event(QEvent *event)
 */
 void VectorWizard::resizeEvent(QResizeEvent *event)
 {
+	// size of installer is fixed to installer background image
+	BackgroundWindow::resizeEvent(event);
+	return;
+
     Q_D(VectorWizard);
     int heightOffset = 0;
 #if !defined(QT_NO_STYLE_WINDOWSVISTA)
