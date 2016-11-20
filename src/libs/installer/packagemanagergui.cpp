@@ -82,6 +82,7 @@
 #endif
 
 #ifdef LUMIT_INSTALLER
+#include "Models/ListItemDelegate.h"
 #include "MessageDialog.h"
 #endif
 
@@ -118,6 +119,15 @@ public:
         layout()->addWidget(widget);
         layout()->setContentsMargins(0, 0, 0, 0);
         layout()->addItem(new QSpacerItem(20, 20, QSizePolicy::Minimum, QSizePolicy::Expanding));
+
+		// add some margin to avoid overlapping with the cut-off top-left corner of the background
+		QList<QListWidget*> allListWidgets = widget->findChildren<QListWidget*>();
+		for(QListWidget *listWidget : allListWidgets)
+		{
+			ListItemDelegate *delegate = new ListItemDelegate(listWidget);
+			delegate->setMargin(7);
+			listWidget->setItemDelegate(delegate);
+		}
 
         addPageAndProperties(packageManagerCore()->controlScriptEngine());
         addPageAndProperties(packageManagerCore()->componentScriptEngine());
