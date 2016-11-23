@@ -304,14 +304,14 @@ bool GuiProxy::createDesktopShortcut()
     QScopedPointer<QInstaller::Operation> operation;
     operation.reset(KDUpdater::UpdateOperationFactory::instance().create(QLatin1String("CreateShortcut")));
     QStringList args = QStringList()
-            << QLatin1String("@TargetDir@/Lumit.exe")
+            << QLatin1String("@TargetDir@/SoundBridge.exe")
 #ifdef _WIN64
-            << QLatin1String("@DesktopDir@/Lumit (64 bit).lnk")
+            << QLatin1String("@DesktopDir@/SoundBridge (64 bit).lnk")
 #else
-            << QLatin1String("@DesktopDir@/Lumit.lnk")
+            << QLatin1String("@DesktopDir@/SoundBridge.lnk")
 #endif
             << QLatin1String("workingDirectory=@TargetDir@")
-            << QLatin1String("iconPath=@TargetDir@/Lumit.exe")
+            << QLatin1String("iconPath=@TargetDir@/SoundBridge.exe")
             << QLatin1String("iconId=0");
     operation->setArguments(m_gui->core()->replaceVariables(args));
     return operation->performOperation();

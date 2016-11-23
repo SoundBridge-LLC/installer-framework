@@ -75,8 +75,8 @@ const char scControlScript[] = "ControlScript";
 
 #ifdef LUMIT_INSTALLER
 
-const QString kOrganizationName(QLatin1String("Lumit Audio"));
-const QString kApplicationName(QLatin1String("Lumit"));
+const QString kOrganizationName(QLatin1String("SoundBridge"));
+const QString kApplicationName(QLatin1String("SoundBridge"));
 
 const QString kPluginFormatsGroup(QLatin1String("PluginFormats"));
 const QString kVSTKey(QLatin1String("VST"));

@@ -65,7 +65,7 @@
 
 #include "VectorStyle.h"
 
-const QString kApplicationId = QLatin1String("Lumit");
+const QString kApplicationId = QLatin1String("SoundBridge");
 
 InstallerBase::InstallerBase(int &argc, char *argv[])
     : SDKApp<QApplication>(argc, argv)
@@ -93,8 +93,8 @@ int InstallerBase::run()
     if(connectedToServer)
     {
         QInstaller::MessageBoxHandler::warning(0, QLatin1String("AlreadyRunning"),
-            QLatin1String("Lumit Setup"),
-            QLatin1String("Lumit application is running.\n"
+            QLatin1String("SoundBridge Setup"),
+            QLatin1String("SoundBridge application is running.\n"
             "Close the instance and try to launch setup again."));
         return EXIT_FAILURE;
     }

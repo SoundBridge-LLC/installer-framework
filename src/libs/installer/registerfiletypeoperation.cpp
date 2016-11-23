@@ -107,8 +107,8 @@ bool RegisterFileTypeOperation::performOperation()
         const QString appFilePath = QDir::toNativeSeparators(argAppFilePath);
         const QString appExecName = QFileInfo(appFilePath).fileName();
         const QString appDirPath = QDir::toNativeSeparators(argAppDirPath);
-        const QString appName = QLatin1String("Lumit Audio Project");
-        const QString appProgId = QLatin1String("Lumit.AudioProject.1");
+        const QString appName = QLatin1String("SoundBridge Project");
+        const QString appProgId = QLatin1String("SoundBridge.SoundBridge.1");
 
         // register project open command in HKEY_CLASSES_ROOT
         QSettings settingsRoot(QLatin1String("HKEY_CLASSES_ROOT"), QSettings::NativeFormat);
@@ -130,11 +130,19 @@ bool RegisterFileTypeOperation::performOperation()
         settingsRoot.endGroup();
         settingsRoot.endGroup();
 
+		// register old project link extension for backward compatibility
         settingsRoot.beginGroup(QLatin1String(".lmt"));
         settingsRoot.setValue(defaultKey, appProgId);
         settingsRoot.setValue(QLatin1String("PerceivedType"), QLatin1String("Audio"));
-        settingsRoot.setValue(QLatin1String("Content Type"), QLatin1String("Audio/Lumit"));
+        settingsRoot.setValue(QLatin1String("Content Type"), QLatin1String("Audio/SoundBridge"));
         settingsRoot.endGroup();
+
+		// new project link extension
+		settingsRoot.beginGroup(QLatin1String(".sb"));
+		settingsRoot.setValue(defaultKey, appProgId);
+		settingsRoot.setValue(QLatin1String("PerceivedType"), QLatin1String("Audio"));
+		settingsRoot.setValue(QLatin1String("Content Type"), QLatin1String("Audio/SoundBridge"));
+		settingsRoot.endGroup();
 
         SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
     }

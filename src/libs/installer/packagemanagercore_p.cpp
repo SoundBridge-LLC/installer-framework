@@ -1838,9 +1838,9 @@ bool PackageManagerCorePrivate::runUninstaller()
 
 #ifdef LUMIT_INSTALLER
 #ifdef _WIN64
-        QString shortcutLocation = m_core->value(QLatin1String("DesktopDir")) + QLatin1String("/Lumit (64 bit).lnk");
+        QString shortcutLocation = m_core->value(QLatin1String("DesktopDir")) + QLatin1String("/SoundBridge (64 bit).lnk");
 #else
-        QString shortcutLocation = m_core->value(QLatin1String("DesktopDir")) + QLatin1String("/Lumit.lnk");
+        QString shortcutLocation = m_core->value(QLatin1String("DesktopDir")) + QLatin1String("/SoundBridge.lnk");
 #endif
         QFile::remove(shortcutLocation);
 #endif
