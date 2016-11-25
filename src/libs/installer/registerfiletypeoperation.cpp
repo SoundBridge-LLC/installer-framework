@@ -103,12 +103,17 @@ bool RegisterFileTypeOperation::performOperation()
     // Original setup code
     {
         const QString defaultKey = QLatin1String("Default");
+		const QString defaultIconGroup = QLatin1String("DefaultIcon");
 
         const QString appFilePath = QDir::toNativeSeparators(argAppFilePath);
         const QString appExecName = QFileInfo(appFilePath).fileName();
         const QString appDirPath = QDir::toNativeSeparators(argAppDirPath);
         const QString appName = QLatin1String("SoundBridge Project");
         const QString appProgId = QLatin1String("SoundBridge.SoundBridge.1");
+
+		// note: all icons are stored in main app's exe file
+		// for details, check resource file in main app's VC project
+		const QString baseIconPath = QLatin1String("\"") + appFilePath + QLatin1String("\"");
 
         // register project open command in HKEY_CLASSES_ROOT
         QSettings settingsRoot(QLatin1String("HKEY_CLASSES_ROOT"), QSettings::NativeFormat);
@@ -119,9 +124,8 @@ bool RegisterFileTypeOperation::performOperation()
         settingsRoot.setValue(defaultKey, appProgId);
         settingsRoot.endGroup();
 
-        settingsRoot.beginGroup(QLatin1String("DefaultIcon"));
-        const QString defaultIconPath = QLatin1String("\"") + appFilePath + QLatin1String("\"") + QLatin1String(",0");
-        settingsRoot.setValue(defaultKey, defaultIconPath);
+        settingsRoot.beginGroup(defaultIconGroup);
+        settingsRoot.setValue(defaultKey, QVariant(baseIconPath + QLatin1String(",0"))); // first icon in the exe
         settingsRoot.endGroup();
 
         settingsRoot.beginGroup(QLatin1String(QLatin1String("/shell/open/command")));
@@ -142,6 +146,22 @@ bool RegisterFileTypeOperation::performOperation()
 		settingsRoot.setValue(defaultKey, appProgId);
 		settingsRoot.setValue(QLatin1String("PerceivedType"), QLatin1String("Audio"));
 		settingsRoot.setValue(QLatin1String("Content Type"), QLatin1String("Audio/SoundBridge"));
+		settingsRoot.endGroup();
+
+		// icon for channel strip preset files
+		settingsRoot.beginGroup(QLatin1String(".scp"));
+		settingsRoot.setValue(defaultKey, QLatin1String("SoundBridge Channel Strip Preset"));
+		settingsRoot.beginGroup(defaultIconGroup);
+		settingsRoot.setValue(defaultKey, QVariant(baseIconPath + QLatin1String(",1"))); // second icon in the exe
+		settingsRoot.endGroup();
+		settingsRoot.endGroup();
+
+		// icon for plugin preset files
+		settingsRoot.beginGroup(QLatin1String(".spp"));
+		settingsRoot.setValue(defaultKey, QLatin1String("SoundBridge Plugin Preset"));
+		settingsRoot.beginGroup(defaultIconGroup);
+		settingsRoot.setValue(defaultKey, QVariant(baseIconPath + QLatin1String(",2"))); // third icon in the exe
+		settingsRoot.endGroup();
 		settingsRoot.endGroup();
 
         SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, 0, 0);
