@@ -64,6 +64,7 @@
 #include <QLocalSocket>
 
 #include "VectorStyle.h"
+#include "SkinManager.h"
 
 const QString kApplicationId = QLatin1String("SoundBridge");
 
@@ -73,6 +74,7 @@ InstallerBase::InstallerBase(int &argc, char *argv[])
 {
     QInstaller::init(); // register custom operations
 	setStyle(new VectorStyle(false));
+	new SkinManager; // singleton
 }
 
 InstallerBase::~InstallerBase()
