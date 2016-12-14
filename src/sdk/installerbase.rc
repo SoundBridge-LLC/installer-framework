@@ -8,8 +8,8 @@ CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "installerbase.manifest"
 
 
 1 VERSIONINFO
-FILEVERSION 0,3,0,0
-PRODUCTVERSION 0,3,0,0
+FILEVERSION 0,4,0,0
+PRODUCTVERSION 0,4,0,0
 FILEOS 0x4
 FILETYPE 0x0
 BEGIN
@@ -19,12 +19,12 @@ BEGIN
     BEGIN
       VALUE "CompanyName", "SoundBridge"
       VALUE "FileDescription", "SoundBridge Uninstaller"
-      VALUE "FileVersion", "0,3,0,0"
+      VALUE "FileVersion", "0,4,0,0"
       VALUE "InternalName", "SoundBridge"
       VALUE "LegalCopyright", "Copyright 2016 SoundBridge, LLC. All rights reserved."
       VALUE "OriginalFilename", "Uninstaller.exe"
       VALUE "ProductName", "SoundBridge"
-      VALUE "ProductVersion", "0,3,0,0"
+      VALUE "ProductVersion", "BETA 1.0"
     END
   END 
   
