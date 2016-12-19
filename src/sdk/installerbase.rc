@@ -17,11 +17,11 @@ BEGIN
   BEGIN
     BLOCK "040904B0"
     BEGIN
-      VALUE "CompanyName", "SoundBridge"
+      VALUE "CompanyName", "Lumit Audio"
       VALUE "FileDescription", "SoundBridge Uninstaller"
       VALUE "FileVersion", "0,4,0,0"
       VALUE "InternalName", "SoundBridge"
-      VALUE "LegalCopyright", "Copyright 2016 SoundBridge, LLC. All rights reserved."
+      VALUE "LegalCopyright", "Copyright 2016 Lumit Audio, LLC. All rights reserved."
       VALUE "OriginalFilename", "Uninstaller.exe"
       VALUE "ProductName", "SoundBridge"
       VALUE "ProductVersion", "BETA 1.0"

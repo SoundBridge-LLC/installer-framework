@@ -74,6 +74,7 @@
 #include <QVBoxLayout>
 #include <QShowEvent>
 #include <QFontDatabase>
+#include <QScrollBar>
 
 #ifdef Q_OS_WIN
 # include <qt_windows.h>
@@ -86,11 +87,24 @@
 #include "MessageDialog.h"
 #endif
 
-
 using namespace KDUpdater;
 using namespace QInstaller;
 
+// helper function that disables context menu (right click) of a scroll area (text browser for example)
+static void disableContextMenu(QAbstractScrollArea *scrollArea)
+{
+	scrollArea->setContextMenuPolicy(Qt::NoContextMenu);
 
+	QScrollBar *horizontalScrollBar = scrollArea->horizontalScrollBar();
+	if(horizontalScrollBar)
+		horizontalScrollBar->setContextMenuPolicy(Qt::NoContextMenu);
+
+	QScrollBar *verticalScrollBar = scrollArea->verticalScrollBar();
+	if(verticalScrollBar)
+		verticalScrollBar->setContextMenuPolicy(Qt::NoContextMenu);
+}
+
+// this classed is used for Lumit Installer only
 class DynamicInstallerPage : public PackageManagerPage
 {
     Q_OBJECT
@@ -128,6 +142,11 @@ public:
 			delegate->setMargin(7);
 			listWidget->setItemDelegate(delegate);
 		}
+
+		// disable context menu (right click) on scroll areas
+		QList<QAbstractScrollArea*> scrollAreaWidgets = widget->findChildren<QAbstractScrollArea*>();
+		for(QAbstractScrollArea *scrollArea : scrollAreaWidgets)
+			disableContextMenu(scrollArea);
 
         addPageAndProperties(packageManagerCore()->controlScriptEngine());
         addPageAndProperties(packageManagerCore()->componentScriptEngine());
@@ -2914,6 +2933,14 @@ PerformInstallationPage::PerformInstallationPage(PackageManagerCore *core)
     m_performInstallationForm->setDetailsWidgetVisible(true);
 
     setCommitPage(true);
+
+#ifdef LUMIT_INSTALLER
+	// disable context menu (right click) on scroll areas
+	QList<QAbstractScrollArea*> scrollAreaWidgets = findChildren<QAbstractScrollArea*>();
+	for(QAbstractScrollArea *scrollArea : scrollAreaWidgets)
+		disableContextMenu(scrollArea);
+#endif
+
 }
 
 /*!
