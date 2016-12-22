@@ -24,7 +24,7 @@ BEGIN
       VALUE "LegalCopyright", "Copyright 2016 Lumit Audio, LLC. All rights reserved."
       VALUE "OriginalFilename", "Uninstaller.exe"
       VALUE "ProductName", "SoundBridge"
-      VALUE "ProductVersion", "BETA 1.0"
+      VALUE "ProductVersion", "Beta 1.0"
     END
   END 
   
