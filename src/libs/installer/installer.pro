@@ -1,7 +1,7 @@
 TEMPLATE = lib
 TARGET = installer
 INCLUDEPATH += . ..
-CONFIG += shared_and_static build_all
+CONFIG += shared_and_static build_all unversioned_libname
 
 include(../7zip/7zip.pri)
 include(../kdtools/kdtools.pri)
@@ -229,3 +229,16 @@ osx {
     OBJECTIVE_SOURCES += CreateDockIconOperation.mm
     LIBS += -framework AppKit
 }
+
+# LUMIT_INSTALLER: VectorWizard
+HEADERS += VectorWizard.h
+SOURCES += VectorWizard.cpp
+INCLUDEPATH += $$PWD/../../../../../VectorWidgets/Sources \
+    $$PWD/../../../../../Dependencies/Mac/Qt/lib/QtGui.framework/Headers/5.6.0/QtGui \
+    $$PWD/../../../../../Dependencies/Mac/Qt/lib/QtWidgets.framework/Headers/5.6.0/QtWidgets
+LIBS += -lVectorWidgets
+LIBS += -L$$PWD/../../../../../Bin/Mac
+
+# LUMIT_INSTALLER: 7z
+LIBS += -L$$OUT_PWD/../7zip
+DEPENDPATH += $$PWD/../7zip

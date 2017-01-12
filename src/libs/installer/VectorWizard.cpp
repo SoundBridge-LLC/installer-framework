@@ -1256,9 +1256,14 @@ bool VectorWizardPrivate::ensureButton(VectorWizard::WizardButton which) const
         if (style != QApplication::style()) // Propagate style
             pushButton->setStyle(style);
         pushButton->setObjectName(object_name_for_button(which));
+
+#ifndef LUMIT_INSTALLER
+        // we don't need this code below anymore since now it's not QPushButton
 #ifdef Q_OS_MACX
         pushButton->setAutoDefault(false);
 #endif
+#endif
+
         pushButton->hide();
 #ifdef Q_CC_HPACC
         const_cast<VectorWizardPrivate *>(this)->btns[which] = pushButton;
@@ -3838,6 +3843,10 @@ VectorWizard *VectorWizardPage::wizard() const
 
 QT_END_NAMESPACE
 
+#ifdef Q_OS_WIN
 #include "GeneratedFiles/moc_VectorWizard.cpp"
+#else
+#include "moc_VectorWizard.cpp"
+#endif
 
 #endif // QT_NO_WIZARD

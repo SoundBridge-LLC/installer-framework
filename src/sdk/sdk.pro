@@ -142,3 +142,9 @@ win32 {
 }
 
 macx:include(../../no_app_bundle.pri)
+
+# LUMIT_INSTALLER
+INCLUDEPATH += $$PWD/../../../../Core/Sources \
+    $$PWD/../../../../VectorWidgets/Sources
+LIBS += -lVectorWidgets
+LIBS += -L$$PWD/../../../../Bin/Mac
