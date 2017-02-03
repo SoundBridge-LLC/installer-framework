@@ -815,10 +815,14 @@ void VectorWizardPrivate::init()
 
 	leftLayout->addSpacing(kSidebarMargin * 2);
 
-	mSidebarItemsLayout = new QVBoxLayout;
+	// create a frame for sidebar
+	// the blue highlighted stripe will reside on this frame
+	QFrame *sidebarFrame = new QFrame;
+	sidebarFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	leftLayout->addWidget(sidebarFrame);
+	mSidebarItemsLayout = new QVBoxLayout(sidebarFrame);
 	mSidebarItemsLayout->setContentsMargins(0, 0, 0, 0);
 	mSidebarItemsLayout->setSpacing(4);
-	leftLayout->addLayout(mSidebarItemsLayout);
 
 	leftLayout->addStretch();
 
@@ -828,8 +832,8 @@ void VectorWizardPrivate::init()
 	mVersionInfoLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 	leftLayout->addWidget(mVersionInfoLabel);
 
-	//
-	mHighlightWidget = new BackgroundWidget;
+	// the position of this stripe will be adjusted later depending on current highlighted item on sidebar
+	mHighlightWidget = new BackgroundWidget(sidebarFrame);
 	mHighlightWidget->setBackground(QString::fromLatin1(":/vector/navigation_highlight.svg"), 0, false);
 	mHighlightWidget->setFixedSize(mHighlightWidget->sizeHint());
 
@@ -893,8 +897,8 @@ void VectorWizardPrivate::highlightSidebarItem(const QString &item)
 	{
 		if(label->text() == item)
 		{
-			mHighlightWidget->setParent(label);
-			mHighlightWidget->show(); // after re-parenting we need to explicitly show it, otherwise it won't be visible
+			// move the blue highlighted stripe to the position of the label
+			mHighlightWidget->move(mHighlightWidget->parentWidget()->mapFromGlobal(label->mapToGlobal(QPoint(0, 0))));
 			break;
 		}
 	}
