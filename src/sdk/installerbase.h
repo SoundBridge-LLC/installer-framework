@@ -36,6 +36,7 @@
 #define INSTALLERBASE_H
 
 #include "sdkapp.h"
+#include <QSharedMemory>
 
 namespace QInstaller {
     class PackageManagerCore;
@@ -53,11 +54,13 @@ public:
     int run();
 
 private:
+    bool isAnotherInstanceRunning();
     void dumpResourceTree() const;
     QStringList repositories(const QString &list) const;
 
 private:
     QInstaller::PackageManagerCore *m_core;
+    QSharedMemory mAnotherInstanceRunning;
 };
 
 #endif // INSTALLERBASE_H

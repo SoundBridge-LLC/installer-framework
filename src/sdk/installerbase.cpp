@@ -62,6 +62,7 @@
 #include <QUuid>
 #include <QLoggingCategory>
 #include <QLocalSocket>
+#include <QSystemSemaphore>
 
 #include "VectorStyle.h"
 #include "SkinManager.h"
@@ -71,10 +72,11 @@ const QString kApplicationId = QLatin1String("SoundBridge");
 InstallerBase::InstallerBase(int &argc, char *argv[])
     : SDKApp<QApplication>(argc, argv)
     , m_core(0)
+    , mAnotherInstanceRunning(kApplicationId)
 {
     QInstaller::init(); // register custom operations
-	setStyle(new VectorStyle(false));
-	new SkinManager; // singleton
+    setStyle(new VectorStyle(false));
+    new SkinManager; // singleton
 }
 
 InstallerBase::~InstallerBase()
@@ -92,6 +94,7 @@ int InstallerBase::run()
         connectedToServer = socket.waitForConnected(1000);
         socket.close();
     }
+
     if(connectedToServer)
     {
         QInstaller::MessageBoxHandler::warning(0, QLatin1String("AlreadyRunning"),
@@ -101,21 +104,18 @@ int InstallerBase::run()
         return EXIT_FAILURE;
     }
 
-    KDRunOnceChecker runCheck(qApp->applicationDirPath() + QLatin1String("/lockmyApp1234865.lock"));
-    if (runCheck.isRunning(KDRunOnceChecker::ConditionFlag::Lockfile)) {
-        // It is possible to install an application and thus the maintenance tool into a
-        // directory that requires elevated permission to create a lock file. Since this
-        // cannot be done without requesting credentials from the user, we silently ignore
-        // the fact that we could not create the lock file and check the running processes.
-        if (runCheck.isRunning(KDRunOnceChecker::ConditionFlag::ProcessList)) {
-            QInstaller::MessageBoxHandler::information(0, QLatin1String("AlreadyRunning"),
-                QString::fromLatin1("Waiting for %1").arg(qAppName()),
-                QString::fromLatin1("Another %1 instance is already running. Wait "
+    // make sure that application is single instance
+    if(isAnotherInstanceRunning())
+    {
+        QInstaller::MessageBoxHandler::information(0, QLatin1String("AlreadyRunning"),
+            QString::fromLatin1("Waiting for %1").arg(qAppName()),
+            QString::fromLatin1("Another %1 instance is already running. Wait "
                 "until it finishes, close it, or restart your system.").arg(qAppName()));
-            return EXIT_FAILURE;
-        }
+
+        return EXIT_FAILURE;
     }
 
+    //
     QString fileName = datFile(binaryFile());
     quint64 cookie = QInstaller::BinaryContent::MagicCookieDat;
     if (fileName.isEmpty()) {
@@ -323,6 +323,27 @@ int InstallerBase::run()
 
 
 // -- private
+
+bool InstallerBase::isAnotherInstanceRunning()
+{
+    QString semaphoreKey = kApplicationId + QString::fromStdString("_semaphore");
+    QSystemSemaphore synchronizeSharedMemory(semaphoreKey, 1);
+    synchronizeSharedMemory.acquire();
+
+    // on Unix based system we need to reattach shared memory to make sure that crashed application release shared memory
+    {
+        QSharedMemory sharedMemory(kApplicationId);
+        sharedMemory.attach();
+    }
+
+    //
+    bool isSharedMemoryAttached = mAnotherInstanceRunning.attach();
+    if(!isSharedMemoryAttached)
+        mAnotherInstanceRunning.create(1);
+
+    synchronizeSharedMemory.release();
+    return isSharedMemoryAttached;
+}
 
 void InstallerBase::dumpResourceTree() const
 {
