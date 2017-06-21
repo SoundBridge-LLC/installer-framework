@@ -201,6 +201,9 @@ int main(int argc, char *argv[])
         if (QInstaller::isVerbose())
             std::cout << VERSION << std::endl << BUILDDATE << std::endl << SHA << std::endl;
 
+        qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+        //qputenv("QT_SCALE_FACTOR", "2");
+
         const KDSelfRestarter restarter(argc, argv);
         return InstallerBase(argc, argv).run();
 
