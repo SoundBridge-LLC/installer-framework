@@ -18,11 +18,11 @@ BEGIN
     BLOCK "040904B0"
     BEGIN
       VALUE "CompanyName", "SoundBridge"
-      VALUE "FileDescription", "SoundBridge Uninstaller"
+      VALUE "FileDescription", "SoundBridge Setup"
       VALUE "FileVersion", "0,1,0,0"
       VALUE "InternalName", "SoundBridge"
       VALUE "LegalCopyright", "Copyright 2017 SoundBridge, LLC. All rights reserved."
-      VALUE "OriginalFilename", "Uninstaller.exe"
+      VALUE "OriginalFilename", "Setup.exe"
       VALUE "ProductName", "SoundBridge"
       VALUE "ProductVersion", "1.0"
     END
