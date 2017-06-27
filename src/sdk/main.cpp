@@ -207,13 +207,13 @@ int main(int argc, char *argv[])
             QApplication app(argc, argv); // to init screens
             //qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1"); // buggy on multi monitor system with different DPI per screen on windows
 
-            int scale = 1;
+            double scale = 1.0;
             QScreen *screen = QGuiApplication::primaryScreen();
             QRect screenGeometry = screen->geometry();
             while(scale * 600 * 4 <= screenGeometry.width())
-                scale++;
+                scale += 0.5;
 
-            if(scale > 1)
+            if(scale > 1.0)
                 qputenv("QT_SCALE_FACTOR", QString::number(scale).toUtf8());
         }
 #endif
