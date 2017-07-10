@@ -254,7 +254,7 @@ public:
     int hspacing;
     int vspacing;
     int buttonSpacing;
-	VectorWizard::WizardStyle wizStyle;
+    VectorWizard::WizardStyle wizStyle;
     bool header;
     bool watermark;
     bool title;
@@ -497,7 +497,7 @@ public:
     void _q_maybeEmitCompleteChanged();
     void _q_updateCachedCompleteState();
 
-	VectorWizard *wizard;
+    VectorWizard *wizard;
     QString title;
     QString subTitle;
     QPixmap pixmaps[VectorWizard::NPixmaps];
@@ -633,10 +633,10 @@ public:
     static QPixmap findDefaultBackgroundPixmap();
 #endif
 
-	void setSidebarItems(const QList<QString> &items);
-	void highlightSidebarItem(const QString &item);
-	void setVersionInfo(const QString &versionInfo);
-	void hideStepIndicator();
+    void setSidebarItems(const QList<QString> &items);
+    void highlightSidebarItem(const QString &item);
+    void setVersionInfo(const QString &versionInfo);
+    void hideStepIndicator();
 
     PageMap pageMap;
     QVector<QWizardField> fields;
@@ -652,8 +652,8 @@ public:
     QWizardLayoutInfo layoutInfo;
     int disableUpdatesCount;
 
-	VectorWizard::WizardStyle wizStyle;
-	VectorWizard::WizardOptions opts;
+    VectorWizard::WizardStyle wizStyle;
+    VectorWizard::WizardOptions opts;
     QMap<int, QString> buttonCustomTexts;
     bool buttonsHaveCustomLayout;
     QList<VectorWizard::WizardButton> buttonsCustomLayout;
@@ -687,11 +687,11 @@ public:
     QVBoxLayout *pageVBoxLayout;
     QHBoxLayout *buttonLayout;
 
-	QVBoxLayout *mSidebarItemsLayout;
-	BackgroundWidget *mHighlightWidget;
-	QList<QLabel*> mSidebarLabels;
-	QLabel *mVersionInfoLabel;
-	StepIndicatorWidget *mStepIndicatorWidget;
+    QVBoxLayout *mSidebarItemsLayout;
+    BackgroundWidget *mHighlightWidget;
+    QList<QLabel*> mSidebarLabels;
+    QLabel *mVersionInfoLabel;
+    StepIndicatorWidget *mStepIndicatorWidget;
 
 #if !defined(QT_NO_STYLE_WINDOWSVISTA)
     QVistaHelper *vistaHelper;
@@ -738,107 +738,113 @@ void VectorWizardPrivate::init()
 {
     Q_Q(VectorWizard);
 
-	// installer size will be fixed to the size of this image
-	q->setBackground(QString::fromLatin1(":/vector/installer_bg.svg"), 0, false);
+    // installer size will be fixed to the size of this image
+    q->setBackground(QString::fromLatin1(":/vector/installer_bg.svg"), 0, false);
 
-	// content holder
-	antiFlickerWidget = new QWizardAntiFlickerWidget(q, this);
+    // content holder
+    antiFlickerWidget = new QWizardAntiFlickerWidget(q, this);
 
-	// layout structure:
-	// outermost layout is of the wizard, and it contains main layout (of content holder)
-	// main layout is horizontal: sidebar on the left and everything else on the right
-	// left sidebar is vertical: logo at top, sidebar items in the middle and version info at bottom
-	// right area is vertical: page at top, then step indicator, and button area at bottom
-	// button area is horizontal
+    // layout structure:
+    // outermost layout is of the wizard, and it contains main layout (of content holder)
+    // main layout is horizontal: sidebar on the left and everything else on the right
+    // left sidebar is vertical: logo at top, sidebar items in the middle and version info at bottom
+    // right area is vertical: page at top, then step indicator, and button area at bottom
+    // button area is horizontal
 
-	// outermost layout
-	QHBoxLayout *dialogLayout = new QHBoxLayout(q);
+    // outermost layout
+    QHBoxLayout *dialogLayout = new QHBoxLayout(q);
+    dialogLayout->setMargin(0);
+    dialogLayout->setSpacing(6);
 
-	// main horizontal layout
-	QHBoxLayout *hMainLayout = new QHBoxLayout(antiFlickerWidget);
-	dialogLayout->addLayout(hMainLayout);
+    // main horizontal layout
+    QHBoxLayout *hMainLayout = new QHBoxLayout(antiFlickerWidget);
+    hMainLayout->setContentsMargins(12, 10, 12, 10);
+    hMainLayout->setSpacing(6);
+    dialogLayout->addLayout(hMainLayout);
 
-	// left
-	BackgroundWidget *leftPanelBackground = new BackgroundWidget(antiFlickerWidget);
-	leftPanelBackground->setBackground(QString::fromLatin1(":/vector/navigation_bg.svg"), 0, false);
-	leftPanelBackground->setFixedSize(leftPanelBackground->sizeHint());
-	hMainLayout->addWidget(leftPanelBackground);
-	QVBoxLayout *leftLayout = new QVBoxLayout(leftPanelBackground);
-	leftLayout->setSpacing(0);
-	leftLayout->setContentsMargins(kSidebarMargin, kSidebarMargin, kSidebarMargin, kSidebarMargin);
-	hMainLayout->addStretch();
+    // left
+    BackgroundWidget *leftPanelBackground = new BackgroundWidget(antiFlickerWidget);
+    leftPanelBackground->setBackground(QString::fromLatin1(":/vector/navigation_bg.svg"), 0, false);
+    leftPanelBackground->setFixedSize(leftPanelBackground->sizeHint());
+    hMainLayout->addWidget(leftPanelBackground);
+    QVBoxLayout *leftLayout = new QVBoxLayout(leftPanelBackground);
+    leftLayout->setSpacing(0);
+    leftLayout->setContentsMargins(kSidebarMargin, kSidebarMargin, kSidebarMargin, kSidebarMargin);
+    hMainLayout->addStretch();
 
-	// right
-	QVBoxLayout *rightLayout = new QVBoxLayout;
-	rightLayout->setContentsMargins(0, 0, 0, 0);
-	rightLayout->setSpacing(kSidebarMargin);
-	hMainLayout->addLayout(rightLayout);
+    // right
+    QVBoxLayout *rightLayout = new QVBoxLayout;
+    rightLayout->setContentsMargins(0, 0, 0, 0);
+    rightLayout->setSpacing(kSidebarMargin);
+    hMainLayout->addLayout(rightLayout);
 
-	// page background
-	BackgroundWidget *pageBackground = new BackgroundWidget(antiFlickerWidget);
-	pageBackground->setBackground(QString::fromLatin1(":/vector/right_bg.svg"), 0, false);
-	pageBackground->setFixedSize(pageBackground->sizeHint());
-	rightLayout->addWidget(pageBackground);
-	QVBoxLayout *pageLayout = new QVBoxLayout(pageBackground);
-	pageLayout->setContentsMargins(2, 2, 2, 2); // border of background
-	pageLayout->setSpacing(0);
+    // page background
+    BackgroundWidget *pageBackground = new BackgroundWidget(antiFlickerWidget);
+    pageBackground->setBackground(QString::fromLatin1(":/vector/right_bg.svg"), 0, false);
+    pageBackground->setFixedSize(pageBackground->sizeHint());
+    rightLayout->addWidget(pageBackground);
+    QVBoxLayout *pageLayout = new QVBoxLayout(pageBackground);
+    pageLayout->setContentsMargins(2, 2, 2, 2); // border of background
+    pageLayout->setSpacing(0);
 
-	// page content
-	pageFrame = new QFrame;
-	pageFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	pageLayout->addWidget(pageFrame);
-	pageVBoxLayout = new QVBoxLayout(pageFrame);
-	pageVBoxLayout->setContentsMargins(0, 0, 0, 0);
-	pageVBoxLayout->setSpacing(0);
-	pageVBoxLayout->addSpacing(0);
+    // page content
+    pageFrame = new QFrame;
+    pageFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    pageLayout->addWidget(pageFrame);
+    pageVBoxLayout = new QVBoxLayout(pageFrame);
+    pageVBoxLayout->setContentsMargins(0, 0, 0, 0);
+    pageVBoxLayout->setSpacing(0);
+    pageVBoxLayout->addSpacing(0);
 
-	// step indicator
-	mStepIndicatorWidget = new StepIndicatorWidget(antiFlickerWidget);
-	rightLayout->addWidget(mStepIndicatorWidget);
-	rightLayout->addStretch();
+    // step indicator
+    mStepIndicatorWidget = new StepIndicatorWidget(antiFlickerWidget);
+    rightLayout->addWidget(mStepIndicatorWidget);
+    rightLayout->addStretch();
 
-	// buttons
-	buttonLayout = new QHBoxLayout;
-	rightLayout->addLayout(buttonLayout);
-	
-	// build left panel
-	BackgroundWidget *logo = new BackgroundWidget(antiFlickerWidget);
-	logo->setBackground(QString::fromLatin1(":/vector/installer_logo.svg"), 0, false);
-	logo->setFixedSize(logo->sizeHint());
-	QHBoxLayout *logoLayout = new QHBoxLayout;
-	logoLayout->setSpacing(0);
-	logoLayout->setContentsMargins(0, 0, 0, 0);
-	logoLayout->addStretch();
-	logoLayout->addWidget(logo);
-	logoLayout->addStretch();
-	leftLayout->addLayout(logoLayout);
+    // buttons
+    buttonLayout = new QHBoxLayout;
+    buttonLayout->setMargin(0);
+    buttonLayout->setSpacing(6);
+    rightLayout->addLayout(buttonLayout);
+    
+    // build left panel
+    BackgroundWidget *logo = new BackgroundWidget(antiFlickerWidget);
+    logo->setBackground(QString::fromLatin1(":/vector/installer_logo.svg"), 0, false);
+    logo->setFixedSize(logo->sizeHint());
+    QHBoxLayout *logoLayout = new QHBoxLayout;
+    logoLayout->setSpacing(0);
+    logoLayout->setContentsMargins(0, 0, 0, 0);
+    logoLayout->addStretch();
+    logoLayout->addWidget(logo);
+    logoLayout->addStretch();
+    leftLayout->addLayout(logoLayout);
 
-	leftLayout->addSpacing(kSidebarMargin * 2);
+    leftLayout->addSpacing(kSidebarMargin * 2);
 
-	// create a frame for sidebar
-	// the blue highlighted stripe will reside on this frame
-	QFrame *sidebarFrame = new QFrame;
-	sidebarFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	leftLayout->addWidget(sidebarFrame);
-	mSidebarItemsLayout = new QVBoxLayout(sidebarFrame);
-	mSidebarItemsLayout->setContentsMargins(0, 0, 0, 0);
-	mSidebarItemsLayout->setSpacing(4);
+    // create a frame for sidebar
+    // the blue highlighted stripe will reside on this frame
+    QFrame *sidebarFrame = new QFrame;
+    sidebarFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    leftLayout->addWidget(sidebarFrame);
+    mSidebarItemsLayout = new QVBoxLayout(sidebarFrame);
+    mSidebarItemsLayout->setContentsMargins(0, 0, 0, 0);
+    mSidebarItemsLayout->setSpacing(4);
 
-	leftLayout->addStretch();
+    leftLayout->addStretch();
 
-	mVersionInfoLabel = new QLabel(antiFlickerWidget);
-	mVersionInfoLabel->setObjectName(QLatin1String("versionInfoLabel")); // this name is used in stylesheet.css, so don't change it
-	mVersionInfoLabel->setContentsMargins(kLabelMargin, 0, kLabelMargin, 0);
-	mVersionInfoLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-	leftLayout->addWidget(mVersionInfoLabel);
+    mVersionInfoLabel = new QLabel(antiFlickerWidget);
+    mVersionInfoLabel->setObjectName(QLatin1String("versionInfoLabel")); // this name is used in stylesheet.css, so don't change it
+    mVersionInfoLabel->setContentsMargins(kLabelMargin, 0, kLabelMargin, 0);
+    mVersionInfoLabel->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    leftLayout->addWidget(mVersionInfoLabel);
 
-	// the position of this stripe will be adjusted later depending on current highlighted item on sidebar
-	mHighlightWidget = new BackgroundWidget(sidebarFrame);
-	mHighlightWidget->setBackground(QString::fromLatin1(":/vector/navigation_highlight.svg"), 0, false);
-	mHighlightWidget->setFixedSize(mHighlightWidget->sizeHint());
+    // the position of this stripe will be adjusted later depending on current highlighted item on sidebar
+    mHighlightWidget = new BackgroundWidget(sidebarFrame);
+    mHighlightWidget->setBackground(QString::fromLatin1(":/vector/navigation_highlight.svg"), 0, false);
+    mHighlightWidget->setFixedSize(mHighlightWidget->sizeHint());
 
-	//
-	wizStyle = VectorWizard::WizardStyle(q->style()->styleHint(QStyle::SH_WizardStyle, 0, q));
+    //
+    wizStyle = VectorWizard::WizardStyle(q->style()->styleHint(QStyle::SH_WizardStyle, 0, q));
     if (wizStyle == VectorWizard::MacStyle) {
         opts = (VectorWizard::NoDefaultButton | VectorWizard::NoCancelButton);
     } else if (wizStyle == VectorWizard::ModernStyle) {
@@ -863,55 +869,55 @@ void VectorWizardPrivate::init()
                                                            fallbackProperties[i].property,
                                                            changed_signal(i)));
 
-	//
-	antiFlickerWidget->setFixedSize(antiFlickerWidget->minimumSizeHint());
-	q->setFixedSize(q->sizeHint());
-	q->addShadow();
+    //
+    antiFlickerWidget->setFixedSize(antiFlickerWidget->minimumSizeHint());
+    q->setFixedSize(q->sizeHint());
+    q->addShadow();
 }
 
 void VectorWizardPrivate::setSidebarItems(const QList<QString> &items)
 {
-	for(const QString &item : items)
-	{
-		QLabel *label = new QLabel;
-		label->setObjectName(QLatin1String("sidebarItemLabel")); // this name is used in stylesheet.css, so don't change it
-		label->setText(item);
-		label->setFixedSize(mHighlightWidget->size());
-		label->setContentsMargins(kLabelMargin, 0, kLabelMargin, 0);
-		label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-		mSidebarLabels.append(label);
+    for(const QString &item : items)
+    {
+        QLabel *label = new QLabel;
+        label->setObjectName(QLatin1String("sidebarItemLabel")); // this name is used in stylesheet.css, so don't change it
+        label->setText(item);
+        label->setFixedSize(mHighlightWidget->size());
+        label->setContentsMargins(kLabelMargin, 0, kLabelMargin, 0);
+        label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        mSidebarLabels.append(label);
 
-		// push label to the left
-		QHBoxLayout *layout = new QHBoxLayout;
-		layout->setSpacing(0);
-		layout->setContentsMargins(0, 0, 0, 0);
-		layout->addWidget(label);
-		layout->addStretch();
-		mSidebarItemsLayout->addLayout(layout);
-	}
+        // push label to the left
+        QHBoxLayout *layout = new QHBoxLayout;
+        layout->setSpacing(0);
+        layout->setContentsMargins(0, 0, 0, 0);
+        layout->addWidget(label);
+        layout->addStretch();
+        mSidebarItemsLayout->addLayout(layout);
+    }
 }
 
 void VectorWizardPrivate::highlightSidebarItem(const QString &item)
 {
-	for(QLabel *label : mSidebarLabels)
-	{
-		if(label->text() == item)
-		{
-			// move the blue highlighted stripe to the position of the label
-			mHighlightWidget->move(mHighlightWidget->parentWidget()->mapFromGlobal(label->mapToGlobal(QPoint(0, 0))));
-			break;
-		}
-	}
+    for(QLabel *label : mSidebarLabels)
+    {
+        if(label->text() == item)
+        {
+            // move the blue highlighted stripe to the position of the label
+            mHighlightWidget->move(mHighlightWidget->parentWidget()->mapFromGlobal(label->mapToGlobal(QPoint(0, 0))));
+            break;
+        }
+    }
 }
 
 void VectorWizardPrivate::setVersionInfo(const QString &versionInfo)
 {
-	mVersionInfoLabel->setText(versionInfo);
+    mVersionInfoLabel->setText(versionInfo);
 }
 
 void VectorWizardPrivate::hideStepIndicator()
 {
-	mStepIndicatorWidget->hide();
+    mStepIndicatorWidget->hide();
 }
 
 void VectorWizardPrivate::reset()
@@ -1006,9 +1012,9 @@ void VectorWizardPrivate::switchToPage(int newId, Direction direction)
 
     current = newId;
 
-	// update step indicator
-	QList<int> pageIds = q->pageIds();
-	mStepIndicatorWidget->setCurrentStep(pageIds.indexOf(current));
+    // update step indicator
+    QList<int> pageIds = q->pageIds();
+    mStepIndicatorWidget->setCurrentStep(pageIds.indexOf(current));
 
     VectorWizardPage *newPage = q->currentPage();
     if (newPage) {
@@ -1152,8 +1158,8 @@ void VectorWizardPrivate::updateLayout()
     disableUpdates();
 
     QWizardLayoutInfo info = layoutInfoForCurrentPage();
-	if(layoutInfo != info)
-		layoutInfo = info;
+    if(layoutInfo != info)
+        layoutInfo = info;
 
     VectorWizardPage *page = q->currentPage();
 
@@ -2072,26 +2078,26 @@ VectorWizard::~VectorWizard()
 
 void VectorWizard::setSidebarItems(const QList<QString> &items)
 {
-	Q_D(VectorWizard);
-	d->setSidebarItems(items);
+    Q_D(VectorWizard);
+    d->setSidebarItems(items);
 }
 
 void VectorWizard::highlightSidebarItem(const QString &item)
 {
-	Q_D(VectorWizard);
-	d->highlightSidebarItem(item);
+    Q_D(VectorWizard);
+    d->highlightSidebarItem(item);
 }
 
 void VectorWizard::setVersionInfo(const QString &versionInfo)
 {
-	Q_D(VectorWizard);
-	d->setVersionInfo(versionInfo);
+    Q_D(VectorWizard);
+    d->setVersionInfo(versionInfo);
 }
 
 void VectorWizard::hideStepIndicator()
 {
-	Q_D(VectorWizard);
-	d->hideStepIndicator();
+    Q_D(VectorWizard);
+    d->hideStepIndicator();
 }
 
 /*!
@@ -2153,8 +2159,8 @@ void VectorWizard::setPage(int theid, VectorWizardPage *page)
     d->pageMap.insert(theid, page);
     page->d_func()->wizard = this;
 
-	// update step indicator
-	d->mStepIndicatorWidget->setNumSteps(d->pageMap.count());
+    // update step indicator
+    d->mStepIndicatorWidget->setNumSteps(d->pageMap.count());
 
     int n = d->pageVBoxLayout->count();
 
@@ -2231,8 +2237,8 @@ void VectorWizard::removePage(int id)
     }
 
     if (removedPage) {
-		// update step indicator
-		d->mStepIndicatorWidget->setNumSteps(d->pageMap.count());
+        // update step indicator
+        d->mStepIndicatorWidget->setNumSteps(d->pageMap.count());
 
         if (d->initialized.contains(id)) {
             cleanupPage(id);
@@ -2889,7 +2895,7 @@ void VectorWizard::setVisible(bool visible)
 */
 QSize VectorWizard::sizeHint() const
 {
-	return BackgroundWindow::sizeHint();
+    return BackgroundWindow::sizeHint();
 }
 
 /*!
@@ -3068,9 +3074,9 @@ bool VectorWizard::event(QEvent *event)
 */
 void VectorWizard::resizeEvent(QResizeEvent *event)
 {
-	// size of installer is fixed to installer background image
-	BackgroundWindow::resizeEvent(event);
-	return;
+    // size of installer is fixed to installer background image
+    BackgroundWindow::resizeEvent(event);
+    return;
 
     Q_D(VectorWizard);
     int heightOffset = 0;
