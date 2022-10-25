@@ -3100,6 +3100,8 @@ void VectorWizard::resizeEvent(QResizeEvent *event)
 */
 void VectorWizard::paintEvent(QPaintEvent * event)
 {
+    BackgroundWindow::paintEvent(event);
+    
     Q_D(VectorWizard);
     if (d->wizStyle == MacStyle && currentPage()) {
         QPixmap backgroundPixmap = currentPage()->pixmap(BackgroundPixmap);
