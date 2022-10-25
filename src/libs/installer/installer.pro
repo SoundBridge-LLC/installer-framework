@@ -234,8 +234,10 @@ osx {
 HEADERS += VectorWizard.h
 SOURCES += VectorWizard.cpp
 INCLUDEPATH += $$PWD/../../../../../VectorWidgets/Sources \
-    $$PWD/../../../../../Dependencies/Mac/Qt/lib/QtGui.framework/Headers/5.6.0/QtGui \
-    $$PWD/../../../../../Dependencies/Mac/Qt/lib/QtWidgets.framework/Headers/5.6.0/QtWidgets
+    $$PWD/../../../../../Dependencies/Mac/Qt/lib/QtGui.framework/Headers/5.15.6/QtGui \
+    $$PWD/../../../../../Dependencies/Mac/Qt/lib/QtGui.framework/Headers/5.15.6 \
+    $$PWD/../../../../../Dependencies/Mac/Qt/lib/QtWidgets.framework/Headers/5.15.6/QtWidgets \
+    $$PWD/../../../../../Dependencies/Mac/Qt/lib/QtWidgets.framework/Headers/5.15.6
 LIBS += -lVectorWidgets
 LIBS += -L$$PWD/../../../../../Bin/Mac
 
