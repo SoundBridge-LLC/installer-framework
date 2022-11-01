@@ -69,7 +69,19 @@ PackageManagerCoreData::PackageManagerCoreData(const QHash<QString, QString> &va
     SHGetFolderPath(0, CSIDL_PROGRAM_FILES, 0, 0, buffer);
     dir = QString::fromWCharArray(buffer);
 #elif defined (Q_OS_OSX)
-    dir = QStandardPaths::standardLocations(QStandardPaths::ApplicationsLocation).value(0);
+    QStringList paths = QStandardPaths::standardLocations(QStandardPaths::ApplicationsLocation);
+    dir = paths.value(0);
+
+    // check whether global applications dir is present
+    int count = paths.size();
+    for(int i = 0; i < count; i++)
+    {
+        if(paths[i].count(QChar::fromLatin1('/')) == 1)
+        {
+            dir = paths[i];
+            break;
+        }
+    }
 #endif
     m_variables.insert(QLatin1String("ApplicationsDir"), dir);
 
