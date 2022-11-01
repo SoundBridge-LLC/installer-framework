@@ -33,7 +33,7 @@
     <IntermediateDirectory>release\</IntermediateDirectory>
     <PrimaryOutput>installerbase</PrimaryOutput>
     <EmbedManifest>false</EmbedManifest>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <OutputDirectory>..\..\bin\</OutputDirectory>
@@ -53,7 +53,7 @@
     <IntermediateDirectory>debug\</IntermediateDirectory>
     <PrimaryOutput>installerbase</PrimaryOutput>
     <EmbedManifest>false</EmbedManifest>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <OutputDirectory>..\..\bin\</OutputDirectory>
