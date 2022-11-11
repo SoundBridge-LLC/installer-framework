@@ -263,7 +263,13 @@ void GuiProxy::addItem(const QString &widgetName, const QString &listWidgetName,
     if(!m_gui) return;
     if(QWidget *widget = m_gui->pageWidgetByObjectName(widgetName))
         if(QListWidget *listWidget = widget->findChild<QListWidget*>(listWidgetName))
+        {
+            for(uint i = 0; i < listWidget->count(); i++)
+                if(listWidget->item(i)->text() == value)
+                    return; // do not add duplicates
+
             listWidget->addItem(value);
+        }
 }
 
 void GuiProxy::removeSelectedItems(const QString &widgetName, const QString &listWidgetName)
