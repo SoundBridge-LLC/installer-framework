@@ -177,6 +177,7 @@ void PerformInstallationForm::setupUi(QWidget *widget)
     baseLayout->addLayout(bottomLayout);
 #endif
 
+    m_detailsBrowser->setContextMenuPolicy(Qt::ContextMenuPolicy::NoContextMenu);
     m_updateTimer = new QTimer(widget);
     connect(m_updateTimer, SIGNAL(timeout()), this, SLOT(updateProgress())); //updateProgress includes label
     m_updateTimer->setInterval(30);

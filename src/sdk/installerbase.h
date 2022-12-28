@@ -54,6 +54,7 @@ public:
     int run();
 
 private:
+    bool isConnectedToServer(const QString &serverId);
     bool isAnotherInstanceRunning();
     void dumpResourceTree() const;
     QStringList repositories(const QString &list) const;

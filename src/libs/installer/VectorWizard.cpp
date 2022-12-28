@@ -601,7 +601,7 @@ public:
 #endif
     }
 
-    void init();
+    void init(const QString &logoFileName, const QString &bgFileName);
     void reset();
     void cleanupPagesNotInHistory();
     void addField(const QWizardField &field);
@@ -734,7 +734,7 @@ static QString buttonDefaultText(int wstyle, int which, const VectorWizardPrivat
     }
 }
 
-void VectorWizardPrivate::init()
+void VectorWizardPrivate::init(const QString &logoFileName, const QString &bgFileName)
 {
     Q_Q(VectorWizard);
 
@@ -780,7 +780,7 @@ void VectorWizardPrivate::init()
 
     // page background
     BackgroundWidget *pageBackground = new BackgroundWidget(antiFlickerWidget);
-    pageBackground->setBackground(QString::fromLatin1(":/vector/right_bg.svg"), 0, false);
+    pageBackground->setBackground(bgFileName.isEmpty() ? QString::fromLatin1(":/vector/right_bg.svg") : bgFileName, 0, false);
     pageBackground->setFixedSize(pageBackground->sizeHint());
     rightLayout->addWidget(pageBackground);
     QVBoxLayout *pageLayout = new QVBoxLayout(pageBackground);
@@ -809,7 +809,7 @@ void VectorWizardPrivate::init()
     
     // build left panel
     BackgroundWidget *logo = new BackgroundWidget(antiFlickerWidget);
-    logo->setBackground(QString::fromLatin1(":/vector/installer_logo.svg"), 0, false);
+    logo->setBackground(logoFileName.isEmpty() ? QString::fromLatin1(":/vector/installer_logo.svg") : logoFileName, 0, false);
     logo->setFixedSize(logo->sizeHint());
     QHBoxLayout *logoLayout = new QHBoxLayout;
     logoLayout->setSpacing(0);
@@ -2059,10 +2059,17 @@ void QWizardAntiFlickerWidget::paintEvent(QPaintEvent *)
 VectorWizard::VectorWizard(QWidget *parent)
     : BackgroundWindow(*new VectorWizardPrivate, parent)
 {
+#ifndef LUMIT_INSTALLER
+    init(QString(), QString());
+#endif
+}
+
+void VectorWizard::init(const QString &logoFileName, const QString &bgFileName)
+{
     Q_D(VectorWizard);
-    d->init();
+    d->init(logoFileName, bgFileName);
 #ifdef Q_OS_WINCE
-    if (!qt_wince_is_mobile())
+    if(!qt_wince_is_mobile())
         setWindowFlags(windowFlags() & ~Qt::WindowOkButtonHint);
 #endif
 }

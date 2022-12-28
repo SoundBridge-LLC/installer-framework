@@ -159,6 +159,7 @@ public:
     QString controlScript() const;
 
 #ifdef LUMIT_INSTALLER
+    QString applicationId() const;
     QString styleSheet() const;
     bool ignoreTitles() const;
     QString customFont1() const;

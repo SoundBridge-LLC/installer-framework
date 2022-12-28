@@ -36,6 +36,8 @@ QT += \
     concurrent \
     widgets \
     core-private \
+    gui-private \
+    widgets-private \
     printsupport
 win32:QT += winextras
 
@@ -64,6 +66,7 @@ HEADERS += packagemanagercore.h \
     createshortcutoperation.h \
     createdesktopentryoperation.h \
     registerfiletypeoperation.h \
+    addkitstospeeddialoperation.h \
     environmentvariablesoperation.h \
     installiconsoperation.h \
     selfrestartoperation.h \
@@ -151,6 +154,7 @@ SOURCES += packagemanagercore.cpp \
     createshortcutoperation.cpp \
     createdesktopentryoperation.cpp \
     registerfiletypeoperation.cpp \
+    addkitstospeeddialoperation.cpp \
     environmentvariablesoperation.cpp \
     installiconsoperation.cpp \
     selfrestartoperation.cpp \
@@ -225,8 +229,11 @@ win32 {
 }
 
 osx {
-    HEADERS += CreateDockIconOperation.h
-    OBJECTIVE_SOURCES += CreateDockIconOperation.mm
+    HEADERS += CreateDockIconOperation.h \
+    MacUtils.h
+    
+    OBJECTIVE_SOURCES += CreateDockIconOperation.mm \
+    MacUtils.mm
     LIBS += -framework AppKit
 }
 

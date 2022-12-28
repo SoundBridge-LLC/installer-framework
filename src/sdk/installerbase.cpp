@@ -67,7 +67,7 @@
 #include "VectorStyle.h"
 #include "SkinManager.h"
 
-const QString kApplicationId = QLatin1String("SoundBridge");
+const QString kApplicationId = QLatin1String("SoundBridge Setup");
 
 InstallerBase::InstallerBase(int &argc, char *argv[])
     : SDKApp<QApplication>(argc, argv)
@@ -76,7 +76,16 @@ InstallerBase::InstallerBase(int &argc, char *argv[])
 {
     QInstaller::init(); // register custom operations
     setStyle(new VectorStyle(false));
-    new SkinManager; // singleton
+    new SkinManager(); // singleton
+
+    //
+    QPalette palette(this->palette());
+    palette.setColor(QPalette::Base, SkinManager::instance().getColor(SC_Dialog_Background));
+    palette.setColor(QPalette::Window, SkinManager::instance().getColor(SC_Dialog_Background));
+    palette.setColor(QPalette::WindowText, SkinManager::instance().getColor(SC_Text));
+    palette.setColor(QPalette::ButtonText, SkinManager::instance().getColor(SC_Text));
+    palette.setColor(QPalette::Text, SkinManager::instance().getColor(SC_Text));
+    setPalette(palette);
 }
 
 InstallerBase::~InstallerBase()
@@ -86,31 +95,13 @@ InstallerBase::~InstallerBase()
 
 int InstallerBase::run()
 {
-    bool connectedToServer = false;
-    {
-        QLocalSocket socket(this);
-        socket.setServerName(kApplicationId);
-        socket.connectToServer(QIODevice::WriteOnly);
-        connectedToServer = socket.waitForConnected(1000);
-        socket.close();
-    }
-
-    if(connectedToServer)
-    {
-        QInstaller::MessageBoxHandler::warning(0, QLatin1String("AlreadyRunning"),
-            QLatin1String("SoundBridge Setup"),
-            QLatin1String("SoundBridge application is running.\n"
-            "Close the instance and try to launch setup again."));
-        return EXIT_FAILURE;
-    }
-
     // make sure that application is single instance
-    if(isAnotherInstanceRunning())
+    if(isConnectedToServer(kApplicationId) || isAnotherInstanceRunning())
     {
         QInstaller::MessageBoxHandler::information(0, QLatin1String("AlreadyRunning"),
-            QString::fromLatin1("Waiting for %1").arg(qAppName()),
-            QString::fromLatin1("Another %1 instance is already running. Wait "
-                "until it finishes, close it, or restart your system.").arg(qAppName()));
+            QLatin1String("Setup"),
+            QLatin1String("You are actively installing a SoundBridge, LLC product.\n"
+                          "Please wait for this installation to complete before proceeding to install another product."));
 
         return EXIT_FAILURE;
     }
@@ -178,6 +169,20 @@ int InstallerBase::run()
     }
 
     dumpResourceTree();
+
+    // try loading skin
+    SkinManager::instance().setActiveSkin(QLatin1String("setup_skin"), true);
+
+    // see whether SoundBridge is running
+    if(!m_core->settings().applicationId().isEmpty() && isConnectedToServer(m_core->settings().applicationId()))
+    {
+        QInstaller::MessageBoxHandler::information(0, QLatin1String("AlreadyRunning"),
+            QLatin1String("Setup"),
+            QLatin1String("A SoundBridge, LLC app is currently running.\n"
+                          "Please close it to proceed with the installation process."));
+
+        return EXIT_FAILURE;
+    }
 
     QString controlScript;
     if (parser.isSet(QLatin1String(CommandLineOptions::Script))) {
@@ -323,6 +328,20 @@ int InstallerBase::run()
 
 
 // -- private
+
+bool InstallerBase::isConnectedToServer(const QString &serverId)
+{
+    bool connectedToServer = false;
+    {
+        QLocalSocket socket(this);
+        socket.setServerName(serverId);
+        socket.connectToServer(QIODevice::WriteOnly);
+        connectedToServer = socket.waitForConnected(1000);
+        socket.close();
+    }
+
+    return connectedToServer;
+}
 
 bool InstallerBase::isAnotherInstanceRunning()
 {

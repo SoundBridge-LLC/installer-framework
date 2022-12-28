@@ -45,6 +45,7 @@
 #include <QtCore/QPair>
 #include <QtCore/QThread>
 #include <QtCore/QVector>
+#include <QDirIterator>
 
 namespace QInstaller {
 
@@ -200,6 +201,18 @@ public:
 
         try {
             Lib7z::extractArchive(&archive, targetDir, callback);
+
+            // change files permission
+            QFile::Permissions permissions = QFile::ReadUser | QFile::ReadGroup | QFile::ReadOwner | QFile::ReadOther
+                                    | QFile::WriteUser | QFile::WriteGroup | QFile::WriteOwner | QFile::WriteOther
+                                    | QFile::ExeUser | QFile::ExeGroup | QFile::ExeOwner | QFile::ExeOther;
+            QDirIterator iterator(targetDir, QDir::Dirs, QDirIterator::Subdirectories);
+            do
+            {
+                QFile::setPermissions(iterator.filePath(), permissions);
+                iterator.next();
+            } while (iterator.hasNext());
+
             emit finished(true, QString());
         } catch (const Lib7z::SevenZipException& e) {
             emit finished(false, tr("Error while extracting '%1': %2").arg(archivePath, e.message()));

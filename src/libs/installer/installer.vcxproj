@@ -278,6 +278,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="abstractfiletask.cpp" />
+    <ClCompile Include="addkitstospeeddialoperation.cpp" />
     <ClCompile Include="adminauthorization_win.cpp" />
     <ClCompile Include="binarycontent.cpp" />
     <ClCompile Include="binaryformat.cpp" />
@@ -854,6 +855,7 @@ endlocal
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ConfigurationName)\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="abstracttask.h" />
+    <ClInclude Include="addkitstospeeddialoperation.h" />
     <ClInclude Include="adminauthorization.h" />
     <ClInclude Include="binarycontent.h" />
     <CustomBuild Include="binaryformat.h">

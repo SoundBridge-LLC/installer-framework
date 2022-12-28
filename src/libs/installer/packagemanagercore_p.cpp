@@ -1840,11 +1840,7 @@ bool PackageManagerCorePrivate::runUninstaller()
         deleteMaintenanceTool();    // this will also delete the TargetDir on Windows
 
 #ifdef LUMIT_INSTALLER
-#ifdef _WIN64
-        QString shortcutLocation = m_core->value(QLatin1String("DesktopDir")) + QLatin1String("/SoundBridge (64 bit).lnk");
-#else
-        QString shortcutLocation = m_core->value(QLatin1String("DesktopDir")) + QLatin1String("/SoundBridge.lnk");
-#endif
+        QString shortcutLocation = m_core->value(QLatin1String("DesktopDir")) + QLatin1String("/") + m_core->value(scName) + QLatin1String(".lnk");
         QFile::remove(shortcutLocation);
 #endif
 

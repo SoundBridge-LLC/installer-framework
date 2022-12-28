@@ -40,6 +40,7 @@
 #include "globalsettingsoperation.h"
 #include "environmentvariablesoperation.h"
 #include "registerfiletypeoperation.h"
+#include "addkitstospeeddialoperation.h"
 #include "selfrestartoperation.h"
 #include "installiconsoperation.h"
 #include "elevatedexecuteoperation.h"
@@ -215,6 +216,7 @@ void QInstaller::init()
     factory.registerUpdateOperation<GlobalSettingsOperation>(QLatin1String("GlobalConfig"));
     factory.registerUpdateOperation<EnvironmentVariableOperation>(QLatin1String("EnvironmentVariable"));
     factory.registerUpdateOperation<RegisterFileTypeOperation>(QLatin1String("RegisterFileType"));
+	factory.registerUpdateOperation<AddKitsToSpeedDialOperation>(QLatin1String("AddKitsToSpeedDial"));
     factory.registerUpdateOperation<SelfRestartOperation>(QLatin1String("SelfRestart"));
     factory.registerUpdateOperation<InstallIconsOperation>(QLatin1String("InstallIcons"));
     factory.registerUpdateOperation<ElevatedExecuteOperation>(QLatin1String("Execute"));
