@@ -428,9 +428,6 @@ static QMessageBox::StandardButton showNewMessageBox(QWidget *parent, QMessageBo
         messageDialog.setEscapeButton((MessageDialog::ButtonType)QMessageBox::Cancel);
         messageDialog.setDefaultButton((MessageDialog::ButtonType)defaultButton);
 
-#if defined(Q_OS_OSX)
-        messageDialog.setWindowModality(Qt::WindowModal);
-#endif
         return (QMessageBox::StandardButton)messageDialog.exec();
     }
 #endif
