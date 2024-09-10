@@ -501,24 +501,8 @@ void MetadataJob::xmlTaskFinished()
     } catch (const AuthenticationRequiredException &e) {
         if (e.type() == AuthenticationRequiredException::Type::Proxy) {
             qCWarning(QInstaller::lcInstallerInstallLog) << e.message();
-            QString username;
-            QString password;
-            const QNetworkProxy proxy = e.proxy();
-            if (m_core->isCommandLineInstance()) {
-                qCDebug(QInstaller::lcInstallerInstallLog).noquote() << QString::fromLatin1("The proxy %1:%2 requires a username and password").arg(proxy.hostName(), proxy.port());
-                askForCredentials(&username, &password, QLatin1String("Username: "), QLatin1String("Password: "));
-            } else {
-                ProxyCredentialsDialog proxyCredentials(proxy);
-                if (proxyCredentials.exec() == QDialog::Accepted) {
-                    username = proxyCredentials.userName();
-                    password = proxyCredentials.password();
-                }
-            }
-            if (!username.isEmpty()) {
-                qCDebug(QInstaller::lcInstallerInstallLog) << "Retrying with new credentials ...";
-                PackageManagerProxyFactory *factory = m_core->proxyFactory();
-
-                factory->setProxyCredentials(proxy, username, password);
+            PackageManagerProxyFactory *factory = m_core->proxyFactory();
+            if (factory->askProxyCredentials(e.proxy())) {
                 m_core->setProxyFactory(factory);
                 status = XmlDownloadRetry;
             } else {
@@ -653,7 +637,10 @@ void MetadataJob::metadataTaskFinished()
                 emit infoMessage(this, tr("Extracting meta information..."));
                 foreach (const FileTaskResult &result, m_metadataResult) {
                     const FileTaskItem item = result.value(TaskRole::TaskItem).value<FileTaskItem>();
-                    if (result.value(TaskRole::ChecksumMismatch).toBool()) {
+                    QByteArray observedChecksum = result.value(TaskRole::Checksum).toByteArray().toHex();
+                    QByteArray expectedCheckSum = item.value(TaskRole::Checksum).toByteArray();
+
+                    if (!expectedCheckSum.isEmpty() && observedChecksum != expectedCheckSum) {
                         QString mismatchMessage = tr("Checksum mismatch detected for \"%1\".")
                                 .arg(item.value(TaskRole::SourceFile).toString());
                         if (m_core->settings().allowUnstableComponents()) {
@@ -983,7 +970,7 @@ MetadataJob::Status MetadataJob::findCachedUpdatesFile(const Repository &reposit
 
     FileTaskItem cachedMetaTaskItem(fileUrl, targetPath);
     cachedMetaTaskItem.insert(TaskRole::UserRole, QVariant::fromValue(repository));
-    const FileTaskResult cachedMetaTaskResult(targetPath, repository.xmlChecksum(), cachedMetaTaskItem, false);
+    const FileTaskResult cachedMetaTaskResult(targetPath, repository.xmlChecksum(), cachedMetaTaskItem);
 
     bool isCached = false;
     const Status status = refreshCacheItem(cachedMetaTaskResult, repository.xmlChecksum(), &isCached);

@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2013 Klaralvdalens Datakonsult AB (KDAB)
-** Copyright (C) 2023 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -32,7 +32,6 @@
 
 #include "task.h"
 #include "packagesource.h"
-#include "filedownloader.h"
 #include "updatesinfo_p.h"
 #include "abstracttask.h"
 
@@ -78,16 +77,6 @@ class KDTOOLS_EXPORT UpdateFinder : public Task
     Q_OBJECT
     class Private;
 
-    struct Data {
-        Data()
-            : downloader(0) {}
-        explicit Data(const QInstaller::PackageSource &i, KDUpdater::FileDownloader *d = 0)
-            : info(i), downloader(d) {}
-
-        QInstaller::PackageSource info;
-        KDUpdater::FileDownloader *downloader;
-    };
-
     enum struct Resolution {
         AddPackage,
         KeepExisting,
@@ -111,7 +100,7 @@ private:
     void clear();
     void computeUpdates();
     void cancelComputeUpdates();
-    bool downloadUpdateXMLFiles();
+    void createUpdatesInfoList();
     bool parseUpdateXMLFiles();
     bool removeInvalidObjects();
     bool computeApplicableUpdates();
@@ -123,7 +112,6 @@ private:
 
 private slots:
     void parseUpdatesXmlTaskFinished();
-    void slotDownloadDone();
 
 private:
     QSet<PackageSource> m_packageSources;
@@ -131,9 +119,7 @@ private:
     QHash<QString, Update *> m_updates;
 
     bool m_cancel;
-    int m_downloadCompleteCount;
-    int m_downloadsToComplete;
-    QHash<UpdatesInfo *, Data> m_updatesInfoList;
+    QHash<UpdatesInfo *, QInstaller::PackageSource> m_updatesInfoList;
     int m_updatesXmlTasks;
     int m_updatesXmlTasksToComplete;
     QList<ParseXmlFilesTask*> m_xmlFileTasks;

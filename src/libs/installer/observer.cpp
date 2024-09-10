@@ -74,7 +74,7 @@ QString FileTaskObserver::progressText() const
         if (bytesReceived.endsWith(tmp))
             bytesReceived.chop(tmp.length());
 
-        progressText = tr("%1 of %2").arg(bytesReceived).arg(bytesToReceive);
+        progressText = tr("%1 of %2").arg(bytesReceived, bytesToReceive);
     } else {
         if (m_bytesTransfered > 0)
             progressText = tr("%1 received.").arg(QInstaller::humanReadableSize(m_bytesTransfered));
@@ -108,7 +108,7 @@ QString FileTaskObserver::progressText() const
             s = (s <= 0 ? 1 : s);
             seconds = tr("%n second(s)", "", s);
         }
-        progressText += tr(" - %1%2%3%4 remaining.").arg(days).arg(hours).arg(minutes).arg(seconds);
+        progressText += tr(" - %1%2%3%4 remaining.").arg(days, hours, minutes, seconds);
     } else {
         progressText += tr(" - unknown time remaining.");
     }
@@ -124,6 +124,16 @@ QByteArray FileTaskObserver::checkSum() const
 void FileTaskObserver::addCheckSumData(const QByteArray &data)
 {
     m_hash.addData(data);
+}
+
+QByteArray FileTaskObserver::expectedSha1() const
+{
+    return m_expectedSha1;
+}
+
+void FileTaskObserver::setExpectedSha1(const QByteArray &data)
+{
+    m_expectedSha1 = data;
 }
 
 void FileTaskObserver::addSample(qint64 sample)
@@ -146,6 +156,41 @@ void FileTaskObserver::setBytesToTransfer(qint64 bytesToReceive)
     m_bytesToTransfer = bytesToReceive;
 }
 
+qint64 FileTaskObserver::bytesTransfered() const
+{
+    return m_bytesTransfered;
+}
+
+qint64 FileTaskObserver::bytesToTransfer() const
+{
+    return m_bytesToTransfer;
+}
+
+void FileTaskObserver::setDownloadFinished(bool downloadFinished)
+{
+    m_downloadFinished = downloadFinished;
+}
+
+bool FileTaskObserver::downloadFinished() const
+{
+    return m_downloadFinished;
+}
+
+qint64 FileTaskObserver::totalBytesDownloadedBeforeResume() const
+{
+    return m_totalBytesBeforeResume;
+}
+
+void FileTaskObserver::updateBytesDownloadedBeforeResume(qint64 bytes)
+{
+    m_bytesBeforeResume += bytes;
+}
+
+void FileTaskObserver::updateTotalBytesDownloadedBeforeResume()
+{
+    m_totalBytesBeforeResume = m_bytesBeforeResume;
+}
+
 
 // -- private
 
@@ -155,8 +200,12 @@ void FileTaskObserver::init()
     m_sampleIndex = 0;
     m_bytesTransfered = 0;
     m_bytesToTransfer = 0;
+    m_bytesBeforeResume = 0;
+    m_totalBytesBeforeResume = 0;
     m_bytesPerSecond = 0;
     m_currentSpeedBin = 0;
+    m_downloadFinished = false;
+    m_informProgressInBytes = false;
 
     m_timerId = -1;
     m_timerInterval = 100;
@@ -183,6 +232,9 @@ void FileTaskObserver::timerEvent(QTimerEvent *event)
 
     for (unsigned int i = 0; i < windowSize; ++i)
         m_bytesPerSecond += m_samples[i];
+
+    if (windowSize == 0)
+        return;
 
     m_bytesPerSecond /= windowSize; // computer average
     m_bytesPerSecond *= 1000.0 / m_timerInterval; // rescale to bytes/second

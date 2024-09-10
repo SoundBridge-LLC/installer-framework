@@ -60,7 +60,6 @@ class KDTOOLS_EXPORT FileDownloaderFactory : public GenericFactory<FileDownloade
         FileDownloaderFactoryData() : m_factory(0) {}
         ~FileDownloaderFactoryData() { delete m_factory; }
 
-        bool m_followRedirects;
         bool m_ignoreSslErrors;
         QStringList m_supportedSchemes;
         FileDownloaderProxyFactory *m_factory;
@@ -78,13 +77,7 @@ public:
     }
     FileDownloader *create(const QString &scheme, QObject *parent = 0) const;
 
-    static bool followRedirects();
-    static void setFollowRedirects(bool val);
-
     static void setProxyFactory(FileDownloaderProxyFactory *factory);
-
-    static bool ignoreSslErrors();
-    static void setIgnoreSslErrors(bool ignore);
 
     static QStringList supportedSchemes();
     static bool isSupportedScheme(const QString &scheme);

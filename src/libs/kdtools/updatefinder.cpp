@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2013 Klaralvdalens Datakonsult AB (KDAB)
-** Copyright (C) 2023 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -29,8 +29,6 @@
 
 #include "updatefinder.h"
 #include "update.h"
-#include "filedownloader.h"
-#include "filedownloaderfactory.h"
 #include "updatesinfo_p.h"
 #include "localpackagehub.h"
 
@@ -73,8 +71,6 @@ static int computePercent(int done, int total)
 UpdateFinder::UpdateFinder()
     : Task(QLatin1String("UpdateFinder"), Stoppable)
     , m_cancel(false)
-    , m_downloadCompleteCount(0)
-    , m_downloadsToComplete(0)
     , m_updatesXmlTasks(0)
     , m_updatesXmlTasksToComplete(0)
 {
@@ -169,15 +165,9 @@ void UpdateFinder::clear()
     qDeleteAll(m_updates);
     m_updates.clear();
 
-    const QList<Data> values = m_updatesInfoList.values();
-    foreach (const Data &data, values)
-        delete data.downloader;
-
     qDeleteAll(m_updatesInfoList.keyBegin(), m_updatesInfoList.keyEnd());
     m_updatesInfoList.clear();
 
-    m_downloadCompleteCount = 0;
-    m_downloadsToComplete = 0;
     qDeleteAll(m_xmlFileTasks);
     m_xmlFileTasks.clear();
 }
@@ -232,10 +222,7 @@ void UpdateFinder::computeUpdates()
     }
 
     // Now we can start...
-    if (!downloadUpdateXMLFiles() || m_cancel) {
-        clear();
-        return;
-    }
+    createUpdatesInfoList();
 
     if (!parseUpdateXMLFiles() || m_cancel) {
         clear();
@@ -271,56 +258,16 @@ void UpdateFinder::cancelComputeUpdates()
 
 /*!
    \internal
-
-   This function downloads Updates.xml from all the update sources except local files.
-   A single application can potentially have several update sources, hence we need to be
-   asynchronous in downloading updates from different sources.
-
-   The function basically does this for each update source:
-   a) Create a KDUpdater::FileDownloader and KDUpdater::UpdatesInfo for each update
-   b) Triggers the download of Updates.xml from each file downloader.
-   c) The downloadCompleted(), downloadCanceled() and downloadAborted() signals are connected
-   in each of the downloaders. Once all the downloads are complete and/or aborted, the next stage
-   would be done.
-
-   The function gets into an event loop until all the downloads are complete.
 */
-bool UpdateFinder::downloadUpdateXMLFiles()
+void UpdateFinder::createUpdatesInfoList()
 {
     // create UpdatesInfo for each update source
     foreach (const PackageSource &info, m_packageSources) {
         const QUrl url = QString::fromLatin1("%1/Updates.xml").arg(info.url.toString());
-        if (url.scheme() != QLatin1String("resource") && url.scheme() != QLatin1String("file")) {
-            // create FileDownloader (except for local files and resources)
-            FileDownloader *downloader = FileDownloaderFactory::instance().create(url.scheme(), this);
-            if (!downloader)
-                break;
-
-            downloader->setUrl(url);
-            downloader->setAutoRemoveDownloadedFile(true);
-            connect(downloader, SIGNAL(downloadCanceled()), this, SLOT(slotDownloadDone()));
-            connect(downloader, SIGNAL(downloadCompleted()), this, SLOT(slotDownloadDone()));
-            connect(downloader, SIGNAL(downloadAborted(QString)), this, SLOT(slotDownloadDone()));
-            m_updatesInfoList.insert(new UpdatesInfo(info.postLoadComponentScript), Data(info, downloader));
-        } else {
-            UpdatesInfo *updatesInfo = new UpdatesInfo(info.postLoadComponentScript);
-            updatesInfo->setFileName(QInstaller::pathFromUrl(url));
-            m_updatesInfoList.insert(updatesInfo, Data(info));
-        }
+        UpdatesInfo *updatesInfo = new UpdatesInfo(info.postLoadComponentScript);
+        updatesInfo->setFileName(QInstaller::pathFromUrl(url));
+        m_updatesInfoList.insert(updatesInfo, info);
     }
-
-    // Trigger download of Updates.xml file
-    m_downloadCompleteCount = 0;
-    m_downloadsToComplete = 0;
-    foreach (const Data &data, m_updatesInfoList) {
-        if (data.downloader) {
-            m_downloadsToComplete++;
-            data.downloader->download();
-        }
-    }
-
-    // Wait until all downloaders have completed their downloads.
-    return waitForJobToFinish(m_downloadCompleteCount, m_downloadsToComplete);
 }
 
 /*!
@@ -333,15 +280,7 @@ bool UpdateFinder::parseUpdateXMLFiles()
     m_updatesXmlTasksToComplete = 0;
     QList<UpdatesInfo *> keys = m_updatesInfoList.keys();
     for (UpdatesInfo *updatesInfo : std::as_const(keys)) {
-        const Data data = m_updatesInfoList.value(updatesInfo);
-        if (data.downloader) {
-            if (!data.downloader->isDownloaded()) {
-                reportError(tr("Cannot download package source %1 from \"%2\".").arg(data.
-                    downloader->url().fileName(), data.info.url.toString()));
-            } else {
-                updatesInfo->setFileName(data.downloader->downloadedFileName());
-            }
-        }
+        const QInstaller::PackageSource data = m_updatesInfoList.value(updatesInfo);
         if (!updatesInfo->fileName().isEmpty()) {
             ParseXmlFilesTask *const task = new ParseXmlFilesTask(updatesInfo);
             m_xmlFileTasks.append(task);
@@ -360,7 +299,7 @@ bool UpdateFinder::parseUpdateXMLFiles()
 */
 bool UpdateFinder::removeInvalidObjects()
 {
-    QMutableHashIterator<UpdatesInfo *, Data> it(m_updatesInfoList);
+    QMutableHashIterator<UpdatesInfo *, QInstaller::PackageSource> it(m_updatesInfoList);
     while (it.hasNext()) {
         UpdatesInfo *info = it.next().key();
         if (info->isValid())
@@ -398,7 +337,7 @@ bool UpdateFinder::computeApplicableUpdates()
 
         if (m_cancel)
             return false;
-        const PackageSource updateSource = m_updatesInfoList.value(updatesInfo).info;
+        const PackageSource updateSource = m_updatesInfoList.value(updatesInfo);
 
         // Create Update objects for updates that have a valid
         // UpdateFile
@@ -543,20 +482,6 @@ void UpdateFinder::parseUpdatesXmlTaskFinished()
     watcher->waitForFinished();
     watcher->deleteLater();
 }
-
-
-/*!
-   \internal
-*/
-void UpdateFinder::slotDownloadDone()
-{
-    ++m_downloadCompleteCount;
-
-    int pc = computePercent(m_downloadCompleteCount, m_downloadsToComplete);
-    pc = computeProgressPercentage(0, 45, pc);
-    reportProgress( pc, tr("Downloading Updates.xml from update sources.") );
-}
-
 
 /*!
    \inmodule kdupdater

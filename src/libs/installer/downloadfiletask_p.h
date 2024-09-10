@@ -36,6 +36,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QNetworkInformation>
 #include <QTimer>
 
 #include <memory>
@@ -77,25 +78,45 @@ public:
     ~Downloader();
 
     void download(QFutureInterface<FileTaskResult> &fi, const QList<FileTaskItem> &items,
-        QNetworkProxyFactory *networkProxyFactory);
+        QNetworkProxyFactory *networkProxyFactory, const bool progressValueInBytes);
 
 signals:
     void finished();
+    void progressChanged(const quint64 progress);
+    void fileDownloaded(const QString &fileName, const QString &componentName);
+    void networkDisconnected();
 
 private slots:
     void doDownload();
     void onReadyRead();
-    void onFinished(QNetworkReply *reply);
+    void onFinished();
     void errorOccurred(QNetworkReply::NetworkError error);
     void onSslErrors(const QList<QSslError> &sslErrors);
     void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
     void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
     void onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *authenticator);
     void onTimeout();
+    void onReachabilityChanged(QNetworkInformation::Reachability newReachability);
+
+protected:
+    void timerEvent(QTimerEvent *event);
 
 private:
     bool testCanceled();
+    void shutDown();
     QNetworkReply *startDownload(const FileTaskItem &item);
+    void connectNetworkReply(QNetworkReply *reply);
+    void disconnectNetworkReply(QNetworkReply *reply);
+    void resumeDownload();
+
+    void runDownloadDeadlineTimer();
+    void stopDownloadDeadlineTimer();
+    void setDownloadPaused(bool paused);
+    bool isDownloadPaused();
+    void setDownloadResumed(bool resumed);
+    bool isDownloadResumed();
+    void updateBytesDownloadedBeforeResume(qint64 bytes);
+    void updateTotalBytesDownloadedBeforeResume();
 
 private:
     QFutureInterface<FileTaskResult> *m_futureInterface;
@@ -106,6 +127,12 @@ private:
     QList<FileTaskItem> m_items;
     QMultiHash<QNetworkReply*, QUrl> m_redirects;
     std::unordered_map<QNetworkReply*, std::unique_ptr<Data>> m_downloads;
+    qint64 m_progress;
+    QBasicTimer m_downloadDeadlineTimer;
+    int m_downloadDeadlineTimerInterval;
+    bool m_downloadPaused;
+    bool m_downloadResumed;
+    bool m_progressValueInBytes;
 };
 
 }   // namespace QInstaller

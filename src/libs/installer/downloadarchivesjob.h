@@ -38,9 +38,7 @@ QT_BEGIN_NAMESPACE
 class QTimerEvent;
 QT_END_NAMESPACE
 
-namespace KDUpdater {
-    class FileDownloader;
-}
+#include "filedownloader.h"
 
 namespace QInstaller {
 
@@ -72,39 +70,35 @@ protected:
     void timerEvent(QTimerEvent *event) override;
 
 public Q_SLOTS:
-    void onDownloadStatusChanged(const QString &status);
+    void registerFile(const QInstaller::FileTaskItem &item);
+    void fileDownloaded(const QString &fileName, const QString &componentName);
+    void onDownloadStatusChanged(const quint64 currentDownloaded);
+    void setTotalProcessedAmount();
 
 protected Q_SLOTS:
-    void registerFile();
-    void downloadCanceled();
-    void downloadFailed(const QString &error);
+    void downloadCompleted();
+    void sha1DownloadFinished();
+    void downloadAborted(const JobError error, const QString &errorStr);
     void finishWithError(const QString &error);
-    void fetchNextArchive();
-    void fetchNextArchiveHash();
-    void finishedHashDownload();
-    void emitDownloadProgress(double progress);
+    void fetchArchives();
+    void networkDisconnected();
 
 private:
-    KDUpdater::FileDownloader *setupDownloader(const QString &suffix = QString(), const QString &queryString = QString());
+    void setupDownloaders();
 
 private:
     PackageManagerCore *m_core;
-    KDUpdater::FileDownloader *m_downloader;
+    QHash<QString, KDUpdater::FileDownloader*> m_downloaders;
 
     int m_archivesDownloaded;
-    int m_archivesToDownloadCount;
     QList<QPair<QString, QString> > m_archivesToDownload;
 
     bool m_canceled;
-    QByteArray m_currentHash;
-    double m_lastFileProgress;
     int m_progressChangedTimerId;
 
-    quint64 m_totalSizeToDownload;
-    quint64 m_totalSizeDownloaded;
     QElapsedTimer m_totalDownloadSpeedTimer;
-
-    uint m_retryCount;
+    quint64 m_currentDownloaded;
+    quint64 m_totalAmount;
 };
 
 } // namespace QInstaller

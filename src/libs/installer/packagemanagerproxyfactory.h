@@ -51,6 +51,7 @@ public:
     QList<QNetworkProxy> queryProxy(const QNetworkProxyQuery &query = QNetworkProxyQuery()) override;
 
     void setProxyCredentials(const QNetworkProxy &proxy, const QString &user, const QString &password);
+    bool askProxyCredentials(const QNetworkProxy &proxy);
 
 private:
 

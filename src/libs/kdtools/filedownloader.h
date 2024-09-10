@@ -1,7 +1,7 @@
 /****************************************************************************
 **
 ** Copyright (C) 2013 Klaralvdalens Datakonsult AB (KDAB)
-** Copyright (C) 2023 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -31,11 +31,17 @@
 #define FILEDOWNLOADER_H
 
 #include "kdtoolsglobal.h"
+#include "filedownloaderfactory.h"
+#include "abstractfiletask.h"
+#include "packagemanagercore.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
 
 #include <QtNetwork/QAuthenticator>
+#include <QFutureWatcher>
+
+using namespace QInstaller;
 
 namespace KDUpdater {
 
@@ -44,113 +50,79 @@ class FileDownloaderProxyFactory;
 class KDTOOLS_EXPORT FileDownloader : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool autoRemoveDownloadedFile READ isAutoRemoveDownloadedFile WRITE setAutoRemoveDownloadedFile)
-    Q_PROPERTY(QUrl url READ url WRITE setUrl)
     Q_PROPERTY(QString scheme READ scheme WRITE setScheme)
 
 public:
     explicit FileDownloader(const QString &scheme, QObject *parent = 0);
     ~FileDownloader();
 
-    QUrl url() const;
-    void setUrl(const QUrl &url);
+    enum DownloadType {
+        ChecksumFile,
+        RegularFile
+    };
 
-    QByteArray sha1Sum() const;
-
-    QByteArray assumedSha1Sum() const;
-    void setAssumedSha1Sum(const QByteArray &sha1);
-    void setCheckSha1Sum(const bool checkSha1Sum);
-    bool checkSha1Sum() const;
+    void resetFileItems();
+    void addFileItem(FileTaskItem item);
+    void addFileItems(QList<FileTaskItem> items);
+    QList<FileTaskItem> fileItems() const;
+    QList<FileTaskItem> fileItemsInChunks();
 
     QString scheme() const;
     void setScheme(const QString &scheme);
 
-    QString errorString() const;
+    void setPackageManagerCore(PackageManagerCore *core);
 
-    virtual bool canDownload() const = 0;
-    virtual bool isDownloaded() const = 0;
-    virtual QString downloadedFileName() const = 0;
-    virtual void setDownloadedFileName(const QString &name) = 0;
     virtual FileDownloader *clone(QObject *parent=0) const = 0;
 
-    void download();
-
-    void setAutoRemoveDownloadedFile(bool val);
-    bool isAutoRemoveDownloadedFile() const;
-
-    void setFollowRedirects(bool val);
-    bool followRedirects() const;
+    void download(DownloadType downloadType);
+    template <typename AbstractTask>
+    void setupFileTask(AbstractTask *const task, const DownloadType downloadType);
+    void resetTasks();
 
     FileDownloaderProxyFactory *proxyFactory() const;
     void setProxyFactory(FileDownloaderProxyFactory *factory);
 
-    QAuthenticator authenticator() const;
-    void setAuthenticator(const QAuthenticator &authenticator);
+    quint64 bytesReceived() const;
 
-    bool ignoreSslErrors();
-    void setIgnoreSslErrors(bool ignore);
+    bool dataDownloded() const;
+    void setDataDownloded(bool downloaded);
+    bool sha1Downloded() const;
+    void setSha1Downloded(bool downloaded);
 
-    qint64 getBytesReceived() const;
-
-public Q_SLOTS:
-    virtual void cancelDownload();
-
-protected:
-    virtual void onError() = 0;
-    virtual void onSuccess() = 0;
+    virtual void reset() = 0;
 
 Q_SIGNALS:
-    void downloadStarted();
-    void downloadCanceled();
+    void downloadCompleted(const QString &sceme);
+    void downloadAborted(const JobError error, const QString &errorStr);
+    void registerFile(const QInstaller::FileTaskItem &item);
+    void setProcessedAmount();
+    void fileDownloaded(const QString &fileName, const QString &componentName);
+    void networkDisconnected();
+    void sha1DownloadFinished();
 
-    void downloadProgress(double progress);
-    void estimatedDownloadTime(int seconds);
-    void downloadSpeed(qint64 bytesPerSecond);
-    void downloadStatus(const QString &status);
-    void downloadProgress(qint64 bytesReceived, qint64 bytesToReceive);
-    void authenticatorChanged(const QAuthenticator &authenticator);
-    void downloadCompleted();
-    void downloadAborted(const QString &errorMessage);
+public Q_SLOT:
+    void setProgress(quint64 bytesReceived);
 
 protected:
-    void setDownloadCanceled();
     void setDownloadCompleted();
-    void setDownloadAborted(const QString &error);
+    void setDownloadAborted(const JobError error, const QString &errorStr);
+    bool isDownloadAborted() const;
 
-    void runDownloadSpeedTimer();
-    void stopDownloadSpeedTimer();
-
-    void runDownloadDeadlineTimer();
-    void stopDownloadDeadlineTimer();
-    void setDownloadPaused(bool paused);
-    bool isDownloadPaused();
-    void setDownloadResumed(bool resumed);
-    bool isDownloadResumed();
-    qint64 bytesDownloadedBeforeResume();
-    qint64 totalBytesDownloadedBeforeResume();
-    void clearBytesDownloadedBeforeResume();
-    void updateBytesDownloadedBeforeResume(qint64 bytes);
-    void updateTotalBytesDownloadedBeforeResume();
-
-    void addSample(qint64 sample);
-    int downloadSpeedTimerId() const;
-    int downloadDeadlineTimerId() const;
-    void setProgress(qint64 bytesReceived, qint64 bytesToReceive);
-
-    void emitDownloadSpeed();
-    void emitDownloadStatus();
-    void emitDownloadProgress();
-    void emitEstimatedDownloadTime();
-
-    void addCheckSumData(const QByteArray &data);
-    void resetCheckSumData();
+private:
+    QFutureWatcher<QInstaller::FileTaskResult> m_shaDownloadTask;
+    QFutureWatcher<QInstaller::FileTaskResult> m_archiveDownloadTask;
 
 private Q_SLOTS:
-    virtual void doDownload() = 0;
+    virtual bool doDownload(DownloadType downloadType) = 0;
+    void shaDownloadTaskFinished();
+    void archiveDownloadTaskFinished();
 
 private:
     struct Private;
     Private *d;
+    QList<FileTaskResult> m_shaDownloadResult;
+    QList<FileTaskResult> m_archiveDownloadResult;
+    int m_downloadableChunkSize;
 };
 
 } // namespace KDUpdater

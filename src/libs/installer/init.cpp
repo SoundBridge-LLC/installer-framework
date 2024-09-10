@@ -98,8 +98,6 @@ void QInstaller::init()
     factory.registerUpdateOperation<ConsumeOutputOperation>(QLatin1String("ConsumeOutput"));
     factory.registerUpdateOperation<SettingsOperation>(QLatin1String("Settings"));
 
-    FileDownloaderFactory::setFollowRedirects(true);
-
     auto messageHandler = [](QtMsgType type, const QMessageLogContext &context, const QString &msg) {
         LoggingHandler::instance().messageHandler(type, context, msg);
     };

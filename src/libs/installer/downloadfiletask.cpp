@@ -1,7 +1,7 @@
 
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -39,6 +39,7 @@
 #include <QNetworkProxyFactory>
 #include <QSslError>
 #include <QTemporaryFile>
+#include <fileutils.h>
 
 namespace QInstaller {
 
@@ -74,14 +75,15 @@ AuthenticationRequiredException::AuthenticationRequiredException(Type type, cons
 
 Downloader::Downloader()
     : m_finished(0)
+    , m_downloadDeadlineTimerInterval(30000)
+    , m_downloadPaused(false)
+    , m_downloadResumed(false)
+
 {
-    connect(&m_timer, &QTimer::timeout, this, &Downloader::onTimeout);
-    connect(&m_nam, &QNetworkAccessManager::finished, this, &Downloader::onFinished);
 }
 
 Downloader::~Downloader()
 {
-    m_nam.disconnect();
     for (const auto &pair : m_downloads) {
         pair.first->disconnect();
         pair.first->abort();
@@ -90,10 +92,11 @@ Downloader::~Downloader()
 }
 
 void Downloader::download(QFutureInterface<FileTaskResult> &fi, const QList<FileTaskItem> &items,
-    QNetworkProxyFactory *networkProxyFactory)
+    QNetworkProxyFactory *networkProxyFactory, const bool progressValueInBytes)
 {
     m_items = items;
     m_futureInterface = &fi;
+    m_progressValueInBytes = progressValueInBytes;
 
     fi.reportStarted();
     fi.setExpectedResultCount(items.count());
@@ -103,12 +106,20 @@ void Downloader::download(QFutureInterface<FileTaskResult> &fi, const QList<File
         &Downloader::onAuthenticationRequired);
     connect(&m_nam, &QNetworkAccessManager::proxyAuthenticationRequired, this,
             &Downloader::onProxyAuthenticationRequired);
+
+    auto netInfo = QNetworkInformation::instance();
+    if (netInfo) {
+        connect(netInfo, &QNetworkInformation::reachabilityChanged,
+                this, &Downloader::onReachabilityChanged);
+    }
+    connect(&m_timer, &QTimer::timeout, this, &Downloader::onTimeout);
     QTimer::singleShot(0, this, &Downloader::doDownload);
 }
 
 void Downloader::doDownload()
 {
     m_timer.start(1000); // Use a timer to check for canceled downloads.
+    runDownloadDeadlineTimer();
 
     foreach (const FileTaskItem &item, m_items) {
         if (!startDownload(item))
@@ -126,11 +137,6 @@ void Downloader::doDownload()
 
 void Downloader::onReadyRead()
 {
-    if (testCanceled()) {
-        m_futureInterface->reportFinished();
-        emit finished(); return;    // error
-    }
-
     QNetworkReply *const reply = qobject_cast<QNetworkReply *>(sender());
     if (!reply)
         return;
@@ -176,10 +182,6 @@ void Downloader::onReadyRead()
 
     QByteArray buffer(32768, Qt::Uninitialized);
     while (reply->bytesAvailable()) {
-        if (testCanceled()) {
-            m_futureInterface->reportFinished();
-            emit finished(); return;    // error
-        }
 
         const qint64 read = reply->read(buffer.data(), buffer.size());
         qint64 written = 0;
@@ -198,21 +200,37 @@ void Downloader::onReadyRead()
 
         data.observer->addSample(read);
         data.observer->addBytesTransfered(read);
-        data.observer->addCheckSumData(buffer.left(read));
+        if (data.file->fileName().endsWith(QLatin1String(".sha1")))
+            data.observer->setExpectedSha1(buffer.left(read));
+        else
+            data.observer->addCheckSumData(buffer.left(read));
 
-        int progress = m_finished * 100;
-        for (const auto &pair : m_downloads)
-            progress += pair.second->observer->progressValue();
         if (!reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
-            m_futureInterface->setProgressValueAndText(progress / m_items.count(),
-                data.observer->progressText());
+            if (m_progressValueInBytes) {
+                quint64 progress = 0;
+                for (const auto &pair : m_downloads)
+                    progress += pair.second->observer->bytesTransfered();
+                emit progressChanged(progress);
+            } else {
+                int progress = m_finished * 100;
+                for (const auto &pair : m_downloads)
+                    progress += pair.second->observer->progressValue();
+                m_futureInterface->setProgressValueAndText(progress / m_items.count(),
+                    data.observer->progressText());
+            }
         }
     }
 }
 
-void Downloader::onFinished(QNetworkReply *reply)
+void Downloader::onFinished()
 {
+    QNetworkReply *const reply = qobject_cast<QNetworkReply *>(sender());
+    if (!reply || reply->error() != QNetworkReply::NoError ||  m_downloads.find(reply) == m_downloads.end())
+        return;
+
     Data &data = *m_downloads[reply];
+    if (data.file)
+        data.file->close();
     const QString filename = data.file ? data.file->fileName() : QString();
     if (!m_futureInterface->isCanceled()) {
         if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
@@ -236,6 +254,8 @@ void Downloader::onFinished(QNetworkReply *reply)
                 reply->deleteLater();
                 return;
             } else {
+                if (data.file)
+                    data.file->close();
                 m_futureInterface->reportException(TaskException(tr("Redirect loop detected for \"%1\".")
                     .arg(url.toString())));
                 return;
@@ -244,27 +264,25 @@ void Downloader::onFinished(QNetworkReply *reply)
     }
 
     const QByteArray ba = reply->readAll();
-    if (!ba.isEmpty()) {
+
+    if (!ba.isEmpty() && !filename.endsWith(QLatin1String(".sha1"))) {
         data.observer->addSample(ba.size());
         data.observer->addBytesTransfered(ba.size());
         data.observer->addCheckSumData(ba);
     }
 
-    const QByteArray expectedCheckSum = data.taskItem.value(TaskRole::Checksum).toByteArray();
-    bool checksumMismatch = false;
-    if (!expectedCheckSum.isEmpty()) {
-        if (expectedCheckSum != data.observer->checkSum().toHex())
-            checksumMismatch = true;
-    }
-    m_futureInterface->reportResult(FileTaskResult(filename, data.observer->checkSum(), data.taskItem,
-                                                  checksumMismatch));
+    // Expected checksum is read from file
+    if (!data.observer->expectedSha1().isEmpty())
+        data.taskItem.insert(TaskRole::Checksum, data.observer->expectedSha1());
 
-    m_downloads.erase(reply);
-    m_redirects.remove(reply);
-    reply->deleteLater();
+    data.observer->setDownloadFinished(true);
+    m_futureInterface->reportResult(FileTaskResult(filename, data.observer->checkSum(), data.taskItem));
+    QFileInfo fi(filename);
+    emit fileDownloaded(fi.fileName(), data.taskItem.value(TaskRole::ComponentName).toString());
 
     m_finished++;
-    if (m_downloads.empty() || m_futureInterface->isCanceled()) {
+
+    if (m_downloads.size() == m_finished || m_futureInterface->isCanceled()) {
         m_futureInterface->reportFinished();
         emit finished();    // emit finished, so the event loop can shutdown
     }
@@ -278,6 +296,8 @@ void Downloader::errorOccurred(QNetworkReply::NetworkError error)
         return; // already handled by onProxyAuthenticationRequired
     if (error == QNetworkReply::AuthenticationRequiredError)
         return; // already handled by onAuthenticationRequired
+    if (error == QNetworkReply::RemoteHostClosedError || error == QNetworkReply::TemporaryNetworkFailureError || error == QNetworkReply::UnknownNetworkError)
+        return; // wait for the reconnection
 
     if (reply) {
         const Data &data = *m_downloads[reply];
@@ -287,20 +307,39 @@ void Downloader::errorOccurred(QNetworkReply::NetworkError error)
         if (data.taskItem.source().contains(QLatin1String("Updates.xml"), Qt::CaseInsensitive)) {
             qCWarning(QInstaller::lcServer) << QString::fromLatin1("Network error while downloading '%1': %2.").arg(
                    data.taskItem.source(), reply->errorString());
-        } else if (data.taskItem.source().contains(QLatin1String("_meta"), Qt::CaseInsensitive)) {
-            QString errorString = tr("Network error while downloading '%1': %2.").arg(data.taskItem.source(), reply->errorString());
-            errorString.append(ProductKeyCheck::instance()->additionalMetaDownloadWarning());
-            m_futureInterface->reportException(TaskException(errorString));
+            disconnectNetworkReply(reply);
+            m_downloads.erase(reply);
+            m_redirects.remove(reply);
+            reply->deleteLater();
+            if (m_downloads.size() <= 0) {
+                m_futureInterface->reportFinished();
+                emit finished();    // emit finished, so the event loop can shutdown
+            }
         } else {
-            m_futureInterface->reportException(
-                TaskException(tr("Network error while downloading '%1': %2.").arg(
-                                      data.taskItem.source(), reply->errorString())));
+            if (isDownloadResumed()) {
+                shutDown();
+                return;
+            }
+            stopDownloadDeadlineTimer();
+            if (data.taskItem.source().contains(QLatin1String("_meta"), Qt::CaseInsensitive)) {
+                QString errorString = tr("Network error while downloading '%1': %2.").arg(data.taskItem.source(), reply->errorString());
+                errorString.append(ProductKeyCheck::instance()->additionalMetaDownloadWarning());
+                m_futureInterface->reportException(TaskException(errorString));
+                emit finished();
+            } else {
+                m_futureInterface->reportException(
+                    TaskException(tr("Network error while downloading '%1': %2.").arg(
+                                        data.taskItem.source(), reply->errorString())));
+                emit finished();
+            }
         }
     } else {
+        stopDownloadDeadlineTimer();
         //: %1 is a sentence describing the error
         m_futureInterface->reportException(
                     TaskException(tr("Unknown network error while downloading \"%1\".").arg(error)));
     }
+    setDownloadResumed(false);
 }
 
 void Downloader::onSslErrors(const QList<QSslError> &sslErrors)
@@ -315,12 +354,18 @@ void Downloader::onSslErrors(const QList<QSslError> &sslErrors)
 
 void Downloader::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
-    Q_UNUSED(bytesReceived)
     QNetworkReply *const reply = qobject_cast<QNetworkReply *>(sender());
     if (reply) {
         const Data &data = *m_downloads[reply];
-        data.observer->setBytesToTransfer(bytesTotal);
+        if (isDownloadResumed()) {
+            data.observer->setBytesToTransfer(bytesTotal + data.observer->totalBytesDownloadedBeforeResume());
+            data.observer->setBytesTransfered(bytesReceived);
+        } else {
+            data.observer->setBytesToTransfer(bytesTotal);
+            data.observer->setBytesTransfered(bytesReceived);
+        }
     }
+    runDownloadDeadlineTimer();
 }
 
 void Downloader::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator)
@@ -347,14 +392,13 @@ void Downloader::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *
 void Downloader::onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuthenticator *)
 {
     // Report to GUI thread.
-    // (MetadataJob will ask for username/password, and restart the download ...)
+    // (Job will ask for username/password, and restart the download ...)
     AuthenticationRequiredException e(AuthenticationRequiredException::Type::Proxy,
         QCoreApplication::translate("AuthenticationRequiredException",
         "Proxy requires authentication."));
     e.setProxy(proxy);
     m_futureInterface->reportException(e);
 }
-
 
 /*!
     \internal
@@ -367,28 +411,53 @@ void Downloader::onProxyAuthenticationRequired(const QNetworkProxy &proxy, QAuth
 void Downloader::onTimeout()
 {
     if (testCanceled()) {
-        // Inject exception, we can't use QFuturInterface::reportException() as the exception
-        // store is "frozen" once cancel was called. On the other hand, client code could use
-        // QFutureWatcherBase::isCanceled() or QFuture::isCanceled() to check for canceled futures.
-        m_futureInterface->exceptionStore()
-            .setException(TaskException(tr("Network transfers canceled.")));
         m_futureInterface->reportFinished();
         emit finished();
     }
 }
 
+void Downloader::onReachabilityChanged(QNetworkInformation::Reachability newReachability)
+{
+    if (newReachability == QNetworkInformation::Reachability::Online) {
+        if (isDownloadPaused()) {
+            setDownloadPaused(false);
+            resumeDownload();
+        }
+    } else if (newReachability == QNetworkInformation::Reachability::Disconnected) {
+        shutDown();
+        setDownloadPaused(true);
+        setDownloadResumed(false);
+        stopDownloadDeadlineTimer();
+        emit networkDisconnected();
+    }
+}
 
-// -- private
+/*!
+    Called when the download timer event \a event occurs.
+*/
+void Downloader::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == m_downloadDeadlineTimer.timerId()) {
+        shutDown();
+        resumeDownload();
+    }
+}
 
 bool Downloader::testCanceled()
 {
-    // TODO: figure out how to implement pause and resume
-    if (m_futureInterface->isSuspended()) {
-        m_futureInterface->toggleSuspended();  // Note: this will trigger cancel
-        m_futureInterface->reportException(
-                    TaskException(tr("Pause and resume not supported by network transfers.")));
-    }
     return m_futureInterface->isCanceled();
+}
+
+void Downloader::shutDown()
+{
+    for (const auto &pair : m_downloads) {
+        if (pair.second->observer->downloadFinished()) {
+            continue;
+        }
+        if (pair.first) {
+            disconnectNetworkReply(pair.first);
+        }
+    }
 }
 
 QNetworkReply *Downloader::startDownload(const FileTaskItem &item)
@@ -408,6 +477,15 @@ QNetworkReply *Downloader::startDownload(const FileTaskItem &item)
     std::unique_ptr<Data> data(new Data(item));
     m_downloads[reply] = std::move(data);
 
+    connectNetworkReply(reply);
+
+    return reply;
+}
+
+void Downloader::connectNetworkReply(QNetworkReply *reply)
+{
+
+    connect(reply, &QNetworkReply::finished, this, &Downloader::onFinished);
     connect(reply, &QIODevice::readyRead, this, &Downloader::onReadyRead);
     connect(reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)), this,
         SLOT(errorOccurred(QNetworkReply::NetworkError)));
@@ -415,14 +493,113 @@ QNetworkReply *Downloader::startDownload(const FileTaskItem &item)
     connect(reply, &QNetworkReply::sslErrors, this, &Downloader::onSslErrors);
 #endif
     connect(reply, &QNetworkReply::downloadProgress, this, &Downloader::onDownloadProgress);
-    return reply;
 }
 
+void Downloader::disconnectNetworkReply(QNetworkReply *reply)
+{
+    disconnect(reply, &QNetworkReply::finished, this, &Downloader::onFinished);
+    disconnect(reply, &QIODevice::readyRead, this, &Downloader::onReadyRead);
+    disconnect(reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)), this,
+            SLOT(errorOccurred(QNetworkReply::NetworkError)));
+#ifndef QT_NO_SSL
+    disconnect(reply, &QNetworkReply::sslErrors, this, &Downloader::onSslErrors);
+#endif
+    disconnect(reply, &QNetworkReply::downloadProgress, this, &Downloader::onDownloadProgress);
+}
+
+/*!
+    Resumes network downloads.
+*/
+void Downloader::resumeDownload()
+{
+    std::unordered_map<QNetworkReply*, std::unique_ptr<Data>> tmpDownloads;
+
+    for (auto it = m_downloads.begin(); it != m_downloads.end(); ) {
+
+        if (it->second->observer->downloadFinished()) {
+            ++it;
+        } else {
+            it->second->observer->updateTotalBytesDownloadedBeforeResume();
+
+            QNetworkRequest request(it->second->taskItem.source());
+            request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::ManualRedirectPolicy);
+            request.setAttribute(QNetworkRequest::Http2AllowedAttribute, false);
+            if (it->second->observer->bytesToTransfer() > 0) {
+                request.setRawHeader(QByteArray("Range"), QString(QStringLiteral("bytes=%1-"))
+                    .arg(it->second->observer->bytesTransfered()).toLatin1());
+            }
+            QNetworkReply *reply = m_nam.get(request);
+
+            tmpDownloads.try_emplace(reply, std::move(it->second));
+            QNetworkReply *oldReply = it->first;
+            oldReply->deleteLater();
+            it = m_downloads.erase(it);
+            connectNetworkReply(reply);
+        }
+    }
+
+    // Reinsert modified elements back into the map
+    for (auto& [new_key, data] : tmpDownloads)
+        m_downloads[new_key] = std::move(data);
+
+    setDownloadResumed(true);
+    runDownloadDeadlineTimer();
+}
+
+/*!
+    Restarts the download deadline timer.
+*/
+void Downloader::runDownloadDeadlineTimer()
+{
+    stopDownloadDeadlineTimer();
+    m_downloadDeadlineTimer.start(m_downloadDeadlineTimerInterval, this);
+}
+
+/*!
+    Stops the download deadline timer.
+*/
+void Downloader::stopDownloadDeadlineTimer()
+{
+    m_downloadDeadlineTimer.stop();
+}
+
+/*!
+    Sets the download into a \a paused state.
+*/
+void Downloader::setDownloadPaused(bool paused)
+{
+    m_downloadPaused = paused;
+}
+
+/*!
+    Returns the download paused state.
+*/
+bool Downloader::isDownloadPaused()
+{
+    return m_downloadPaused;
+}
+
+/*!
+    Sets the download into a \a resumed state.
+*/
+void Downloader::setDownloadResumed(bool resumed)
+{
+    m_downloadResumed = resumed;
+}
+
+/*!
+    Returns the download resumed state.
+*/
+bool Downloader::isDownloadResumed()
+{
+    return m_downloadResumed;
+}
 
 // -- DownloadFileTask
 
 DownloadFileTask::DownloadFileTask(const QList<FileTaskItem> &items)
     : AbstractFileTask()
+    , m_progressInBytes(false)
 {
     setTaskItems(items);
 }
@@ -457,11 +634,24 @@ void DownloadFileTask::setProxyFactory(KDUpdater::FileDownloaderProxyFactory *fa
     m_proxyFactory.reset(factory);
 }
 
+void DownloadFileTask::setProgressValueInBytes(bool progressInBytes)
+{
+    m_progressInBytes = progressInBytes;
+}
+
+bool DownloadFileTask::progressValueInBytes() const
+{
+    return m_progressInBytes;
+}
+
 void DownloadFileTask::doTask(QFutureInterface<FileTaskResult> &fi)
 {
     QEventLoop el;
     Downloader downloader;
     connect(&downloader, &Downloader::finished, &el, &QEventLoop::quit);
+    connect(&downloader, &Downloader::progressChanged, this, &DownloadFileTask::progressChanged);
+    connect(&downloader, &Downloader::fileDownloaded, this, &DownloadFileTask::fileDownloaded);
+    connect(&downloader, &Downloader::networkDisconnected, this, &DownloadFileTask::networkDisconnected);
 
     QList<FileTaskItem> items = taskItems();
     if (!m_authenticator.isNull()) {
@@ -470,7 +660,7 @@ void DownloadFileTask::doTask(QFutureInterface<FileTaskResult> &fi)
                 items[i].insert(TaskRole::Authenticator, QVariant::fromValue(m_authenticator));
         }
     }
-    downloader.download(fi, items, (m_proxyFactory.isNull() ? 0 : m_proxyFactory->clone()));
+    downloader.download(fi, items, (m_proxyFactory.isNull() ? 0 : m_proxyFactory->clone()), progressValueInBytes());
     el.exec();  // That's tricky here, we need to run our own event loop to keep QNAM working.
 }
 

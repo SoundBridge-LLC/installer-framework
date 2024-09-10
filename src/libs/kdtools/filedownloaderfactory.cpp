@@ -63,7 +63,6 @@ FileDownloaderFactory::FileDownloaderFactory()
     registerFileDownloader<LocalFileDownloader>( QLatin1String("file"));
     registerFileDownloader<HttpDownloader>(QLatin1String("ftp"));
     registerFileDownloader<HttpDownloader>(QLatin1String("http"));
-    registerFileDownloader<ResourceFileDownloader >(QLatin1String("resource"));
 
 #ifndef QT_NO_SSL
     if (QSslSocket::supportsSsl())
@@ -72,23 +71,6 @@ FileDownloaderFactory::FileDownloaderFactory()
         qCWarning(QInstaller::lcInstallerInstallLog) << "Cannot register file downloader for https protocol: QSslSocket::supportsSsl() returns false";
 #endif
 
-    d->m_followRedirects = false;
-}
-
-/*!
-    Returns whether redirects should be followed.
-*/
-bool FileDownloaderFactory::followRedirects()
-{
-    return FileDownloaderFactory::instance().d->m_followRedirects;
-}
-
-/*!
-    Determines that redirects should be followed if \a val is \c true.
-*/
-void FileDownloaderFactory::setFollowRedirects(bool val)
-{
-    FileDownloaderFactory::instance().d->m_followRedirects = val;
 }
 
 /*!
@@ -98,22 +80,6 @@ void FileDownloaderFactory::setProxyFactory(FileDownloaderProxyFactory *factory)
 {
     delete FileDownloaderFactory::instance().d->m_factory;
     FileDownloaderFactory::instance().d->m_factory = factory;
-}
-
-/*!
-    Returns \c true if SSL errors should be ignored.
-*/
-bool FileDownloaderFactory::ignoreSslErrors()
-{
-    return FileDownloaderFactory::instance().d->m_ignoreSslErrors;
-}
-
-/*!
-    Determines that SSL errors should be ignored if \a ignore is \c true.
-*/
-void FileDownloaderFactory::setIgnoreSslErrors(bool ignore)
-{
-    FileDownloaderFactory::instance().d->m_ignoreSslErrors = ignore;
 }
 
 /*!
@@ -150,13 +116,10 @@ bool FileDownloaderFactory::isSupportedScheme(const QString &scheme)
 */
 FileDownloader *FileDownloaderFactory::create(const QString &scheme, QObject *parent) const
 {
-    FileDownloader *downloader =
-        GenericFactory<FileDownloader, QString, QObject*>::create(scheme, parent);
-    if (downloader != 0) {
-        downloader->setFollowRedirects(d->m_followRedirects);
-        downloader->setIgnoreSslErrors(d->m_ignoreSslErrors);
-        if (d->m_factory)
-            downloader->setProxyFactory(d->m_factory->clone());
+    FileDownloader *downloader = GenericFactory<FileDownloader, QString, QObject*>::create(scheme, parent);
+    if (downloader && d->m_factory) {
+        downloader->setScheme(scheme);
+        downloader->setProxyFactory(d->m_factory->clone());
     }
     return downloader;
 }

@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2022 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -31,6 +31,8 @@
 
 #include "abstractfiletask.h"
 
+class FileTaskObserver;
+
 namespace QInstaller {
 
 class INSTALLER_EXPORT CopyFileTask : public AbstractFileTask
@@ -41,11 +43,20 @@ class INSTALLER_EXPORT CopyFileTask : public AbstractFileTask
 public:
     CopyFileTask() {}
     explicit CopyFileTask(const FileTaskItem &item);
+    explicit CopyFileTask(const QList<FileTaskItem> &items);
 
     explicit CopyFileTask(const QString &source);
     CopyFileTask(const QString &source, const QString &target);
 
     void doTask(QFutureInterface<FileTaskResult> &fi) override;
+    void setProgressValueInBytes(bool progressInBytes);
+
+Q_SIGNALS:
+    void fileDownloaded(const QString &fileName, const QString &componentName);
+    void progressChanged(const quint64 progress);
+
+private:
+    bool m_progressValueInBytes;
 };
 
 }   // namespace QInstaller

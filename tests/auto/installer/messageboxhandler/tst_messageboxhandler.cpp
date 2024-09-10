@@ -155,7 +155,7 @@ private slots:
         setRepository(":///data/invalidoperation");
         core->autoRejectMessageBoxes();
         core->installDefaultComponentsSilently();
-        QCOMPARE(PackageManagerCore::Canceled, core->status());
+        QCOMPARE(core->status(), PackageManagerCore::Canceled);
     }
 
     void invalidOperationAutoAccept()
@@ -163,7 +163,7 @@ private slots:
         setRepository(":///data/invalidoperation");
         core->autoAcceptMessageBoxes();
         core->installDefaultComponentsSilently();
-        QCOMPARE(PackageManagerCore::Success, core->status());
+        QCOMPARE(core->status(), PackageManagerCore::Success);
     }
 
     void invalidHashAutoReject()
@@ -171,7 +171,7 @@ private slots:
         setRepository(":///data/invalidhash");
         core->autoRejectMessageBoxes();
         core->installSelectedComponentsSilently(QStringList () << "B");
-        QCOMPARE(PackageManagerCore::Failure, core->status());
+        QCOMPARE(core->status(), PackageManagerCore::Failure);
     }
 
     void invalidHashAutoAccept()
@@ -179,7 +179,8 @@ private slots:
         setRepository(":///data/invalidhash");
         core->autoAcceptMessageBoxes();
         core->installSelectedComponentsSilently(QStringList () << "B");
-        QCOMPARE(PackageManagerCore::Failure, core->status());
+
+        QCOMPARE(core->status(), PackageManagerCore::Failure);
     }
 
     void missingArchiveAutoReject()
@@ -187,7 +188,7 @@ private slots:
         setRepository(":///data/missingarchive");
         core->autoRejectMessageBoxes();
         core->installSelectedComponentsSilently(QStringList () << "C");
-        QCOMPARE(PackageManagerCore::Canceled, core->status());
+        QCOMPARE(core->status(), PackageManagerCore::Failure);
     }
 
     void missingArchiveAutoAccept()
@@ -195,7 +196,7 @@ private slots:
         setRepository(":///data/missingarchive");
         core->autoAcceptMessageBoxes();
         core->installSelectedComponentsSilently(QStringList () << "C");
-        QCOMPARE(PackageManagerCore::Failure, core->status()); // Fails after retrying
+        QCOMPARE(core->status(), PackageManagerCore::Failure);
     }
 
     void messageBoxFromScriptDefaultAnswer()

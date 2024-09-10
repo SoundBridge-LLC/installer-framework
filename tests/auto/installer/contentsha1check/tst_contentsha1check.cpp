@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2023 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -47,7 +47,7 @@ void downloadingArchiveOutput(QtMsgType type, const QMessageLogContext &context,
     Q_UNUSED(type)
     Q_UNUSED(context)
     QByteArray localMsg = msg.toLocal8Bit();
-    if (!msg.startsWith("Downloading archive"))
+    if (!msg.startsWith("Archive "))
         return;
     if (expectedMessages.contains(msg))
         expectedMessages.removeOne(msg);
@@ -79,10 +79,8 @@ private slots:
                 << PackageManagerCore::Success
                 << componentResources
                 << (QStringList() << "components.xml" << "A.txt" << "B.txt")
-                << (QStringList() << "Downloading archive \"1.0.2-1content.7z.sha1\" for component A."
-                                  << "Downloading archive \"1.0.2-1content.7z\" for component A."
-                                  << "Downloading archive \"1.0.0-1content.7z.sha1\" for component B."
-                                  << "Downloading archive \"1.0.0-1content.7z\" for component B.");
+                << (QStringList() << "Archive \"1.0.2-1content.7z\" downloaded for component A."
+                                  << "Archive \"1.0.0-1content.7z\" downloaded for component B.");
     }
 
     void testInstallWithInvalidChecksum_data()

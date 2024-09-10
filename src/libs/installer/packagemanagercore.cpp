@@ -895,7 +895,7 @@ int PackageManagerCore::downloadNeededArchives(double partProgressSize)
     archivesJob.setExpectedTotalSize(archivesToDownloadTotalSize);
     connect(this, &PackageManagerCore::installationInterrupted, &archivesJob, &Job::cancel);
     connect(&archivesJob, &DownloadArchivesJob::outputTextChanged,
-            ProgressCoordinator::instance(), &ProgressCoordinator::emitLabelAndDetailTextChanged);
+            ProgressCoordinator::instance(), &ProgressCoordinator::emitDetailTextChanged);
     connect(&archivesJob, &DownloadArchivesJob::downloadStatusChanged,
             ProgressCoordinator::instance(), &ProgressCoordinator::additionalProgressStatusChanged);
 

@@ -29,10 +29,10 @@
 
 #include "binaryformatenginehandler.h"
 #include "component.h"
-#include "messageboxhandler.h"
 #include "packagemanagercore.h"
-#include "utils.h"
 #include "fileutils.h"
+#include "abstractfiletask.h"
+#include "downloadfiletask.h"
 
 #include "filedownloader.h"
 #include "filedownloaderfactory.h"
@@ -43,24 +43,17 @@
 using namespace QInstaller;
 using namespace KDUpdater;
 
-
-static constexpr uint scMaxRetries = 5;
-
 /*!
     Creates a new DownloadArchivesJob with parent \a core.
 */
 DownloadArchivesJob::DownloadArchivesJob(PackageManagerCore *core, const QString &objectName)
     : Job(core)
     , m_core(core)
-    , m_downloader(nullptr)
     , m_archivesDownloaded(0)
-    , m_archivesToDownloadCount(0)
     , m_canceled(false)
-    , m_lastFileProgress(0)
     , m_progressChangedTimerId(0)
-    , m_totalSizeToDownload(0)
-    , m_totalSizeDownloaded(0)
-    , m_retryCount(scMaxRetries)
+    , m_currentDownloaded(0)
+    , m_totalAmount(0)
 {
     setCapabilities(Cancelable);
     setObjectName(objectName);
@@ -71,8 +64,10 @@ DownloadArchivesJob::DownloadArchivesJob(PackageManagerCore *core, const QString
 */
 DownloadArchivesJob::~DownloadArchivesJob()
 {
-    if (m_downloader)
-        m_downloader->deleteLater();
+    for (auto i = m_downloaders.cbegin(), end = m_downloaders.cend(); i != end; ++i) {
+        if (i.value())
+            i.value()->deleteLater();
+    }
 }
 
 /*!
@@ -82,7 +77,6 @@ DownloadArchivesJob::~DownloadArchivesJob()
 void DownloadArchivesJob::setArchivesToDownload(const QList<QPair<QString, QString>> &archives)
 {
     m_archivesToDownload = archives;
-    m_archivesToDownloadCount = archives.count();
 }
 
 /*!
@@ -90,7 +84,7 @@ void DownloadArchivesJob::setArchivesToDownload(const QList<QPair<QString, QStri
 */
 void DownloadArchivesJob::setExpectedTotalSize(quint64 total)
 {
-    m_totalSizeToDownload = total;
+    m_totalAmount = total;
 }
 
 /*!
@@ -100,7 +94,7 @@ void DownloadArchivesJob::doStart()
 {
     m_totalDownloadSpeedTimer.start();
     m_archivesDownloaded = 0;
-    fetchNextArchiveHash();
+    fetchArchives();
 }
 
 /*!
@@ -109,93 +103,29 @@ void DownloadArchivesJob::doStart()
 void DownloadArchivesJob::doCancel()
 {
     m_canceled = true;
-    if (m_downloader != nullptr)
-        m_downloader->cancelDownload();
+    for (auto i = m_downloaders.cbegin(), end = m_downloaders.cend(); i != end; ++i) {
+        if (i.value())
+            i.value()->reset();
+    }
+    emitFinishedWithError(Job::Canceled, tr("Download canceled."));
 }
 
-void DownloadArchivesJob::fetchNextArchiveHash()
+void DownloadArchivesJob::fetchArchives()
 {
     if (m_archivesToDownload.isEmpty()) {
         emitFinished();
         return;
     }
-
-    if (m_canceled) {
-        finishWithError(tr("Canceled"));
-        return;
-    }
-
-    if (m_downloader)
-        m_downloader->deleteLater();
-
-    m_downloader = setupDownloader(QLatin1String(".sha1"));
-    if (!m_downloader) {
-        m_archivesToDownload.removeFirst();
-        QMetaObject::invokeMethod(this, "fetchNextArchiveHash", Qt::QueuedConnection);
-        return;
-    }
-
-    connect(m_downloader, &FileDownloader::downloadCompleted,
-            this, &DownloadArchivesJob::finishedHashDownload, Qt::QueuedConnection);
-    m_downloader->download();
-}
-
-void DownloadArchivesJob::finishedHashDownload()
-{
-    Q_ASSERT(m_downloader != nullptr);
-
-    QFile sha1HashFile(m_downloader->downloadedFileName());
-    if (sha1HashFile.open(QFile::ReadOnly)) {
-        emit hashDownloadReady(m_downloader->downloadedFileName());
-        m_currentHash = sha1HashFile.readAll();
-        fetchNextArchive();
-    } else {
-        finishWithError(tr("Downloading hash signature failed."));
+    setupDownloaders();
+    for (auto i = m_downloaders.cbegin(), end = m_downloaders.cend(); i != end; ++i) {
+        FileDownloader *downloader = i.value();
+        downloader->download(FileDownloader::DownloadType::ChecksumFile);
     }
 }
 
-/*!
-    Fetches the next archive and registers it in the installer.
-*/
-void DownloadArchivesJob::fetchNextArchive()
+void DownloadArchivesJob::networkDisconnected()
 {
-    if (m_canceled) {
-        finishWithError(tr("Canceled"));
-        return;
-    }
-
-    if (m_archivesToDownload.isEmpty()) {
-        emitFinished();
-        return;
-    }
-
-    if (m_downloader != nullptr)
-        m_downloader->deleteLater();
-
-    m_downloader = setupDownloader(QString(), m_core->value(scUrlQueryString));
-    if (!m_downloader) {
-        m_archivesToDownload.removeFirst();
-        QMetaObject::invokeMethod(this, "fetchNextArchiveHash", Qt::QueuedConnection);
-        return;
-    }
-
-    emit progressChanged(double(m_archivesDownloaded) / m_archivesToDownloadCount);
-    connect(m_downloader, SIGNAL(downloadProgress(double)), this, SLOT(emitDownloadProgress(double)));
-    connect(m_downloader, &FileDownloader::downloadCompleted,
-            this, &DownloadArchivesJob::registerFile, Qt::QueuedConnection);
-
-    m_downloader->download();
-}
-
-/*!
-    Emits the global download \a progress during a single download in a lazy way (uses a timer to reduce to
-    much processChanged).
-*/
-void DownloadArchivesJob::emitDownloadProgress(double progress)
-{
-    m_lastFileProgress = progress;
-    if (!m_progressChangedTimerId)
-        m_progressChangedTimerId = startTimer(5);
+    setTotalProcessedAmount();
 }
 
 /*!
@@ -206,42 +136,49 @@ void DownloadArchivesJob::timerEvent(QTimerEvent *event)
     if (event->timerId() == m_progressChangedTimerId) {
         killTimer(m_progressChangedTimerId);
         m_progressChangedTimerId = 0;
-        emit progressChanged((double(m_archivesDownloaded) + m_lastFileProgress) / m_archivesToDownloadCount);
+        emit progressChanged(double(processedAmount()) / double(totalAmount()));
+        quint64 currentDownloaded = 0;
+        for (auto i = m_downloaders.cbegin(), end = m_downloaders.cend(); i != end; ++i)
+            currentDownloaded += i.value()->bytesReceived();
+        setProcessedAmount(currentDownloaded);
+        onDownloadStatusChanged(currentDownloaded);
     }
 }
 
 /*!
-    Builds a textual representation of the total download \a status and
-    emits the \c {downloadStatusChanged()} signal.
+    Builds a textual representation of the total download \a currentDownloaded
+    and emits the \c {downloadStatusChanged()} signal.
 */
-void DownloadArchivesJob::onDownloadStatusChanged(const QString &status)
+void DownloadArchivesJob::onDownloadStatusChanged(const quint64 currentDownloaded)
 {
-    if (!m_downloader || m_canceled) {
-        emit downloadStatusChanged(status);
+    if (m_canceled)
         return;
-    }
 
-    QString extendedStatus;
-    quint64 currentDownloaded = m_totalSizeDownloaded + m_downloader->getBytesReceived();
-    if (m_totalSizeToDownload > 0) {
+    QString status;
+
+    if (totalAmount() > 0) {
         QString bytesReceived = humanReadableSize(currentDownloaded);
-        const QString bytesToReceive = humanReadableSize(m_totalSizeToDownload);
+        const QString bytesToReceive = humanReadableSize(totalAmount());
 
         // remove the unit from the bytesReceived value if bytesToReceive has the same
         const QString tmp = bytesToReceive.mid(bytesToReceive.indexOf(QLatin1Char(' ')));
         if (bytesReceived.endsWith(tmp))
             bytesReceived.chop(tmp.length());
 
-        extendedStatus = tr("%1 of %2").arg(bytesReceived, bytesToReceive);
+        status = tr("%1 of %2").arg(bytesReceived, bytesToReceive);
     } else if (currentDownloaded > 0) {
-        extendedStatus = tr("%1 downloaded.").arg(humanReadableSize(currentDownloaded));
+        status = tr("%1 downloaded.").arg(humanReadableSize(currentDownloaded));
     }
 
-    const quint64 totalDownloadSpeed = currentDownloaded
-        / double(m_totalDownloadSpeedTimer.elapsed() / 1000);
+    quint64 totalDownloadSpeed = 0;
 
-    if (m_totalSizeToDownload > 0 && totalDownloadSpeed > 0) {
-        const qint64 time = (m_totalSizeToDownload - currentDownloaded) / totalDownloadSpeed;
+    // Show download speed after download has fully started and we can more reliably
+    // calculate the real download speed
+    if (m_totalDownloadSpeedTimer.isValid() && m_totalDownloadSpeedTimer.elapsed() > 8000)
+        totalDownloadSpeed = currentDownloaded / double(m_totalDownloadSpeedTimer.elapsed() / 1000);
+
+    if (totalAmount() > 0 && totalDownloadSpeed > 0 && m_currentDownloaded != currentDownloaded) {
+        const quint64 time = (totalAmount() - currentDownloaded) / totalDownloadSpeed;
 
         int s = time % 60;
         const int d = time / 86400;
@@ -265,144 +202,142 @@ void DownloadArchivesJob::onDownloadStatusChanged(const QString &status)
             s = (s <= 0 ? 1 : s);
             seconds = tr("%n second(s)", "", s);
         }
-        extendedStatus += tr(" - %1%2%3%4 remaining.").arg(days, hours, minutes, seconds);
+        status += tr(" - %1%2%3%4 remaining.").arg(days, hours, minutes, seconds);
     } else {
-        extendedStatus += tr(" - unknown time remaining.");
+        status += tr(" - unknown time remaining.");
     }
+    m_currentDownloaded = currentDownloaded;
+    emit downloadStatusChanged(tr("Downloading: ")+ status);
+}
 
-    emit downloadStatusChanged(tr("Archive: ") + status
-        + QLatin1String("<br>") + tr("Total: ")+ extendedStatus);
+void DownloadArchivesJob::setTotalProcessedAmount()
+{
+    // Use timer to prevent UI from updating progress too frequently
+    if (!m_progressChangedTimerId)
+        m_progressChangedTimerId = startTimer(300);
 }
 
 /*!
     Registers the just downloaded file in the installer's file system.
 */
-void DownloadArchivesJob::registerFile()
+void DownloadArchivesJob::registerFile(const FileTaskItem &item)
 {
-    Q_ASSERT(m_downloader != nullptr);
-
     if (m_canceled || m_archivesToDownload.isEmpty())
         return;
 
-    if (m_currentHash != m_downloader->sha1Sum().toHex()) {
-        //TODO: Maybe we should try to download the file again automatically
-        const QMessageBox::Button res =
-            MessageBoxHandler::critical(MessageBoxHandler::currentBestSuitParent(),
-            QLatin1String("DownloadError"), tr("Download Error"), tr("Hash verification while "
-            "downloading failed. This is a temporary error, please retry.\n\n"
-            "Expected: %1 \nDownloaded: %2").arg(QString::fromLatin1(m_currentHash), QString::fromLatin1(m_downloader->sha1Sum().toHex())),
-            QMessageBox::Retry | QMessageBox::Cancel, QMessageBox::Retry);
-
-        if (res == QMessageBox::Cancel) {
-            finishWithError(tr("Cannot verify Hash\nExpected: %1 \nDownloaded: %2")
-                .arg(QString::fromLatin1(m_currentHash), QString::fromLatin1(m_downloader->sha1Sum().toHex())));
-            return;
-        }
-        // When using command line instance, only retry a number of times to avoid
-        // infinite loop in case the automatic answer for the messagebox is "Retry"
-        if (m_core->isCommandLineInstance() && (--m_retryCount == 0)) {
-           finishWithError(tr("Retry count (%1) exceeded").arg(scMaxRetries));
-           return;
-        }
-    } else {
-        m_retryCount = scMaxRetries;
-
-        ++m_archivesDownloaded;
-        m_totalSizeDownloaded += QFile(m_downloader->downloadedFileName()).size();
-        if (m_progressChangedTimerId) {
-            killTimer(m_progressChangedTimerId);
-            m_progressChangedTimerId = 0;
-            emit progressChanged(double(m_archivesDownloaded) / m_archivesToDownloadCount);
-        }
-
-        const QPair<QString, QString> pair = m_archivesToDownload.takeFirst();
-        BinaryFormatEngineHandler::instance()->registerResource(pair.first,
-            m_downloader->downloadedFileName());
-
-        emit fileDownloadReady(m_downloader->downloadedFileName());
+    ++m_archivesDownloaded;
+    if (m_progressChangedTimerId) {
+        killTimer(m_progressChangedTimerId);
+        m_progressChangedTimerId = 0;
     }
-    fetchNextArchiveHash();
+
+    BinaryFormatEngineHandler::instance()->registerResource(item.value(TaskRole::Name).toString(), item.target());
+
+    emit fileDownloadReady(item.target());
 }
 
-void DownloadArchivesJob::downloadCanceled()
+void DownloadArchivesJob::fileDownloaded(const QString &fileName, const QString &componentName)
 {
-    emitFinishedWithError(Job::Canceled, m_downloader->errorString());
+    emit outputTextChanged(tr("Archive \"%1\" downloaded for component %2.")
+                               .arg(fileName, componentName));
 }
 
-void DownloadArchivesJob::downloadFailed(const QString &error)
+void DownloadArchivesJob::downloadCompleted()
+{
+    // Wait for all downloaders to complete
+    for (auto i = m_downloaders.cbegin(), end = m_downloaders.cend(); i != end; ++i) {
+        if (!i.value()->dataDownloded())
+            return;
+    }
+    emitFinished();
+    m_archivesToDownload.clear();
+}
+
+void DownloadArchivesJob::sha1DownloadFinished()
+{
+    // Wait for all downloaders to complete
+    for (auto i = m_downloaders.cbegin(), end = m_downloaders.cend(); i != end; ++i) {
+        if (!i.value()->sha1Downloded())
+            return;
+    }
+    // Start showing progress of downloaded data
+    setTotalAmount(m_totalAmount);
+}
+
+
+void DownloadArchivesJob::downloadAborted(const JobError error, const QString &errorStr)
 {
     if (m_canceled)
         return;
 
-    const QMessageBox::StandardButton b =
-        MessageBoxHandler::critical(MessageBoxHandler::currentBestSuitParent(),
-        QLatin1String("archiveDownloadError"), tr("Download Error"), tr("Cannot download archive %1: %2")
-        .arg(m_archivesToDownload.first().second, error), QMessageBox::Retry | QMessageBox::Cancel,
-        QMessageBox::Retry);
-
-    if (b == QMessageBox::Retry) {
-        // When using command line instance, only retry a number of times to avoid
-        // infinite loop in case the automatic answer for the messagebox is "Retry"
-         if (m_core->isCommandLineInstance() && (--m_retryCount == 0)) {
-            finishWithError(tr("Retry count (%1) exceeded").arg(scMaxRetries));
-            return;
-         }
-
-        QMetaObject::invokeMethod(this, "fetchNextArchiveHash", Qt::QueuedConnection);
-    } else {
-        downloadCanceled();
-    }
+    emitFinishedWithError(error, errorStr);
 }
 
 void DownloadArchivesJob::finishWithError(const QString &error)
 {
-    const FileDownloader *const dl = qobject_cast<const FileDownloader*> (sender());
-    const QString msg = tr("Cannot fetch archives: %1\nError while loading %2");
-    if (dl != nullptr)
-        emitFinishedWithError(QInstaller::DownloadError, msg.arg(error, dl->url().toString()));
-    else
-        emitFinishedWithError(QInstaller::DownloadError, msg.arg(error, m_downloader->url().toString()));
+    emitFinishedWithError(QInstaller::DownloadError, error);
 }
 
-KDUpdater::FileDownloader *DownloadArchivesJob::setupDownloader(const QString &suffix, const QString &queryString)
+void DownloadArchivesJob::setupDownloaders()
 {
     KDUpdater::FileDownloader *downloader = nullptr;
-    const QFileInfo fi = QFileInfo(m_archivesToDownload.first().first);
-    const Component *const component = m_core->componentByName(PackageManagerCore::checkableName(QFileInfo(fi.path()).fileName()));
-    if (component) {
+    const QString &queryString = m_core->value(scUrlQueryString);
+    for (QPair<QString,QString> item : std::as_const(m_archivesToDownload)) {
+        const QFileInfo fi = QFileInfo(item.first);
+        const Component *const component = m_core->componentByName(PackageManagerCore::checkableName(QFileInfo(fi.path()).fileName()));
+        if (!component) {
+            emit outputTextChanged(tr("Cannot find component for %1.").arg(QFileInfo(fi.path()).fileName()));
+            continue;
+        }
         QString fullQueryString;
         if (!queryString.isEmpty())
             fullQueryString = QLatin1String("?") + queryString;
-        const QUrl url(m_archivesToDownload.first().second + suffix + fullQueryString);
+        const QUrl url(item.second + QLatin1String(".sha1") + fullQueryString);
         const QString &scheme = url.scheme();
-        downloader = FileDownloaderFactory::instance().create(scheme, this);
-
-        if (downloader) {
-            downloader->setUrl(url);
-            downloader->setAutoRemoveDownloadedFile(false);
-
-            QAuthenticator auth;
-            auth.setUser(component->value(QLatin1String("username")));
-            auth.setPassword(component->value(QLatin1String("password")));
-            downloader->setAuthenticator(auth);
-
-            connect(downloader, &FileDownloader::downloadCanceled, this, &DownloadArchivesJob::downloadCanceled);
-            connect(downloader, &FileDownloader::downloadAborted, this, &DownloadArchivesJob::downloadFailed,
-                Qt::QueuedConnection);
-            connect(downloader, &FileDownloader::downloadStatus, this, &DownloadArchivesJob::onDownloadStatusChanged);
-
-            if (FileDownloaderFactory::isSupportedScheme(scheme)) {
-                downloader->setDownloadedFileName(component->localTempPath() + QLatin1Char('/')
-                    + component->name() + QLatin1Char('/') + fi.fileName() + suffix);
-            }
-
-            emit outputTextChanged(tr("Downloading archive \"%1\" for component %2.")
-                .arg(fi.fileName() + suffix, component->displayName()));
+        if (m_downloaders.contains(scheme)) {
+            downloader = m_downloaders.value(scheme);
         } else {
-            emit outputTextChanged(tr("Scheme %1 not supported (URL: %2).").arg(scheme, url.toString()));
+            downloader = FileDownloaderFactory::instance().create(scheme, this);
+            if (!downloader) {
+                emit outputTextChanged(tr("Scheme %1 not supported (URL: %2).").arg(scheme, url.toString()));
+                return;
+            }
+            downloader->setPackageManagerCore(m_core);
+            m_downloaders.insert(scheme, downloader);
         }
-    } else {
-        emit outputTextChanged(tr("Cannot find component for %1.").arg(QFileInfo(fi.path()).fileName()));
+        QString fname = item.first;
+        QString target = (component->localTempPath() + QLatin1Char('/')
+            + component->name() + QLatin1Char('/') + fi.fileName() + QLatin1String(".sha1"));
+
+        QString source = url.toString();
+        if (scheme == QLatin1String("file"))
+            source = url.toLocalFile();
+
+        FileTaskItem taskItem(source, target);
+        taskItem.insert(TaskRole::Name, fname);
+        taskItem.insert(TaskRole::ComponentName, component->displayName());
+        QAuthenticator authenticator;
+        authenticator.setUser(component->value(QLatin1String("username")));
+        authenticator.setPassword(component->value(QLatin1String("password")));
+        taskItem.insert(TaskRole::Authenticator, QVariant::fromValue(authenticator));
+
+        downloader->addFileItem(taskItem);
     }
-    return downloader;
+    for (auto i = m_downloaders.cbegin(), end = m_downloaders.cend(); i != end; ++i) {
+        connect(i.value(), &FileDownloader::downloadAborted, this, &DownloadArchivesJob::downloadAborted,
+            Qt::QueuedConnection);
+        connect(i.value(), &FileDownloader::setProcessedAmount,
+                this, &DownloadArchivesJob::setTotalProcessedAmount, Qt::QueuedConnection);
+        connect(i.value(), &FileDownloader::sha1DownloadFinished,
+                this, &DownloadArchivesJob::sha1DownloadFinished, Qt::QueuedConnection);
+        connect(i.value(), &FileDownloader::registerFile,
+                this, &DownloadArchivesJob::registerFile, Qt::QueuedConnection);
+        connect(i.value(), &FileDownloader::fileDownloaded,
+                this, &DownloadArchivesJob::fileDownloaded, Qt::QueuedConnection);
+        connect(i.value(), &FileDownloader::downloadCompleted,
+                this, &DownloadArchivesJob::downloadCompleted, Qt::QueuedConnection);
+        connect(i.value(), &FileDownloader::networkDisconnected,
+                this, &DownloadArchivesJob::networkDisconnected, Qt::QueuedConnection);
+
+    }
 }

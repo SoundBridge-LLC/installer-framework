@@ -63,11 +63,12 @@ struct PackageManager
         QString appFilePath = QCoreApplication::applicationFilePath();
         core->disableWriteMaintenanceTool();
         core->setAutoConfirmCommand();
-        QSet<Repository> repoList;
-        Repository repo = Repository::fromUserInput(repository);
-        repoList.insert(repo);
-        core->settings().setDefaultRepositories(repoList);
-
+        if (!repository.isEmpty()) {
+            QSet<Repository> repoList;
+            Repository repo = Repository::fromUserInput(repository);
+            repoList.insert(repo);
+            core->settings().setDefaultRepositories(repoList);
+        }
         core->setValue(scTargetDir, targetDir);
         return core;
     }

@@ -30,6 +30,8 @@
 
 #include "packagemanagercore.h"
 #include "settings.h"
+#include "globals.h"
+#include "proxycredentialsdialog.h"
 
 #include <QNetworkProxy>
 
@@ -130,6 +132,29 @@ void PackageManagerProxyFactory::setProxyCredentials(const QNetworkProxy &proxy,
     } else {
         p->user = user;
         p->password = password;
+    }
+}
+
+bool PackageManagerProxyFactory::askProxyCredentials(const QNetworkProxy &proxy)
+{
+    QString username;
+    QString password;
+    if (m_core->isCommandLineInstance()) {
+        qCDebug(QInstaller::lcInstallerInstallLog).noquote() << QString::fromLatin1("The proxy %1:%2 requires a username and password").arg(proxy.hostName(), proxy.port());
+        askForCredentials(&username, &password, QLatin1String("Username: "), QLatin1String("Password: "));
+    } else {
+        ProxyCredentialsDialog proxyCredentials(proxy);
+        if (proxyCredentials.exec() == QDialog::Accepted) {
+            username = proxyCredentials.userName();
+            password = proxyCredentials.password();
+        }
+    }
+    if (!username.isEmpty()) {
+        qCDebug(QInstaller::lcInstallerInstallLog) << "Retrying with new credentials ...";
+        setProxyCredentials(proxy, username, password);
+        return true;
+    } else {
+        return false;
     }
 }
 

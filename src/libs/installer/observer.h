@@ -62,12 +62,25 @@ public:
     QByteArray checkSum() const;
     void addCheckSumData(const QByteArray &data);
 
+    QByteArray expectedSha1() const;
+    void setExpectedSha1(const QByteArray &data);
+
     void addSample(qint64 sample);
     void timerEvent(QTimerEvent *event) override;
 
     void setBytesTransfered(qint64 bytesTransfered);
     void addBytesTransfered(qint64 bytesTransfered);
     void setBytesToTransfer(qint64 bytesToTransfer);
+
+    qint64 bytesTransfered() const;
+    qint64 bytesToTransfer() const;
+
+    void setDownloadFinished(bool downloadFinished);
+    bool downloadFinished() const;
+
+    qint64 totalBytesDownloadedBeforeResume() const;
+    void updateBytesDownloadedBeforeResume(qint64 bytes);
+    void updateTotalBytesDownloadedBeforeResume();
 
 private:
     void init();
@@ -78,6 +91,8 @@ private:
 
     qint64 m_bytesTransfered;
     qint64 m_bytesToTransfer;
+    qint64 m_bytesBeforeResume;
+    qint64 m_totalBytesBeforeResume;
 
     qint64 m_samples[50];
     quint32 m_sampleIndex;
@@ -85,6 +100,10 @@ private:
     qint64 m_currentSpeedBin;
 
     QCryptographicHash m_hash;
+    QByteArray m_expectedSha1;
+
+    bool m_downloadFinished;
+    bool m_informProgressInBytes;
 };
 
 }   // namespace QInstaller
