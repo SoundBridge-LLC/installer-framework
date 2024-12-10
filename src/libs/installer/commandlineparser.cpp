@@ -247,6 +247,9 @@ CommandLineParser::CommandLineParser()
                       "to let the application determine the ideal thread count from the amount of logical "
                       "processor cores in the system."),
         QLatin1String("threads")));
+    addOption(QCommandLineOption(QStringList()
+        << CommandLineOptions::scLanguage,
+        QLatin1String("Override installer language for testing"), QLatin1String("language")));
 
     QCommandLineOption cleanupUpdate(CommandLineOptions::scCleanupUpdate);
     cleanupUpdate.setValueName(QLatin1String("path"));

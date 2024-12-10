@@ -200,44 +200,19 @@ public:
         QLocale lang = QLocale::English;
 #ifndef IFW_DISABLE_TRANSLATIONS
         if (!isCommandLineInterface) {
-            const QString directory = QLatin1String(":/translations");
-            // Check if there is a modified translation first to enable people
-            // to easily provide corrected translations to Qt/IFW for their installers
-            const QString newDirectory = QLatin1String(":/translations_new");
             const QStringList translations = m_core->settings().translations();
-
             if (translations.isEmpty()) {
-                for (const QString &language : QLocale().uiLanguages()) {
-                    const QLocale locale(language);
-                    std::unique_ptr<QTranslator> qtTranslator(new QTranslator(QCoreApplication::instance()));
-                    bool qtLoaded = qtTranslator->load(locale, QLatin1String("qt"),
-                                                      QLatin1String("_"), newDirectory);
-                    if (!qtLoaded)
-                        qtLoaded = qtTranslator->load(locale, QLatin1String("qt"),
-                                                      QLatin1String("_"), directory);
-
-                    if (qtLoaded || locale.language() == QLocale::English) {
-                        if (qtLoaded)
-                            QCoreApplication::instance()->installTranslator(qtTranslator.release());
-
-                        std::unique_ptr <QTranslator> ifwTranslator(new QTranslator(QCoreApplication::instance()));
-                        bool ifwLoaded = ifwTranslator->load(locale, QLatin1String("ifw"), QLatin1String("_"), newDirectory);
-                        if (!ifwLoaded)
-                            ifwLoaded = ifwTranslator->load(locale, QLatin1String("ifw"), QLatin1String("_"), directory);
-                        if (ifwLoaded) {
-                            QCoreApplication::instance()->installTranslator(ifwTranslator.release());
-                        } else {
-                            qCWarning(QInstaller::lcDeveloperBuild) << "Could not load IFW translation for language"
-                                << QLocale::languageToString(locale.language());
-                        }
-
-                        // To stop loading other translations it's sufficient that
-                        // qt was loaded successfully or we hit English as system language
+                if (m_parser.isSet(CommandLineOptions::scLanguage)) {
+                    const QLocale locale(m_parser.value(CommandLineOptions::scLanguage));
+                    if (localeFound(locale))
                         lang = locale;
-                        break;
-                    } else {
-                        qCWarning(QInstaller::lcDeveloperBuild) << "Could not load Qt translation for language"
-                            << QLocale::languageToString(locale.language());
+                } else {
+                    for (const QString &language : QLocale().uiLanguages()) {
+                        const QLocale locale(language);
+                        if (localeFound(locale)) {
+                            lang = locale;
+                            break;
+                        }
                     }
                 }
             } else {
@@ -613,6 +588,44 @@ public:
                 + m_core->settings().controlScript();
         }
         return controlScript;
+    }
+
+    bool localeFound(const QLocale &locale) const
+    {
+        const QString directory = QLatin1String(":/translations");
+        // Check if there is a modified translation first to enable people
+        // to easily provide corrected translations to Qt/IFW for their installers
+        const QString newDirectory = QLatin1String(":/translations_new");
+
+        std::unique_ptr<QTranslator> qtTranslator(new QTranslator(QCoreApplication::instance()));
+        bool qtLoaded = qtTranslator->load(locale, QLatin1String("qt"),
+                                           QLatin1String("_"), newDirectory);
+        if (!qtLoaded)
+            qtLoaded = qtTranslator->load(locale, QLatin1String("qt"),
+                                          QLatin1String("_"), directory);
+
+        if (qtLoaded || locale.language() == QLocale::English) {
+            if (qtLoaded)
+                QCoreApplication::instance()->installTranslator(qtTranslator.release());
+
+            std::unique_ptr <QTranslator> ifwTranslator(new QTranslator(QCoreApplication::instance()));
+            bool ifwLoaded = ifwTranslator->load(locale, QLatin1String("ifw"), QLatin1String("_"), newDirectory);
+            if (!ifwLoaded)
+                ifwLoaded = ifwTranslator->load(locale, QLatin1String("ifw"), QLatin1String("_"), directory);
+            if (ifwLoaded) {
+                QCoreApplication::instance()->installTranslator(ifwTranslator.release());
+            } else {
+                qCWarning(QInstaller::lcDeveloperBuild) << "Could not load IFW translation for language"
+                                                        << QLocale::languageToString(locale.language());
+            }
+            // To stop loading other translations it's sufficient that
+            // qt was loaded successfully or we hit English as system language
+            return true;
+        } else {
+            qCWarning(QInstaller::lcDeveloperBuild) << "Could not load Qt translation for language"
+                                                    << QLocale::languageToString(locale.language());
+        }
+        return false;
     }
 
 private:

@@ -296,6 +296,7 @@ static const QLatin1String scMaxConcurrentOperationsShort("mco");
 static const QLatin1String scMaxConcurrentOperationsLong("max-concurrent-operations");
 static const QLatin1String scCleanupUpdate("cleanup-update");
 static const QLatin1String scCleanupUpdateOnly("cleanup-update-only");
+static const QLatin1String scLanguage("lang");
 
 // Deprecated options, provided only for backward compatibility
 static const QLatin1String scDeprecatedUpdater("updater");
