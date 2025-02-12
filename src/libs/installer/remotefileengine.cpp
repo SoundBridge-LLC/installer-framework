@@ -80,20 +80,30 @@ QAbstractFileEngine* RemoteFileEngineHandler::create(const QString &fileName) co
 class RemoteFileEngineIterator : public QAbstractFileEngineIterator
 {
 public:
-    RemoteFileEngineIterator(const QString &path, QDir::Filters filters, const QStringList &nameFilters,
-            const QStringList &files)
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    RemoteFileEngineIterator(const QString &path, QDir::Filters filters,
+                             const QStringList &nameFilters, const QStringList &files)
         : QAbstractFileEngineIterator(path, filters, nameFilters)
-#else
-        : QAbstractFileEngineIterator(filters, nameFilters)
-#endif
         , index(-1)
         , entries(files)
-    {
-    }
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    {}
+
+    RemoteFileEngineIterator(const QString &path, QDirListing::IteratorFlags filters,
+                             const QStringList &nameFilters, const QStringList &files)
+        : QAbstractFileEngineIterator(path, filters, nameFilters)
+        , index(-1)
+        , entries(files)
+    {}
+
     bool advance() override;
 #else
+    RemoteFileEngineIterator(const QString &path, QDir::Filters filters,
+                             const QStringList &nameFilters, const QStringList &files)
+        : QAbstractFileEngineIterator(filters, nameFilters)
+        , index(-1)
+        , entries(files)
+    {}
+
     QString next() override;
     bool hasNext() const override;
 #endif
@@ -177,8 +187,8 @@ bool RemoteFileEngine::atEnd() const
 */
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
 QAbstractFileEngine::IteratorUniquePtr
-RemoteFileEngine::beginEntryList(const QString &path, QDir::Filters filters,
-                                   const QStringList &filterNames)
+RemoteFileEngine::beginEntryList(const QString &path, QDirListing::IteratorFlags filters,
+                                 const QStringList &filterNames)
 #else
 QAbstractFileEngine::Iterator* RemoteFileEngine::beginEntryList(QDir::Filters filters,
     const QStringList &filterNames)
@@ -239,6 +249,17 @@ bool RemoteFileEngine::copy(const QString &newName)
     return m_fileEngine.copy(newName);
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+QStringList RemoteFileEngine::entryList(QDirListing::IteratorFlags filters, const QStringList &filterNames) const
+{
+    if ((const_cast<RemoteFileEngine *>(this))->connectToServer()) {
+        return callRemoteMethod<QStringList>
+            (QString::fromLatin1(Protocol::QAbstractFileEngineEntryList),
+             static_cast<qint32>(filters), filterNames);
+    }
+    return m_fileEngine.entryList(filters, filterNames);
+}
+#endif
 /*!
     \reimp
 */

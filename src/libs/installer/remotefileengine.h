@@ -85,7 +85,6 @@ public:
     bool setSize(qint64 size) override;
     bool caseSensitive() const override;
     bool isRelativePath() const override;
-    QStringList entryList(QDir::Filters filters, const QStringList &filterNames) const override;
     FileFlags fileFlags(FileFlags type = FileInfoAll) const override;
     bool setPermissions(uint perms) override;
     QString fileName(FileName file = DefaultName) const override;
@@ -102,12 +101,14 @@ public:
     uchar *map(qint64, qint64, QFile::MemoryMapFlags) { return 0; }
     bool unmap(uchar *) { return true; }
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
-    IteratorUniquePtr beginEntryList(const QString &path, QDir::Filters filters, const QStringList &filterNames) override;
+    IteratorUniquePtr beginEntryList(const QString &path, QDirListing::IteratorFlags filters, const QStringList &filterNames) override;
     IteratorUniquePtr endEntryList() override;
+    QStringList entryList(QDirListing::IteratorFlags filters, const QStringList &filterNames) const override;
 #else
     Iterator *beginEntryList(QDir::Filters filters, const QStringList &filterNames) override;
     Iterator *endEntryList() override;
 #endif
+    QStringList entryList(QDir::Filters filters, const QStringList &filterNames) const override;
 
     qint64 read(char *data, qint64 maxlen) override;
     qint64 readLine(char *data, qint64 maxlen) override;

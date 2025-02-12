@@ -266,14 +266,6 @@ QAbstractFileEngine::FileFlags BinaryFormatEngine::fileFlags(FileFlags type) con
 */
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
 QAbstractFileEngine::IteratorUniquePtr
-BinaryFormatEngine::beginEntryList(const QString &path, QDir::Filters filters,
-                                    const QStringList &filterNames)
-{
-    const QStringList entries = entryList(filters, filterNames);
-    return std::make_unique<StringListIterator>(path, entries, filters, filterNames);
-}
-
-QAbstractFileEngine::IteratorUniquePtr
 BinaryFormatEngine::beginEntryList(const QString &path, QDirListing::IteratorFlags filters, const QStringList &filterNames)
 {
     const QStringList entries = entryList(filters, filterNames);
