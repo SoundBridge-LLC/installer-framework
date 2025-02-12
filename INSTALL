@@ -38,7 +38,7 @@ cmake --install .
 
 Recommended configuration options for Linux:
 
-configure -prefix $PWD/qtbase -release -static -accessibility -qt-zlib -qt-libpng -qt-libjpeg -qt-pcre -no-glib -no-cups -no-sql-sqlite -no-feature-gssapi -no-qml-debug -no-opengl -no-egl -no-xinput2 -no-sm -no-icu -nomake examples -nomake tests -no-libudev -bundled-xcb-xinput -qt-harfbuzz -qt-doubleconversion
+configure -prefix $PWD/qtbase -release -static -accessibility -qt-zlib -qt-libpng -qt-libjpeg -qt-pcre -no-glib -no-cups -no-sql-sqlite -no-feature-gssapi -no-qml-debug -no-opengl -no-egl -no-sm -no-icu -nomake examples -nomake tests -no-libudev -bundled-xcb-xinput -qt-harfbuzz -qt-doubleconversion
 
 Build Qt:
 cmake --build . --parallel
