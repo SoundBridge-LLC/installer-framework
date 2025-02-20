@@ -1,7 +1,6 @@
 <Updates>
  <ApplicationName>{AnyApplication}</ApplicationName>
- <ApplicationVersion>1.0.0</ApplicationVersion>
- <Checksum>false</Checksum>
+ <ApplicationVersion>1.0.0</ApplicationVersion>um>
  <PackageUpdate>
   <Name>A</Name>
   <DisplayName>A</DisplayName>

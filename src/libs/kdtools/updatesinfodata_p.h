@@ -51,12 +51,11 @@ public:
     QString updateXmlFile;
     QString applicationName;
     QString applicationVersion;
-    QString checkSha1CheckSum;
     QList<UpdateInfo> updateInfoList;
     bool m_postLoadComponentScript;
 
     void parseFile(const QString &updateXmlFile);
-    bool parsePackageUpdateElement(QXmlStreamReader &reader, const QString &checkSha1CheckSum);
+    bool parsePackageUpdateElement(QXmlStreamReader &reader);
 
     void setInvalidContentError(const QString &detail);
 

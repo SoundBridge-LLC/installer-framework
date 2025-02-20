@@ -83,21 +83,6 @@ private slots:
                                   << "Downloading archive \"1.0.2-1content.7z\" for component A."
                                   << "Downloading archive \"1.0.0-1content.7z.sha1\" for component B."
                                   << "Downloading archive \"1.0.0-1content.7z\" for component B.");
-
-        /*********** Install with and without checksum check **********/
-        componentResources.clear();
-        componentResources.append(ComponentResource("C", "1.0.2-1content.txt"));
-        componentResources.append(ComponentResource("D", "1.0.0-1content.txt"));
-
-        QTest::newRow("Without checksum check")
-                << ":///data/repositorywithnochecksumcheck"
-                << (QStringList() << "C" << "D")
-                << PackageManagerCore::Success
-                << componentResources
-                << (QStringList() << "components.xml" << "C.txt" << "D.txt")
-                << (QStringList() << "Downloading archive \"1.0.2-1content.7z\" for component C."
-                                  << "Downloading archive \"1.0.0-1content.7z\" for component D.");
-
     }
 
     void testInstallWithInvalidChecksum_data()

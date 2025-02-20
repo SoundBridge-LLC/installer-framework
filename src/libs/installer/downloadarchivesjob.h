@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2022 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -55,7 +55,7 @@ public:
     ~DownloadArchivesJob();
 
     int numberOfDownloads() const { return m_archivesDownloaded; }
-    void setArchivesToDownload(const QList<PackageManagerCore::DownloadItem> &archives);
+    void setArchivesToDownload(const QList<QPair<QString, QString>> &archives);
     void setExpectedTotalSize(quint64 total);
 
 Q_SIGNALS:
@@ -93,7 +93,7 @@ private:
 
     int m_archivesDownloaded;
     int m_archivesToDownloadCount;
-    QList<PackageManagerCore::DownloadItem> m_archivesToDownload;
+    QList<QPair<QString, QString> > m_archivesToDownload;
 
     bool m_canceled;
     QByteArray m_currentHash;

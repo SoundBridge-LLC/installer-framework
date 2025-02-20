@@ -1,7 +1,6 @@
 <Updates>
  <ApplicationName>{AnyApplication}</ApplicationName>
  <ApplicationVersion>1.0.0</ApplicationVersion>
- <Checksum>false</Checksum>
  <PackageUpdate>
   <Name>B</Name>
   <DisplayName>A</DisplayName>
@@ -10,7 +9,7 @@
   <ReleaseDate>2015-01-01</ReleaseDate>
   <Default>true</Default>
   <Script>script.qs</Script>
-  <SHA1>750eda14d867849aeb2f47d620f6e5f32134f375</SHA1>
+  <SHA1>5765d137b7e0355e0c1aab92241fdbb2ae4d4332</SHA1>
   <DownloadableArchives>content.7z</DownloadableArchives>
  </PackageUpdate>
 </Updates>

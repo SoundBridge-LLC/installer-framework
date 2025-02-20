@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2022 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -79,7 +79,7 @@ DownloadArchivesJob::~DownloadArchivesJob()
     Sets the \a archives to download. The first value of each pair contains the file name to register
     the file in the installer's internal file system, the second one the source url.
 */
-void DownloadArchivesJob::setArchivesToDownload(const QList<PackageManagerCore::DownloadItem> &archives)
+void DownloadArchivesJob::setArchivesToDownload(const QList<QPair<QString, QString>> &archives)
 {
     m_archivesToDownload = archives;
     m_archivesToDownloadCount = archives.count();
@@ -120,28 +120,24 @@ void DownloadArchivesJob::fetchNextArchiveHash()
         return;
     }
 
-    if (m_archivesToDownload.first().checkSha1CheckSum) {
-        if (m_canceled) {
-            finishWithError(tr("Canceled"));
-            return;
-        }
-
-        if (m_downloader)
-            m_downloader->deleteLater();
-
-        m_downloader = setupDownloader(QLatin1String(".sha1"));
-        if (!m_downloader) {
-            m_archivesToDownload.removeFirst();
-            QMetaObject::invokeMethod(this, "fetchNextArchiveHash", Qt::QueuedConnection);
-            return;
-        }
-
-        connect(m_downloader, &FileDownloader::downloadCompleted,
-                this, &DownloadArchivesJob::finishedHashDownload, Qt::QueuedConnection);
-        m_downloader->download();
-    } else {
-        QMetaObject::invokeMethod(this, "fetchNextArchive", Qt::QueuedConnection);
+    if (m_canceled) {
+        finishWithError(tr("Canceled"));
+        return;
     }
+
+    if (m_downloader)
+        m_downloader->deleteLater();
+
+    m_downloader = setupDownloader(QLatin1String(".sha1"));
+    if (!m_downloader) {
+        m_archivesToDownload.removeFirst();
+        QMetaObject::invokeMethod(this, "fetchNextArchiveHash", Qt::QueuedConnection);
+        return;
+    }
+
+    connect(m_downloader, &FileDownloader::downloadCompleted,
+            this, &DownloadArchivesJob::finishedHashDownload, Qt::QueuedConnection);
+    m_downloader->download();
 }
 
 void DownloadArchivesJob::finishedHashDownload()
@@ -288,7 +284,7 @@ void DownloadArchivesJob::registerFile()
     if (m_canceled || m_archivesToDownload.isEmpty())
         return;
 
-    if (m_archivesToDownload.first().checkSha1CheckSum && m_currentHash != m_downloader->sha1Sum().toHex()) {
+    if (m_currentHash != m_downloader->sha1Sum().toHex()) {
         //TODO: Maybe we should try to download the file again automatically
         const QMessageBox::Button res =
             MessageBoxHandler::critical(MessageBoxHandler::currentBestSuitParent(),
@@ -319,8 +315,8 @@ void DownloadArchivesJob::registerFile()
             emit progressChanged(double(m_archivesDownloaded) / m_archivesToDownloadCount);
         }
 
-        const PackageManagerCore::DownloadItem item = m_archivesToDownload.takeFirst();
-        BinaryFormatEngineHandler::instance()->registerResource(item.fileName,
+        const QPair<QString, QString> pair = m_archivesToDownload.takeFirst();
+        BinaryFormatEngineHandler::instance()->registerResource(pair.first,
             m_downloader->downloadedFileName());
 
         emit fileDownloadReady(m_downloader->downloadedFileName());
@@ -341,7 +337,7 @@ void DownloadArchivesJob::downloadFailed(const QString &error)
     const QMessageBox::StandardButton b =
         MessageBoxHandler::critical(MessageBoxHandler::currentBestSuitParent(),
         QLatin1String("archiveDownloadError"), tr("Download Error"), tr("Cannot download archive %1: %2")
-        .arg(m_archivesToDownload.first().sourceUrl, error), QMessageBox::Retry | QMessageBox::Cancel,
+        .arg(m_archivesToDownload.first().second, error), QMessageBox::Retry | QMessageBox::Cancel,
         QMessageBox::Retry);
 
     if (b == QMessageBox::Retry) {
@@ -371,13 +367,13 @@ void DownloadArchivesJob::finishWithError(const QString &error)
 KDUpdater::FileDownloader *DownloadArchivesJob::setupDownloader(const QString &suffix, const QString &queryString)
 {
     KDUpdater::FileDownloader *downloader = nullptr;
-    const QFileInfo fi = QFileInfo(m_archivesToDownload.first().fileName);
+    const QFileInfo fi = QFileInfo(m_archivesToDownload.first().first);
     const Component *const component = m_core->componentByName(PackageManagerCore::checkableName(QFileInfo(fi.path()).fileName()));
     if (component) {
         QString fullQueryString;
         if (!queryString.isEmpty())
             fullQueryString = QLatin1String("?") + queryString;
-        const QUrl url(m_archivesToDownload.first().sourceUrl + suffix + fullQueryString);
+        const QUrl url(m_archivesToDownload.first().second + suffix + fullQueryString);
         const QString &scheme = url.scheme();
         downloader = FileDownloaderFactory::instance().create(scheme, this);
 

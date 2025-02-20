@@ -1,7 +1,6 @@
 <Updates>
  <ApplicationName>{AnyApplication}</ApplicationName>
  <ApplicationVersion>1.0.0</ApplicationVersion>
- <Checksum>true</Checksum>
  <PackageUpdate>
   <Name>example.with.unstable.dependency</Name>
   <DisplayName>README.txt</DisplayName>

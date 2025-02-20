@@ -8,7 +8,9 @@
         <file>data/repositorywithchecksumcheck/B/1.0.0-1content.7z.sha1</file>
         <file>data/repositorywithnochecksumcheck/Updates.xml</file>
         <file>data/repositorywithnochecksumcheck/C/1.0.2-1content.7z</file>
+        <file>data/repositorywithnochecksumcheck/C/1.0.2-1content.7z.sha1</file>
         <file>data/repositorywithnochecksumcheck/D/1.0.0-1content.7z</file>
+        <file>data/repositorywithnochecksumcheck/D/1.0.0-1content.7z.sha1</file>
         <file>data/repositorywithinvalidchecksum/Updates.xml</file>
         <file>data/repositorywithinvalidchecksum/E/1.0.2-1content.7z</file>
         <file>data/repositorywithinvalidchecksum/E/1.0.2-1content.7z.sha1</file>

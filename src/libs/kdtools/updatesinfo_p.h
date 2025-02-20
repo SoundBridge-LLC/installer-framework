@@ -74,8 +74,6 @@ public:
     QString applicationName() const;
     QString applicationVersion() const;
 
-    QString checkSha1CheckSum() const;
-
     int updateInfoCount() const;
     UpdateInfo updateInfo(int index) const;
     QList<UpdateInfo> updatesInfo() const;

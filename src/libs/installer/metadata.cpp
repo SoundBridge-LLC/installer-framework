@@ -51,7 +51,7 @@ namespace QInstaller {
     \internal
 */
 static bool verifyFileIntegrityFromElement(const QDomElement &element, const QString &childNodeName,
-    const QString &attribute, const QString &metaDirectory, bool testChecksum)
+    const QString &attribute, const QString &metaDirectory)
 {
     const QDomNodeList nodes = element.childNodes();
     for (int i = 0; i < nodes.count(); ++i) {
@@ -74,9 +74,6 @@ static bool verifyFileIntegrityFromElement(const QDomElement &element, const QSt
                 << "for reading:" << file.errorString();
             return false;
         }
-
-        if (!testChecksum)
-            continue;
 
         QCryptographicHash hash(QCryptographicHash::Sha1);
         hash.addData(&file);
@@ -354,11 +351,6 @@ bool Metadata::verifyMetaFiles(QFile *updateFile) const
     const QDomElement rootElement = doc.documentElement();
     const QDomNodeList childNodes = rootElement.childNodes();
 
-    bool testChecksum = true;
-    const QDomElement checksumElement = rootElement.firstChildElement(QLatin1String("Checksum"));
-    if (!checksumElement.isNull())
-        testChecksum = (checksumElement.text().toLower() == scTrue);
-
     for (int i = 0; i < childNodes.count(); ++i) {
         const QDomElement element = childNodes.at(i).toElement();
         if (element.isNull() || element.tagName() != QLatin1String("PackageUpdate"))
@@ -381,22 +373,22 @@ bool Metadata::verifyMetaFiles(QFile *updateFile) const
 
             if (metaElement.tagName() == QLatin1String("Licenses")) {
                 if (!verifyFileIntegrityFromElement(metaElement, QLatin1String("License"),
-                        QLatin1String("file"), packagePath, testChecksum)) {
+                        QLatin1String("file"), packagePath)) {
                     return false;
                 }
             } else if (metaElement.tagName() == QLatin1String("UserInterfaces")) {
                 if (!verifyFileIntegrityFromElement(metaElement, QLatin1String("UserInterface"),
-                        QString(), packagePath, testChecksum)) {
+                        QString(), packagePath)) {
                     return false;
                 }
             } else if (metaElement.tagName() == QLatin1String("Translations")) {
                 if (!verifyFileIntegrityFromElement(metaElement, QLatin1String("Translation"),
-                        QString(), packagePath, testChecksum)) {
+                        QString(), packagePath)) {
                     return false;
                 }
             } else if (metaElement.tagName() == QLatin1String("Script")) {
                 if (!verifyFileIntegrityFromElement(metaElement.parentNode().toElement(),
-                        QLatin1String("Script"), QString(), packagePath, testChecksum)) {
+                        QLatin1String("Script"), QString(), packagePath)) {
                     return false;
                 }
             } else {

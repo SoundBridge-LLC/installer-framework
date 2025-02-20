@@ -5,4 +5,5 @@ SUBDIRS += \
     binarycreator \
     repogen \
     devtool \
-    repocompare
+    repocompare \
+    checksumgenerator

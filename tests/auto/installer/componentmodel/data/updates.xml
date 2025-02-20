@@ -1,7 +1,6 @@
 <Updates>
     <ApplicationName>Your application</ApplicationName>
     <ApplicationVersion>1.2.3</ApplicationVersion>
-    <Checksum>true</Checksum>
     <PackageUpdate>
         <Name>com.vendor.product</Name>
         <DisplayName>The root component</DisplayName>

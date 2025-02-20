@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -847,19 +847,15 @@ int PackageManagerCore::downloadNeededArchives(double partProgressSize)
 {
     Q_ASSERT(partProgressSize >= 0 && partProgressSize <= 1);
 
-    QList<DownloadItem> archivesToDownload;
+    QList<QPair<QString, QString> > archivesToDownload;
     quint64 archivesToDownloadTotalSize = 0;
     QList<Component*> neededComponents = orderedComponentsToInstall();
     foreach (Component *component, neededComponents) {
         // collect all archives to be downloaded
         const QStringList toDownload = component->downloadableArchives();
-        bool checkSha1CheckSum = (component->value(scCheckSha1CheckSum).toLower() == scTrue);
         foreach (const QString &versionFreeString, toDownload) {
-            DownloadItem item;
-            item.checkSha1CheckSum = checkSha1CheckSum;
-            item.fileName = scInstallerPrefixWithTwoArgs.arg(component->name(), versionFreeString);
-            item.sourceUrl = scThreeArgs.arg(component->repositoryUrl().toString(), component->name(), versionFreeString);
-            archivesToDownload.push_back(item);
+            archivesToDownload.push_back(qMakePair(scInstallerPrefixWithTwoArgs.arg(component->name(), versionFreeString),
+                scThreeArgs.arg(component->repositoryUrl().toString(), component->name(), versionFreeString)));
         }
         archivesToDownloadTotalSize += component->value(scCompressedSize).toULongLong();
     }

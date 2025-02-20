@@ -1,7 +1,6 @@
 <Updates>
  <ApplicationName>{AnyApplication}</ApplicationName>
  <ApplicationVersion>1.0.0</ApplicationVersion>
- <Checksum>false</Checksum>
  <PackageUpdate>
   <Name>qt.tools.qtcreator</Name>
   <DisplayName>Component qtcreator. Dependency removed</DisplayName>

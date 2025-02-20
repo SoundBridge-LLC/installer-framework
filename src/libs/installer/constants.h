@@ -78,7 +78,6 @@ static const QLatin1String scOfflineBinaryName("OfflineBinaryName");
 static const QLatin1String scSHA1("SHA1");
 static const QLatin1String scMetadataName("MetadataName");
 static const QLatin1String scContentSha1("ContentSha1");
-static const QLatin1String scCheckSha1CheckSum("CheckSha1CheckSum");
 
 static const char * const scClearCacheHint = QT_TR_NOOP(
     "This may be solved by restarting the application after clearing the cache from:");

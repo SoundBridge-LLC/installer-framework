@@ -1,7 +1,6 @@
 <Updates>
  <ApplicationName>{AnyApplication}</ApplicationName>
  <ApplicationVersion>1.0.0</ApplicationVersion>
- <Checksum>false</Checksum>
  <PackageUpdate>
   <Name>A</Name>
   <DisplayName>A</DisplayName>
@@ -12,6 +11,6 @@
   <Script>script.qs</Script>
   <UpdateFile CompressedSize="225" UncompressedSize="75" OS="Any"/>
   <DownloadableArchives>content.7z</DownloadableArchives>
-  <SHA1>6d7a3e15d11a4d94b81452fc2aa18e705a01c922</SHA1>
+  <SHA1>b2515feca8f6f836ae6aa58db6b42e764629fbb4</SHA1>
  </PackageUpdate>
 </Updates>

@@ -111,13 +111,6 @@ public:
         All = (Root | Descendants | Dependencies | Replacements)
     };
 
-    struct DownloadItem
-    {
-        QString fileName;
-        QString sourceUrl;
-        bool checkSha1CheckSum;
-    };
-
     Q_DECLARE_FLAGS(ComponentTypes, ComponentType)
 
     static QFont virtualComponentsFont();

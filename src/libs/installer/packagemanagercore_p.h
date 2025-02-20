@@ -202,7 +202,6 @@ public:
     QString m_error;
 
     bool m_needsHardRestart;
-    bool m_testChecksum;
     bool m_launchedAsRoot;
     bool m_commandLineInstance;
     bool m_defaultInstall;

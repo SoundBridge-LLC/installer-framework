@@ -1,7 +1,6 @@
 <Updates>
  <ApplicationName>{AnyApplication}</ApplicationName>
  <ApplicationVersion>1.0.0</ApplicationVersion>
- <Checksum>false</Checksum>
  <PackageUpdate>
   <Name>componentA</Name>
   <DisplayName>Component A</DisplayName>
@@ -147,7 +146,7 @@
   <SortingPriority>30</SortingPriority>
   <UpdateFile OS="Any" CompressedSize="281" UncompressedSize="99"/>
   <DownloadableArchives>content.7z</DownloadableArchives>
-  <SHA1>8cba36dd589492c28e0d04942b4f8aa0a09f59cc</SHA1>
+  <SHA1>4b7ecc062b082daa951d5e8e7d8692aaedfefae2</SHA1>
  </PackageUpdate>
  <PackageUpdate>
   <Name>componentH</Name>

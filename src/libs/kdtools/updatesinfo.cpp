@@ -73,10 +73,8 @@ void UpdatesInfoData::parseFile(const QString &updateXmlFile)
                     applicationName = reader.readElementText();
                 } else if (reader.name() == QLatin1String("ApplicationVersion")) {
                     applicationVersion = reader.readElementText();
-                } else if (reader.name() == QLatin1String("Checksum")) {
-                    checkSha1CheckSum = (reader.readElementText());
                 } else if (reader.name() == QLatin1String("PackageUpdate")) {
-                    if (!parsePackageUpdateElement(reader, checkSha1CheckSum))
+                    if (!parsePackageUpdateElement(reader))
                         return; //error handled in subroutine
                 } else {
                     reader.skipCurrentElement();
@@ -102,7 +100,7 @@ void UpdatesInfoData::parseFile(const QString &updateXmlFile)
     error = UpdatesInfo::NoError;
 }
 
-bool UpdatesInfoData::parsePackageUpdateElement(QXmlStreamReader &reader, const QString &checkSha1CheckSum)
+bool UpdatesInfoData::parsePackageUpdateElement(QXmlStreamReader &reader)
 {
     UpdateInfo info;
     QHash<QString, QVariant> scriptHash;
@@ -167,7 +165,6 @@ bool UpdatesInfoData::parsePackageUpdateElement(QXmlStreamReader &reader, const 
         setInvalidContentError(tr("PackageUpdate element without ReleaseDate"));
         return false;
     }
-    info.data[QLatin1String("CheckSha1CheckSum")] = checkSha1CheckSum;
     updateInfoList.append(info);
     return true;
 }
@@ -295,11 +292,6 @@ QString UpdatesInfo::applicationName() const
 QString UpdatesInfo::applicationVersion() const
 {
     return d->applicationVersion;
-}
-
-QString UpdatesInfo::checkSha1CheckSum() const
-{
-    return d->checkSha1CheckSum;
 }
 
 int UpdatesInfo::updateInfoCount() const
