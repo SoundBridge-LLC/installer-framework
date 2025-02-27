@@ -10,10 +10,12 @@ SOURCES += $$PWD/rcc/rcc.cpp \
 
 HEADERS += $$PWD/ifwtools_global.h \
     $$PWD/repositorygen.h \
-    $$PWD/binarycreator.h
+    $$PWD/binarycreator.h \
+    $$PWD/binarydump.h
 
 SOURCES += $$PWD/repositorygen.cpp \
-    $$PWD/binarycreator.cpp
+    $$PWD/binarycreator.cpp \
+    $$PWD/binarydump.cpp
 
 RESOURCES += $$PWD/resources/ifwtools.qrc
 

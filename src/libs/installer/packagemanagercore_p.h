@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -96,6 +96,8 @@ public:
     QString maintenanceToolAliasPath() const;
     QString installerBinaryPath() const;
     QString offlineBinaryName() const;
+    void setHybridInstaller(const PackageManagerCore::HybridInstaller hybridInstaller);
+    bool isHybridInstaller() const;
     QString datFileName();
 
     void writeMaintenanceConfigFiles();
@@ -344,6 +346,7 @@ private:
     bool m_allowCompressedRepositoryInstall;
     int m_connectedOperations;
     QStringList m_componentsToBeInstalled;
+    PackageManagerCore::HybridInstaller m_hybridInstaller;
 };
 
 } // namespace QInstaller

@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -31,11 +31,15 @@
 #include <copydirectoryoperation.h>
 #include <errors.h>
 #include <fileio.h>
+#include <binarycontent.h>
 
 #include <QDirIterator>
 #include <QDomDocument>
+#include <QResource>
 
 #include <iostream>
+
+using namespace QInstallerTools;
 
 int BinaryDump::dump(const QInstaller::ResourceCollectionManager &manager, const QString &target)
 {
@@ -133,4 +137,30 @@ int BinaryDump::dump(const QInstaller::ResourceCollectionManager &manager, const
         std::cerr << "Unknown exception caught." << std::endl;
     }
     return result;
+}
+
+void BinaryDump::initializeBinaryDump(qint64 &magicMarker, QList<QInstaller::OperationBlob> &operations,
+                                      QInstaller::ResourceCollectionManager &manager,
+                                      QVector<QByteArray> &resourceMappings,  quint64 cookie,
+                                      const QString path)
+{
+    QFile file(path);
+    QInstaller::openForRead(&file);
+
+    QInstaller::BinaryContent::readBinaryContent(&file, &operations, &manager, &magicMarker, cookie);
+
+    // map the inbuilt resources
+    const QInstaller::ResourceCollection meta = manager.collectionByName("QResources");
+    foreach (const QSharedPointer<QInstaller::Resource> &resource, meta.resources()) {
+        const bool isOpen = resource->isOpen();
+        if ((!isOpen) && (!resource->open()))
+            continue;
+
+        const QByteArray ba = resource->readAll();
+        if (!QResource::registerResource((const uchar*) ba.data(), QLatin1String(":/metadata")))
+            throw QInstaller::Error(QLatin1String("Cannot register in-binary resource."));
+        resourceMappings.append(ba);
+        if (!isOpen)
+            resource->close();
+    }
 }

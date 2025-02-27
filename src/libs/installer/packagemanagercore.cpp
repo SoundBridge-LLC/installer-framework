@@ -3203,10 +3203,12 @@ PackageManagerCore::Status PackageManagerCore::removeInstallationSilently()
     a user interface. Virtual components cannot be selected unless made visible with
     --show-virtual-components as in installation. AutoDependOn nor non-checkable components
     cannot be selected directly. Returns \c PackageManagerCore::Status.
+    If \a createHybrid is true, offline installation can be updated with maintenance tool.
 */
-PackageManagerCore::Status PackageManagerCore::createOfflineInstaller(const QStringList &componentsToAdd)
+PackageManagerCore::Status PackageManagerCore::createOfflineInstaller(const QStringList &componentsToAdd, const HybridInstaller createHybrid)
 {
     setOfflineGenerator();
+    d->setHybridInstaller(createHybrid);
     return d->fetchComponentsAndInstall(componentsToAdd);
 }
 

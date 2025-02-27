@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -31,6 +31,8 @@
 
 #include <binaryformat.h>
 
+namespace QInstallerTools {
+
 class BinaryDump
 {
     Q_DISABLE_COPY(BinaryDump)
@@ -38,6 +40,13 @@ class BinaryDump
 public:
     BinaryDump() {}
     int dump(const QInstaller::ResourceCollectionManager &manager, const QString &target);
+    static void initializeBinaryDump(qint64 &magicMarker,
+                                    QList<QInstaller::OperationBlob> &operations,
+                                    QInstaller::ResourceCollectionManager &manager,
+                                    QVector<QByteArray> &resourceMappings,
+                                    quint64 cookie, const QString path);
 };
+
+} // namespace QInstallerTools
 
 #endif // BINARYDUMP_H

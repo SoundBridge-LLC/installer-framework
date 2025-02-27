@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2023 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -263,6 +263,8 @@ static const QLatin1String scRootShort("t");
 static const QLatin1String scRootLong("root");
 static const QLatin1String scOfflineInstallerNameShort("oi");
 static const QLatin1String scOfflineInstallerNameLong("offline-installer-name");
+static const QLatin1String scCreateHybridShort("hb");
+static const QLatin1String scCreateHybridLong("hybrid");
 static const QLatin1String scPlatformShort("p");
 static const QLatin1String scPlatformLong("platform");
 static const QLatin1String scNoForceInstallationShort("nf");

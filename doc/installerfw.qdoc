@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -330,6 +330,12 @@
             \li --oi, --offline-installer-name <filename>
             \li [CLI] Set custom filename for the generated offline installer. Without this
                 the original filename is used with an added "_offline-yyyy-MM-dd" suffix.
+        \row
+            \li --hb, --hybrid
+            \li [CLI] Create a hybrid installer from selected packages.
+                Use together with the \c create-offline command. The hybrid installer
+                is an offline installer, but after installation, you can use \e {\MT}
+                for online updates.
         \row
             \li -p, --platform <plugin>
             \li Use the specified platform plugin.
@@ -1325,9 +1331,6 @@
     and receive others via a network connection. For more information, see
     \l {Reducing Installer Size}.
 
-    For information about how to implement data integration into the
-    installer binary, see QInstaller::BinaryContent.
-
     \note If you change this configuration, you must recompile the
     \c installerbase tool.
 
@@ -1343,13 +1346,13 @@
 
         \li On Windows:
     \code
-    <location-of-ifw>\binarycreator.exe -t <location-of-ifw>\installerbase.exe -p <package_directory> -c <config_directory>\<config_file> <installer_name>
+    <location-of-ifw>\binarycreator.exe --offline-only -t <location-of-ifw>\installerbase.exe -p <package_directory> -c <config_directory>\<config_file> <installer_name>
     \endcode
 
         \li On Linux and macOS
 
     \code
-    <location-of-ifw>/binarycreator -t <location-of-ifw>/installerbase -p <package_directory> -c <config_directory>/<config_file> <installer_name>
+    <location-of-ifw>/binarycreator --offline-only -t <location-of-ifw>/installerbase -p <package_directory> -c <config_directory>/<config_file> <installer_name>
     \endcode
 
     \endlist
@@ -1401,6 +1404,11 @@
             \li -f or --offline-only
             \li Create an offline installer that never accesses online
                 repositories.
+        \row
+            \li -hb or --hybrid
+            \li Create a hybrid installer from selected packages.
+                The hybrid installer is an offline installer, but after installation,
+                you can use \e {\MT} for online updates.
         \row
             \li -c or --config file
             \li Use \c file as the \l{Configuration File}
@@ -1771,7 +1779,7 @@
 
     The \c <RepositoryCategory> element in the installer configuration file
     (config.xml) can contain a list of several \c <RemoteRepositories> elements. Each \c <RemoteRepositories>
-    element within the \c <RepositoryCagetory> element is considered a category. Each catecory can have
+    element within the \c <RepositoryCategory> element is considered a category. Each category can have
     a \c <DisplayName>, a \c <Tooltip>, a \c <Preselected> element and several \c <Repository> elements.
     Repository categories are shown in the component selection page,
     on the left side of the component selection widget:
@@ -1814,13 +1822,19 @@
     <location-of-ifw>\binarycreator.exe -t <location-of-ifw>\installerbase.exe -p <package_directory> -c <config_directory>\<config_file> -e <packages> <installer_name>
     \endcode
 
+    If a \l{Package Directory} contains packages when the installer is created, those are stored inside
+    of the installer binary. To create an online installer in Windows, use \l{binarycreator} option \c --online-only:
+    \code
+    <location-of-ifw>\binarycreator.exe --online-only -t <location-of-ifw>\installerbase.exe -p <package_directory> -c <config_directory>\<config_file> <installer_name>
+    \endcode
+
     For example, enter the following command to create an installer binary
     called SDKInstaller.exe that will not contain data for org.qt-project.sdk.qt and
     org.qt-project.qtcreator, because those packages are downloaded from a remote
     repository:
 
     \code
-    binarycreator.exe -p installer-packages -c installer-config\config.xml -e org.qt-project.sdk.qt,org.qt-project.qtcreator SDKInstaller.exe
+    <location-of-ifw>\binarycreator.exe -p installer-packages -c installer-config\config.xml -e org.qt-project.sdk.qt,org.qt-project.qtcreator SDKInstaller.exe
     \endcode
 
     \section1 Reducing Installer Size
@@ -1847,20 +1861,28 @@
     \title Creating Offline Installers
 
     Offline installers do not try to connect to an online repository at all
-    during installation. However, the metadata configuration (config.xml)
-    enables users to add and update components online.
+    during installation. To create an offline installer, use the \c offline-only
+    option of the \l{binarycreator} tool.
+
+    If you want to be able to update the installation later on, use the \c hybrid
+    option of the \l{binarycreator} tool. To create hybrid offline installers,
+    repositories need to be defined in \l{Configuration File} and packages
+    available in \l{Package Directory}.
 
     Offline installers are especially useful in cases where a corporate firewall
     does not allow end users to connect to web servers. The network
     administrator can set up a local update service within the network.
 
-    To create offline installers, use the \c{--offline-only} option of the
-    \c binarycreator tool.
-
     To create an offline installer in Windows, enter the following command:
 
     \code
     <location-of-ifw>\binarycreator.exe --offline-only -t <location-of-ifw>\installerbase.exe -p <package_directory> -c <config_directory>\<config_file> <installer_name>
+    \endcode
+
+    To create a hybrid offline installer in Windows, enter the following command:
+
+    \code
+    <location-of-ifw>\binarycreator.exe --hybrid -t <location-of-ifw>\installerbase.exe -p <package_directory> -c <config_directory>\<config_file> <installer_name>
     \endcode
 
     Some options have default values, and therefore, you can omit them.

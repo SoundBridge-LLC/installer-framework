@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2022 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -144,6 +144,10 @@ CommandLineParser::CommandLineParser()
         QLatin1String("[CLI] Set custom filename for the generated offline installer. Without this "
                       "the original filename is used with an added \"_offline-yyyy-MM-dd\" suffix."),
         QLatin1String("filename")), CommandLineOnly);
+    addOption(QCommandLineOption(QStringList()
+        << CommandLineOptions::scCreateHybridShort << CommandLineOptions::scCreateHybridLong,
+        QLatin1String("[CLI] Create hybrid offline installer from selected packages. Is used together with command create-offline."
+                    "Hybrid installer is an offline installer, but after installation maintenance tool can be used for online updates.")));
     addOption(QCommandLineOption(QStringList()
         << CommandLineOptions::scPlatformShort << CommandLineOptions::scPlatformLong,
         QLatin1String("Use the specified platform plugin."),

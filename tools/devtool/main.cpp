@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -215,33 +215,14 @@ int main(int argc, char *argv[])
             }
         }
 
-        QFile file(path);
-        QInstaller::openForRead(&file);
-
         qint64 magicMarker;
         QList<QInstaller::OperationBlob> operations;
         QInstaller::ResourceCollectionManager manager;
-        QInstaller::BinaryContent::readBinaryContent(&file, &operations, &manager, &magicMarker,
-            cookie);
-
-        // map the inbuilt resources
-        const QInstaller::ResourceCollection meta = manager.collectionByName("QResources");
-        foreach (const QSharedPointer<QInstaller::Resource> &resource, meta.resources()) {
-            const bool isOpen = resource->isOpen();
-            if ((!isOpen) && (!resource->open()))
-                continue;   // TODO: should we throw here?
-
-            const QByteArray ba = resource->readAll();
-            if (!QResource::registerResource((const uchar*) ba.data(), QLatin1String(":/metadata")))
-                throw QInstaller::Error(QLatin1String("Cannot register in-binary resource."));
-            resourceMappings.append(ba);
-            if (!isOpen)
-                resource->close();
-        }
+        QInstallerTools::BinaryDump::initializeBinaryDump(magicMarker, operations, manager, resourceMappings, cookie, path);
 
         if (command == QLatin1String("dump")) {
             // To dump the content we do not need the binary format engine.
-            BinaryDump bd;
+            QInstallerTools::BinaryDump bd;
             result = bd.dump(manager, arguments.last());
         } else if (command == QLatin1String("operation")) {
             QInstaller::BinaryFormatEngineHandler::instance()->registerResources(manager

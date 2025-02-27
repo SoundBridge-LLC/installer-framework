@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>data/packages/A/data/A.txt</file>
+        <file>data/packages/A/meta/package.xml</file>
+        <file>data/packages/B/data/B.txt</file>
+        <file>data/packages/B/meta/package.xml</file>
+        <file>data/config/config.xml</file>
+    </qresource>
+</RCC>

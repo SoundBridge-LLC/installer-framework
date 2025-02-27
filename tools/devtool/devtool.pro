@@ -14,13 +14,11 @@ DESTDIR = $$IFW_APP_PATH
 macos:QTPLUGIN += qsecuretransportbackend
 
 HEADERS += operationrunner.h \
-    binaryreplace.h \
-    binarydump.h
+    binaryreplace.h
 
 SOURCES += main.cpp \
     operationrunner.cpp \
-    binaryreplace.cpp \
-    binarydump.cpp
+    binaryreplace.cpp
 
 osx:include(../../no_app_bundle.pri)
 

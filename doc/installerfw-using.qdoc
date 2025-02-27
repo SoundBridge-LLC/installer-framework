@@ -513,6 +513,19 @@
     installer.exe --root "C:\TargetFolder" --offline-installer-name "MyInstaller" create-offline componentA componentB
     \endcode
 
+    When installing with an offline installer, installer creates a \MT to the
+    root of the installation. With an offline installer, you can only uninstall with
+    the generated \MT. In case you want to be able to update the offline installation
+    later on with the \MT, use the option \c{--hybrid} when creating the offline installer.
+    With the \c{--hybrid} option, \MT has all the same repositories available as
+    the online installer you used to create the offline installer.
+
+
+    \code
+    installer.exe --root "C:\TargetFolder" --offline-installer-name "MyInstaller" create-offline componentA componentB --hybrid
+    \endcode
+
+
     \section1 Clearing the Local Cache
 
     Online installers and maintenance tools created with the Qt Installer Framework cache the

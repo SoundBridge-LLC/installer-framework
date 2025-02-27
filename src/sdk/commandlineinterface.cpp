@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -226,7 +226,7 @@ int CommandLineInterface::removeInstallation()
     }
 }
 
-int CommandLineInterface::createOfflineInstaller()
+int CommandLineInterface::createOfflineInstaller(const QInstaller::PackageManagerCore::HybridInstaller createHybrid)
 {
     if (!initialize())
         return EXIT_FAILURE;
@@ -250,7 +250,7 @@ int CommandLineInterface::createOfflineInstaller()
             "the generated installer, using default name:" << offlineName;
     }
     try {
-        return m_core->createOfflineInstaller(m_positionalArguments);
+        return m_core->createOfflineInstaller(m_positionalArguments, createHybrid);
     } catch (const QInstaller::Error &err) {
         qCCritical(QInstaller::lcInstallerInstallLog) << err.message();
         return EXIT_FAILURE;

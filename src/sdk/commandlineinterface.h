@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -31,6 +31,10 @@
 
 #include "sdkapp.h"
 
+namespace QInstaller {
+    class PackageManagerCore;
+}
+
 class CommandLineInterface : public SDKApp<QCoreApplication>
 {
     Q_OBJECT
@@ -48,7 +52,7 @@ public:
     int installPackages();
     int uninstallPackages();
     int removeInstallation();
-    int createOfflineInstaller();
+    int createOfflineInstaller(const QInstaller::PackageManagerCore::HybridInstaller createHybrid);
     int clearLocalCache();
 
 private:

@@ -37,6 +37,7 @@
 #include <QFile>
 #include <QDir>
 #include <QtTest/QTest>
+#include <QProcess>
 
 #include <iostream>
 #include <sstream>
@@ -94,13 +95,60 @@ struct VerifyInstaller
 
     static void verifyFileContent(const QString &fileName, const QString &content)
     {
-        QVERIFY(fileContent(fileName).contains(content));
+        QVERIFY2(fileContent(fileName).contains(content), qPrintable(QString("File: \"%1\" does not contain \"%2")
+            .arg(fileName).arg(content)));
     }
 
     static void verifyFileHasNoContent(const QString &fileName, const QString &content)
     {
-        QVERIFY(!fileContent(fileName).contains(content));
+        QVERIFY2(!fileContent(fileName).contains(content), qPrintable(QString("File: \"%1\" contains \"%2\"")
+            .arg(fileName).arg(content)));
     }
+
+    static void runMaintenanceTool(const QString &maintenanceTool, QByteArray &output)
+    {
+        QVERIFY2(QFileInfo::exists(maintenanceTool), qPrintable(QString("Maintenancetool \"%1\""
+             "does not exist").arg(maintenanceTool)));
+        QEventLoop loop;
+        QProcess process;
+
+        QObject::connect(&process, SIGNAL(finished(int,QProcess::ExitStatus)), &loop, SLOT(quit()));
+        process.start(maintenanceTool, QStringList() << "install" << "somePackage", QIODevice::ReadOnly);
+
+        if (process.state() != QProcess::NotRunning)
+            loop.exec();
+        output = process.readAllStandardOutput().trimmed();
+    }
+
+    static void runUninstaller(const QString &maintenanceTool)
+    {
+        QVERIFY2(QFileInfo::exists(maintenanceTool), qPrintable(QString("Maintenancetool \"%1\""
+            "does not exist").arg(maintenanceTool)));
+        QEventLoop loop;
+        QProcess process;
+
+        QObject::connect(&process, SIGNAL(finished(int,QProcess::ExitStatus)), &loop, SLOT(quit()));
+        process.start(maintenanceTool, QStringList() << "purge" << "-c", QIODevice::ReadOnly);
+
+        if (process.state() != QProcess::NotRunning)
+            loop.exec();
+    }
+
+    static void runInstaller(const QString &installDir, const QString &targetFile, QByteArray &output)
+    {
+        QVERIFY2(QFileInfo::exists(targetFile), qPrintable(QString("Installer \"%1\""
+            "does not exist").arg(targetFile)));
+        QEventLoop loop;
+        QProcess process;
+
+        QObject::connect(&process, SIGNAL(finished(int,QProcess::ExitStatus)), &loop, SLOT(quit()));
+        process.start(targetFile, QStringList() << "install" << "--root" << installDir << "-c" << "--accept-licenses", QIODevice::ReadOnly);
+
+        if (process.state() != QProcess::NotRunning)
+            loop.exec();
+        output = process.readAllStandardOutput().trimmed();
+    }
+
     static void getInstallerBaseBinaryFile(QString &m_installerBase)
     {
         QString ifwDir = QUOTE(IFW_LIB_PATH);

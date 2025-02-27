@@ -103,7 +103,7 @@ private slots:
         // Replace the custom message handler installed in QInstaller::init() to suppress all output
         qInstallMessageHandler(silentTestMessageHandler);
 
-        QCOMPARE(expectedStatus, core->createOfflineInstaller(QStringList() << component));
+        QCOMPARE(expectedStatus, core->createOfflineInstaller(QStringList() << component, PackageManagerCore::NonHybrid));
 
         if (expectedStatus == PackageManagerCore::Success) {
 #ifdef Q_OS_LINUX
@@ -154,7 +154,7 @@ private slots:
         // Replace the custom message handler installed in QInstaller::init() to suppress all output
         qInstallMessageHandler(silentTestMessageHandler);
 
-        QCOMPARE(expectedStatus, core->createOfflineInstaller(QStringList() << component));
+        QCOMPARE(expectedStatus, core->createOfflineInstaller(QStringList() << component, PackageManagerCore::NonHybrid));
     }
 
 private:

@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2022 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -65,6 +65,11 @@ static void printUsage()
     std::cout << "  -f|--offline-only         Forces the installer to act as an offline installer, " << std::endl;
     std::cout << "                             i.e. never access online repositories" << std::endl;
 
+    std::cout << "  -h|--hybrid               Forces the installer to act as an offline installer, " << std::endl;
+    std::cout << "                             however, after installing the installation can be updated." << std::endl;
+    std::cout << "                             Requires both package directory '--packages', and online repositories "
+                 "                             in 'config.xml' to be defined." << std::endl;
+
     std::cout << "  -r|--resources r1,.,rn    include the given resource files into the binary" << std::endl;
 
     std::cout << "  -v|--verbose              Verbose output" << std::endl;
@@ -96,9 +101,16 @@ static void printUsage()
     std::cout << "  " << appName << " -c installer-config" << sep << "config.xml -p packages-directory "
         "-e org.qt-project.sdk.qt,org.qt-project.qtcreator -t installerbase" << suffix << " SDKInstaller"
         << suffix << std::endl;
-    std::cout << std::endl;
     std::cout << "Creates an installer for the SDK without qt and qt creator." << std::endl;
     std::cout << std::endl;
+    std::cout << "Example (hybrid installer):" << std::endl;
+    std::cout << "  " << appName << " --hybrid -c installer-config" << sep << "config.xml -p packages-directory "
+        "-t installerbase" << suffix << " SDKInstaller"
+        << suffix << std::endl;
+    std::cout << "Creates an offline installer for the SDK, containing all dependencies." << std::endl;
+    std::cout << "After installation, maintenance tool can be used to update the installation." << std::endl;
+    std::cout << std::endl;
+
     std::cout << "Example update.rcc:" << std::endl;
     std::cout << "  " << appName << " -c installer-config" << sep << "config.xml -p packages-directory "
         "-rcc" << std::endl;
@@ -173,6 +185,9 @@ int main(int argc, char **argv)
         } else if (*it == QLatin1String("-n") || *it == QLatin1String("--online-only")) {
             parsedArgs.onlineOnly = true;
         } else if (*it == QLatin1String("-f") || *it == QLatin1String("--offline-only")) {
+            parsedArgs.offlineOnly = true;
+        } else if (*it == QLatin1String("-h") || *it == QLatin1String("--hybrid")) {
+            parsedArgs.hybridInstaller = true;
             parsedArgs.offlineOnly = true;
         } else if (*it == QLatin1String("-t") || *it == QLatin1String("--template")) {
             ++it;

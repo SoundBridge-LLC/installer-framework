@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2022 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -340,7 +340,10 @@ int main(int argc, char *argv[])
             return CommandLineInterface(argc, argv).removeInstallation();
         } else if (parser.positionalArguments().contains(CommandLineOptions::scCreateOfflineShort)
                 || parser.positionalArguments().contains(CommandLineOptions::scCreateOfflineLong)) {
-            return CommandLineInterface(argc, argv).createOfflineInstaller();
+            bool createHybrid = parser.isSet(CommandLineOptions::scCreateHybridShort)
+                || parser.isSet(CommandLineOptions::scCreateHybridLong);
+            return CommandLineInterface(argc, argv).createOfflineInstaller
+                (createHybrid ? QInstaller::PackageManagerCore::Hybrid : QInstaller::PackageManagerCore::NonHybrid);
         } else if (parser.positionalArguments().contains(CommandLineOptions::scClearCacheShort)
                 || parser.positionalArguments().contains(CommandLineOptions::scClearCacheLong)) {
             return CommandLineInterface(argc, argv).clearLocalCache();

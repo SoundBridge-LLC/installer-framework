@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -109,6 +109,11 @@ public:
         Replacements = 0x8,
         AllNoReplacements = (Root | Descendants | Dependencies),
         All = (Root | Descendants | Dependencies | Replacements)
+    };
+
+    enum HybridInstaller {
+        NonHybrid,
+        Hybrid
     };
 
     Q_DECLARE_FLAGS(ComponentTypes, ComponentType)
@@ -294,7 +299,7 @@ public:
     PackageManagerCore::Status installDefaultComponentsSilently();
     PackageManagerCore::Status uninstallComponentsSilently(const QStringList& components);
     PackageManagerCore::Status removeInstallationSilently();
-    PackageManagerCore::Status createOfflineInstaller(const QStringList &componentsToAdd);
+    PackageManagerCore::Status createOfflineInstaller(const QStringList &componentsToAdd, const HybridInstaller createHybrid);
 
     // convenience
     Q_INVOKABLE void setInstaller();

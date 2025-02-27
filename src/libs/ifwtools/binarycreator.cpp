@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2022 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -584,13 +584,17 @@ QList<QSharedPointer<QInstaller::Resource> > createBinaryResourceFiles(const QSt
     return result;
 }
 
-void QInstallerTools::copyConfigData(const QString &configFile, const QString &targetDir)
+void QInstallerTools::copyConfigData(const BinaryCreatorArgs &args, const QString &targetDir)
 {
     qDebug() << "Begin to copy configuration file and data.";
 
-    const QString sourceConfigFile = QFileInfo(configFile).absoluteFilePath();
+    const QString sourceConfigFile = QFileInfo(args.configFile).absoluteFilePath();
     const QString targetConfigFile = targetDir + QLatin1String("/config.xml");
-    QInstallerTools::copyWithException(sourceConfigFile, targetConfigFile, QLatin1String("configuration"));
+
+    QStringList elementsToRemoveTags;
+    if (args.offlineOnly && !args.hybridInstaller)
+        elementsToRemoveTags << scRemoteRepositories << scRepositoryCategories;
+    QInstaller::trimmedCopyConfigData(sourceConfigFile, targetConfigFile, elementsToRemoveTags);
 
     // Permissions might be set to bogus values
     QInstaller::setDefaultFilePermissions(targetConfigFile, DefaultFilePermissions::NonExecutable);
@@ -838,7 +842,7 @@ int QInstallerTools::createBinary(BinaryCreatorArgs args, QString &argumentError
             .applicationName(), settings.version(), unite7zFiles);
 
         // 4; copy the configuration file and and icons etc.
-        copyConfigData(args.configFile, tmpMetaDir + QLatin1String("/installer-config"));
+        copyConfigData(args, tmpMetaDir + QLatin1String("/installer-config"));
         {
             QSettings confInternal(tmpMetaDir + QLatin1String("/config/config-internal.ini")
                 , QSettings::IniFormat);
@@ -848,6 +852,7 @@ int QInstallerTools::createBinary(BinaryCreatorArgs args, QString &argumentError
             if (args.onlineOnly)
                 args.offlineOnly = !args.onlineOnly;
             confInternal.setValue(QLatin1String("offlineOnly"), args.offlineOnly);
+            confInternal.setValue(QLatin1String("hybridInstaller"), args.hybridInstaller);
         }
 
         if (!args.compileResource) {

@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -200,6 +200,7 @@ PackageManagerCorePrivate::PackageManagerCorePrivate(PackageManagerCore *core)
     , m_allowCompressedRepositoryInstall(false)
 #endif
     , m_connectedOperations(0)
+    , m_hybridInstaller(PackageManagerCore::NonHybrid)
 {
 }
 
@@ -246,6 +247,7 @@ PackageManagerCorePrivate::PackageManagerCorePrivate(PackageManagerCore *core, q
     , m_allowCompressedRepositoryInstall(false)
 #endif
     , m_connectedOperations(0)
+    , m_hybridInstaller(PackageManagerCore::NonHybrid)
 {
     foreach (const OperationBlob &operation, performedOperations) {
         std::unique_ptr<QInstaller::Operation> op(KDUpdater::UpdateOperationFactory::instance()
@@ -947,6 +949,16 @@ QString PackageManagerCorePrivate::offlineBinaryName() const
         filename += suffix;
 #endif
     return QString::fromLatin1("%1/%2").arg(targetDir()).arg(filename);
+}
+
+void PackageManagerCorePrivate::setHybridInstaller(const PackageManagerCore::HybridInstaller hybridInstaller)
+{
+    m_hybridInstaller = hybridInstaller;
+}
+
+bool PackageManagerCorePrivate::isHybridInstaller() const
+{
+    return m_hybridInstaller;
 }
 
 QString PackageManagerCorePrivate::datFileName()
@@ -2321,8 +2333,10 @@ bool PackageManagerCorePrivate::runOfflineGenerator()
         ProgressCoordinator::instance()->emitLabelAndDetailTextChanged(tr("Preparing installer configuration..."));
 
         // Create copy of internal config file and data, remove repository related elements
-        QInstaller::trimmedCopyConfigData(m_data.settingsFilePath(), tempSettingsFilePath,
-            QStringList() << scRemoteRepositories << scRepositoryCategories);
+        QStringList elementsToRemoveTags;
+        if (!isHybridInstaller())
+            elementsToRemoveTags << scRemoteRepositories << scRepositoryCategories;
+        QInstaller::trimmedCopyConfigData(m_data.settingsFilePath(), tempSettingsFilePath, elementsToRemoveTags);
 
         // Assemble final installer binary
         QInstallerTools::BinaryCreatorArgs args;
@@ -2333,6 +2347,7 @@ bool PackageManagerCorePrivate::runOfflineGenerator()
 #endif
         args.templateBinary = offlineBinaryTempName;
         args.offlineOnly = true;
+        args.hybridInstaller = isHybridInstaller();
         args.configFile = tempSettingsFilePath;
         args.ftype = QInstallerTools::Include;
         // Add possible custom resources
@@ -3005,6 +3020,9 @@ QList<ComponentAlias *> PackageManagerCorePrivate::componentAliases()
 
 bool PackageManagerCorePrivate::fetchMetaInformationFromRepositories(DownloadType type)
 {
+    if (isOfflineOnly() && type != CompressedPackage)
+        return true;
+
     m_updates = false;
     m_repoFetched = false;
     m_updateSourcesAdded = false;
