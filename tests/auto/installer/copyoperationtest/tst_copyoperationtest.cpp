@@ -75,7 +75,8 @@ private slots:
         m_testDestinationFilePath = QDir(m_testDestinationPath).absoluteFilePath(QFileInfo(
             qApp->applicationFilePath()).fileName());
         if (QDir(m_testDestinationPath).exists()) {
-            QFAIL("Remove test folder first!");
+            QDir dir(m_testDestinationPath);
+            QVERIFY(dir.removeRecursively());
         }
     }
 

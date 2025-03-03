@@ -48,7 +48,8 @@ private slots:
        QInstaller::init();
        QString path = QDir::current().path() + QDir::toNativeSeparators("/test");
        if (QDir(path).exists()) {
-           QFAIL("Remove test folder first!");
+           QDir dir(path);
+           QVERIFY(dir.removeRecursively());
        }
     }
 
