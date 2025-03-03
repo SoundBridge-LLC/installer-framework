@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -27,6 +27,7 @@
 **************************************************************************/
 
 #include "../shared/packagemanager.h"
+#include "../shared/verifyinstaller.h"
 
 #include <packagemanagercore.h>
 #include <errors.h>
@@ -43,17 +44,7 @@ class tst_CreateOffline : public QObject
 private slots:
     void initTestCase()
     {
-        // Need to provide a replacement base binary as we are not running actual installer
-#ifdef Q_OS_WIN
-        m_installerBase = "../../../../bin/installerbase.exe";
-#else
-        m_installerBase = "../../../../bin/installerbase";
-#endif
-        if (!QFile(m_installerBase).exists()) {
-            QSKIP("No \"installerbase\" binary found in source tree. This can be "
-                  "the case if this is an out of sources build or the binaries are "
-                  "installed to a location with a different path prefix.");
-        }
+        VerifyInstaller::getInstallerBaseBinaryFile(m_installerBase);
     }
 
     void init()

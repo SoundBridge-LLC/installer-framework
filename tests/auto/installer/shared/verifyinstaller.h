@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2023 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -40,6 +40,9 @@
 
 #include <iostream>
 #include <sstream>
+
+#define QUOTE_(x) #x
+#define QUOTE(x) QUOTE_(x)
 
 struct VerifyInstaller
 {
@@ -97,6 +100,39 @@ struct VerifyInstaller
     static void verifyFileHasNoContent(const QString &fileName, const QString &content)
     {
         QVERIFY(!fileContent(fileName).contains(content));
+    }
+    static void getInstallerBaseBinaryFile(QString &m_installerBase)
+    {
+        QString ifwDir = QUOTE(IFW_LIB_PATH);
+        QDir dir;
+        if (!ifwDir.isEmpty()) {
+            dir.setPath(ifwDir);
+            dir.cdUp();
+            dir.cd("bin");
+        }
+        if (!dir.exists()) {
+            dir = QDir::current();
+            for (int i = 0; i < 4; i++) {
+                if (!dir.cdUp())
+                    break;
+                if (dir.cd("bin"))
+                    break;
+            }
+        }
+        if (!dir.exists())
+            QSKIP(qPrintable(QString("Could not find installer path \"%1\"").arg(dir.absolutePath())));
+
+        m_installerBase = dir.absolutePath();
+#ifdef Q_OS_WIN
+        m_installerBase.append(QLatin1String("/installerbase.exe"));
+#else
+        m_installerBase.append(QLatin1String("/installerbase"));
+#endif
+        if (!QFile::exists(m_installerBase)) {
+            QSKIP(qPrintable(QString("No \"%1\" binary found in source tree. This can be "
+                "the case if this is an out of sources build or the binaries are "
+                "installed to a location with a different path prefix.").arg(m_installerBase)));
+        }
     }
 
     static void addToFileMap(const QDir &baseDir, const QFileInfo &fileInfo, QMap<QString, QByteArray> &map)
