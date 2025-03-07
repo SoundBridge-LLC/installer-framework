@@ -69,7 +69,6 @@ private:
 private:
     QHash<Component*, QSet<Component*> > m_visitedComponents;
     QList<const Component*> m_componentsForAutodepencencyCheck;
-    QSet<QString> m_toInstallComponentIds; //for faster lookups
     QSet<QString> m_toInstallComponentAliases;
     //Helper hash for quicker search for autodependency components
     AutoDependencyHash m_autoDependencyComponentHash;

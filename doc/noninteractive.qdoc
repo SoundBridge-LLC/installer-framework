@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2022 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -427,12 +427,24 @@
         \li Brief Description
 
         \row
-        \li \c MessageLabel
-        \li Displays a message.
+        \li \c InstallMsgLabel
+        \li Title for InstallComponentsTreeview.
 
         \row
-        \li \c TaskDetailsBrowser
-        \li Displays some more detailed information about the installation.
+        \li \c InstallComponentsTreeview
+        \li Displays a summary of components to be installed.
+
+        \row
+        \li \c UninstallMsgLabel
+        \li Title for UninstallComponentsTreeview.
+
+        \row
+        \li \c UninstallComponentsTreeview
+        \li Displays a summary of components to be uninstalled.
+
+        \row
+        \li \c RemoveAllMsgLabel
+        \li Displays information about full uninstall.
     \endtable
 
     \section2 Perform Installation Page

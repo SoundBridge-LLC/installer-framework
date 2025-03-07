@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -42,6 +42,7 @@
 #include "repositorycategory.h"
 #include "componentselectionpage_p.h"
 #include "loggingutils.h"
+#include "readyforinstallationpage_p.h"
 
 #include "sysinfo.h"
 #include "globals.h"
@@ -2668,35 +2669,12 @@ void StartMenuDirectoryPage::currentItemChanged(QListWidgetItem *current)
 */
 ReadyForInstallationPage::ReadyForInstallationPage(PackageManagerCore *core)
     : PackageManagerPage(core)
-    , m_msgLabel(new QLabel)
+    , d(new ReadyForInstallationPagePrivate(this, core))
 {
     setPixmap(QWizard::WatermarkPixmap, QPixmap());
     setObjectName(QLatin1String("ReadyForInstallationPage"));
-    updatePageListTitle();
-
-    QVBoxLayout *baseLayout = new QVBoxLayout();
-    baseLayout->setObjectName(QLatin1String("BaseLayout"));
-
-    m_msgLabel->setWordWrap(true);
-    m_msgLabel->setObjectName(QLatin1String("MessageLabel"));
-    m_msgLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    baseLayout->addWidget(m_msgLabel);
-
-    m_taskDetailsBrowser = new QTextBrowser(this);
-    m_taskDetailsBrowser->setReadOnly(true);
-    m_taskDetailsBrowser->setObjectName(QLatin1String("TaskDetailsBrowser"));
-    m_taskDetailsBrowser->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_taskDetailsBrowser->setVisible(false);
-    baseLayout->addWidget(m_taskDetailsBrowser, 1);
-
+    setColoredTitle(tr("Installation Summary"));
     setCommitPage(true);
-
-    if (packageManagerCore()->settings().wizardShowPageList())
-        baseLayout->setContentsMargins(QMargins(0, -1, -1, -1));
-    setLayout(baseLayout);
-
-    connect(core, &PackageManagerCore::installerBinaryMarkerChanged,
-            this, &ReadyForInstallationPage::updatePageListTitle);
 }
 
 /*!
@@ -2706,50 +2684,7 @@ ReadyForInstallationPage::ReadyForInstallationPage(PackageManagerCore *core)
 */
 void ReadyForInstallationPage::entering()
 {
-    setComplete(false);
-
-    if (packageManagerCore()->isUninstaller()) {
-        m_taskDetailsBrowser->setVisible(false);
-        setButtonText(QWizard::CommitButton, tr("U&ninstall"));
-        setColoredTitle(tr("Ready to Uninstall"));
-        m_msgLabel->setText(tr("All required information is now available to begin removing %1 from your computer.<br>"
-            "<font color=\"red\">The program directory %2 will be deleted completely</font>, "
-            "including all content in that directory!")
-            .arg(productName(),
-                QDir::toNativeSeparators(QDir(packageManagerCore()->value(scTargetDir))
-            .absolutePath())));
-        setComplete(true);
-        return;
-    } else if (packageManagerCore()->isMaintainer()) {
-        setButtonText(QWizard::CommitButton, tr("U&pdate"));
-        setColoredTitle(tr("Ready to Update Packages"));
-        m_msgLabel->setText(tr("All required information is now available to begin updating your installation."));
-    } else if (packageManagerCore()->isOfflineGenerator()) {
-        setButtonText(QWizard::CommitButton, tr("Create Offline Installer"));
-        setColoredTitle(tr("Ready to Create Offline Installer"));
-        m_msgLabel->setText(tr("All required information is now available to create an offline installer for selected components."));
-    } else {
-        Q_ASSERT(packageManagerCore()->isInstaller());
-        setButtonText(QWizard::CommitButton, tr("&Install"));
-        setColoredTitle(tr("Ready to Install"));
-        m_msgLabel->setText(tr("All required information is now available to begin installing %1 on your computer.")
-            .arg(productName()));
-    }
-
-    bool componentsOk = packageManagerCore()->recalculateAllComponents();
-    const QString htmlOutput = packageManagerCore()->componentResolveReasons();
-
-    qCDebug(QInstaller::lcInstallerInstallLog).noquote() << htmlToString(htmlOutput);
-    m_taskDetailsBrowser->setHtml(htmlOutput);
-    m_taskDetailsBrowser->setVisible(!componentsOk || LoggingHandler::instance().isVerbose());
-    setComplete(componentsOk);
-
-    if (packageManagerCore()->checkAvailableSpace()) {
-        m_msgLabel->setText(QString::fromLatin1("%1 %2").arg(m_msgLabel->text(), packageManagerCore()->availableSpaceMessage()));
-    } else {
-        m_msgLabel->setText(packageManagerCore()->availableSpaceMessage());
-        setComplete(false);
-    }
+    setComplete(d->entering());
 }
 
 /*!
@@ -2759,22 +2694,6 @@ void ReadyForInstallationPage::entering()
 void ReadyForInstallationPage::leaving()
 {
     setButtonText(QWizard::CommitButton, gui()->defaultButtonText(QWizard::CommitButton));
-}
-
-/*!
-    Updates page list title based on installer binary type.
-*/
-void ReadyForInstallationPage::updatePageListTitle()
-{
-    PackageManagerCore *core = packageManagerCore();
-    if (core->isOfflineGenerator())
-        setPageListTitle(tr("Ready to Create Offline Installer"));
-    else if (core->isInstaller())
-        setPageListTitle(tr("Ready to Install"));
-    else if (core->isMaintainer())
-        setPageListTitle(tr("Ready to Update"));
-    else if (core->isUninstaller())
-        setPageListTitle(tr("Ready to Uninstall"));
 }
 
 // -- PerformInstallationPage

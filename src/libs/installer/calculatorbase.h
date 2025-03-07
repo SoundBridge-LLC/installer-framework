@@ -61,6 +61,7 @@ public:
                           const QString &referencedComponent = QString());
 
     QList<Component *> resolvedComponents() const;
+    QSet<QString> resolvedComponentNames() const;
     virtual QString resolutionText(Component *component) const = 0;
     Resolution resolutionType(Component *component) const;
 
@@ -75,6 +76,7 @@ protected:
     QString m_errorString;
 
     QList<Component *> m_resolvedComponents;
+    QSet<QString> m_resolvedComponentNames;  //for faster lookups
     QHash<QString, QPair<Resolution, QString> > m_componentNameResolutionHash;
 };
 

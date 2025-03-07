@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2023 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -26,56 +26,36 @@
 **
 **************************************************************************/
 
-#include "calculatorbase.h"
+#ifndef COMPONENTSELECTEDPROXYMODEL_H
+#define COMPONENTSELECTEDPROXYMODEL_H
 
-#include "component.h"
+#include "installer_global.h"
+#include "packagemanagercore.h"
+
+#include <QSortFilterProxyModel>
 
 namespace QInstaller {
 
-CalculatorBase::CalculatorBase(PackageManagerCore *core)
-    : m_core(core)
-{
-}
+enum SelectionMode {
+    Selected,
+    Unselected
+};
 
-CalculatorBase::~CalculatorBase()
+class INSTALLER_EXPORT ComponentSelectedProxyModel : public QSortFilterProxyModel
 {
-}
+    Q_OBJECT
 
-void CalculatorBase::insertResolution(Component *component, const Resolution resolutionType
-    , const QString &referencedComponent)
-{
-    // Keep the first reason
-    if (m_componentNameResolutionHash.contains(component->name()))
-        return;
+public:
+    explicit ComponentSelectedProxyModel(PackageManagerCore *core, SelectionMode selectionMode, QObject *parent = nullptr);
 
-    m_componentNameResolutionHash.insert(component->name(),
-        QPair<Resolution, QString>(resolutionType, referencedComponent));
-}
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
-QList<Component *> CalculatorBase::resolvedComponents() const
-{
-    return m_resolvedComponents;
-}
-
-QSet<QString> CalculatorBase::resolvedComponentNames() const
-{
-    return m_resolvedComponentNames;
-}
-
-CalculatorBase::Resolution CalculatorBase::resolutionType(Component *component) const
-{
-    return m_componentNameResolutionHash.value(component->name()).first;
-}
-
-QString CalculatorBase::error() const
-{
-    return m_errorString;
-}
-
-QString CalculatorBase::referencedComponent(Component *component) const
-{
-    return m_componentNameResolutionHash.value(component->name()).second;
-}
+private:
+    PackageManagerCore *m_core;
+    SelectionMode m_selectionMode;
+};
 
 } // namespace QInstaller
 
+#endif // COMPONENTSELECTEDPROXYMODEL_H

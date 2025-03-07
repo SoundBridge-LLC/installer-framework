@@ -100,11 +100,11 @@ bool InstallerCalculator::solve(const QList<Component *> &components)
     for (Component *component : std::as_const(components)){
         if (!component)
             continue;
-        if (m_toInstallComponentIds.contains(component->name())) {
+        if (m_resolvedComponentNames.contains(component->name())) {
             const QString errorMessage = recursionError(component);
             qCWarning(QInstaller::lcInstallerInstallLog).noquote() << errorMessage;
             m_errorString.append(errorMessage);
-            Q_ASSERT_X(!m_toInstallComponentIds.contains(component->name()), Q_FUNC_INFO,
+            Q_ASSERT_X(!m_resolvedComponentNames.contains(component->name()), Q_FUNC_INFO,
                 qPrintable(errorMessage));
             return false;
         }
@@ -173,7 +173,7 @@ void InstallerCalculator::addComponentForInstall(Component *component, const QSt
 
     if (!component->isInstalled(version) || (m_core->isUpdater() && component->isUpdateAvailable())) {
         m_resolvedComponents.append(component);
-        m_toInstallComponentIds.insert(component->name());
+        m_resolvedComponentNames.insert(component->name());
     }
 }
 
@@ -181,7 +181,7 @@ bool InstallerCalculator::addComponentsFromAlias(ComponentAlias *alias)
 {
     QList<Component *> componentsToAdd;
     for (auto *component : alias->components()) {
-        if (m_toInstallComponentIds.contains(component->name()))
+        if (m_resolvedComponentNames.contains(component->name()))
             continue; // Already added
 
         componentsToAdd.append(component);
@@ -257,8 +257,8 @@ bool InstallerCalculator::solveComponent(Component *component, const QString &ve
         //- And dependency component is not already added for install
         //- And component is not already added for install, then dependencies are already resolved
         if (((!dependencyComponent->isInstalled() || dependencyComponent->updateRequested())
-                || isUpdateRequired) && (!m_toInstallComponentIds.contains(dependencyComponent->name())
-                && !m_toInstallComponentIds.contains(component->name()))) {
+                || isUpdateRequired) && (!m_resolvedComponentNames.contains(dependencyComponent->name())
+                && !m_resolvedComponentNames.contains(component->name()))) {
             if (m_visitedComponents.value(component).contains(dependencyComponent)) {
                 const QString errorMessage = recursionError(component);
                 qCWarning(QInstaller::lcInstallerInstallLog).noquote() << errorMessage;
@@ -277,7 +277,7 @@ bool InstallerCalculator::solveComponent(Component *component, const QString &ve
         }
     }
 
-    if (!m_toInstallComponentIds.contains(component->name())) {
+    if (!m_resolvedComponentNames.contains(component->name())) {
         addComponentForInstall(component, requiredDependencyVersion);
         insertResolution(component, Resolution::Resolved);
     }
@@ -311,7 +311,7 @@ QSet<Component *> InstallerCalculator::autodependencyComponents()
         for (const QString& autoDependency : m_autoDependencyComponentHash.value(component->name())) {
             // If a components is already installed or is scheduled for installation, no need to check
             // for auto depend installation.
-            if (m_toInstallComponentIds.contains(autoDependency)) {
+            if (m_resolvedComponentNames.contains(autoDependency)) {
                 continue;
             }
             Component *autoDependComponent = m_core->componentByName(autoDependency);
@@ -319,10 +319,10 @@ QSet<Component *> InstallerCalculator::autodependencyComponents()
                 continue;
             if ((!autoDependComponent->isInstalled()
                  || (m_core->isUpdater() && autoDependComponent->isUpdateAvailable()))
-                && !m_toInstallComponentIds.contains(autoDependComponent->name())) {
+                && !m_resolvedComponentNames.contains(autoDependComponent->name())) {
                 // One of the components autodependons is requested for install, check if there
                 // are other autodependencies as well
-                if (autoDependComponent->isAutoDependOn(m_toInstallComponentIds)) {
+                if (autoDependComponent->isAutoDependOn(m_resolvedComponentNames)) {
                     foundAutoDependOnList.insert(autoDependComponent);
                     insertResolution(autoDependComponent, Resolution::Automatic);
                 }

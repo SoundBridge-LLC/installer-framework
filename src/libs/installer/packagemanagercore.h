@@ -258,12 +258,14 @@ public:
 
     Q_INVOKABLE bool calculateComponentsToInstall() const;
     QList<Component*> orderedComponentsToInstall() const;
+    QSet<QString> componentsToInstallNames() const;
 
     Q_INVOKABLE bool recalculateAllComponents();
     QString componentResolveReasons() const;
 
     Q_INVOKABLE bool calculateComponentsToUninstall() const;
     QList<Component*> componentsToUninstall() const;
+    QSet<QString> componentsToUninstallNames() const;
 
     QList<Component *> componentsMarkedForInstallation() const;
     QList<ComponentAlias *> aliasesMarkedForInstallation() const;

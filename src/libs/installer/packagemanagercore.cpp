@@ -2384,6 +2384,14 @@ QList<Component*> PackageManagerCore::orderedComponentsToInstall() const
 }
 
 /*!
+    Returns an ordered list of component names to install. The list can be empty.
+*/
+QSet<QString> PackageManagerCore::componentsToInstallNames() const
+{
+    return d->installerCalculator()->resolvedComponentNames();
+}
+
+/*!
     Returns a HTML-formatted description of the reasons each component is about
     to be installed or uninstalled, or a description of the error occurred while
     calculating components to install and uninstall.
@@ -2492,6 +2500,14 @@ bool PackageManagerCore::calculateComponentsToUninstall() const
 QList<Component *> PackageManagerCore::componentsToUninstall() const
 {
     return d->uninstallerCalculator()->resolvedComponents();
+}
+
+/*!
+    Returns an ordered list of component names to uninstall. The list can be empty.
+*/
+QSet<QString> PackageManagerCore::componentsToUninstallNames() const
+{
+    return d->uninstallerCalculator()->resolvedComponentNames();
 }
 
 /*!

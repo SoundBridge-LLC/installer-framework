@@ -34,6 +34,7 @@
 
 #include "sysinfo.h"
 #include "fileutils.h"
+#include "horizontalruler.h"
 
 const QLatin1String SPACE_ITEM("|");
 static const char *scSpaceRequired(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space required: %1"));
@@ -48,9 +49,12 @@ SpaceWidget::SpaceWidget(PackageManagerCore *core, QWidget *parent)
     , m_spaceAvailableLabel(nullptr)
 {
     setObjectName(QLatin1String("SpaceItem"));
-
-    QHBoxLayout *spaceLabelLayout = new QHBoxLayout(this);
-    spaceLabelLayout->setContentsMargins(-1, 0, -1, 0);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    QHBoxLayout *spaceLabelLayout = new QHBoxLayout();
+    mainLayout->addWidget(new HorizontalRuler());
+    mainLayout->addLayout(spaceLabelLayout);
+    mainLayout->setContentsMargins(0, 0, 0, 0);
+    spaceLabelLayout->setContentsMargins(0, 0, 0, 0);
 
     m_spaceRequiredLabel = new QLabel();
     spaceLabelLayout->addWidget(m_spaceRequiredLabel);

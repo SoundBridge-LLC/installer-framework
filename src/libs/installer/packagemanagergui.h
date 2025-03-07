@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -58,6 +58,7 @@ class PackageManagerCore;
 class PackageManagerPage;
 class PerformInstallationForm;
 class ComponentSelectionPagePrivate;
+class ReadyForInstallationPagePrivate;
 
 // -- PackageManagerGui
 
@@ -423,12 +424,9 @@ protected:
     void entering() override;
     void leaving() override;
 
-private Q_SLOTS:
-    void updatePageListTitle();
-
 private:
-    QLabel *m_msgLabel;
-    QTextBrowser* m_taskDetailsBrowser;
+    friend class ReadyForInstallationPagePrivate;
+    ReadyForInstallationPagePrivate *const d;
 };
 
 

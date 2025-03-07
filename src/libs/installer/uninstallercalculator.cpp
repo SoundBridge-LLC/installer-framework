@@ -97,6 +97,7 @@ bool UninstallerCalculator::solveComponent(Component *component, const QString &
     }
 
     m_resolvedComponents.append(component);
+    m_resolvedComponentNames.insert(component->name());
     return true;
 }
 

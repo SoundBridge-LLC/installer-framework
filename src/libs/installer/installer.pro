@@ -49,6 +49,7 @@ HEADERS += packagemanagercore.h \
     calculatorbase.h \
     componentalias.h \
     componentsortfilterproxymodel.h \
+    componentselectedproxymodel.h \
     concurrentoperationrunner.h \
     genericdatacache.h \
     loggingutils.h \
@@ -151,7 +152,8 @@ HEADERS += packagemanagercore.h \
     clickablelabel.h \
     categorycombobox.h \
     horizontalruler.h \
-    spacewidget.h
+    spacewidget.h \
+    readyforinstallationpage_p.h
 
 SOURCES += packagemanagercore.cpp \
     abstractarchive.cpp \
@@ -163,6 +165,7 @@ SOURCES += packagemanagercore.cpp \
     directoryguard.cpp \
     fileguard.cpp \
     componentsortfilterproxymodel.cpp \
+    componentselectedproxymodel.cpp \
     genericdatacache.cpp \
     loggingutils.cpp \
     metadata.cpp \
@@ -245,12 +248,14 @@ SOURCES += packagemanagercore.cpp \
     clickablelabel.cpp \
     categorycombobox.cpp \
     horizontalruler.cpp \
-    spacewidget.cpp
+    spacewidget.cpp \
+    readyforinstallationpage_p.cpp
 
 macos:SOURCES += fileutils_mac.mm
 
 FORMS += proxycredentialsdialog.ui \
-    serverauthenticationdialog.ui
+    serverauthenticationdialog.ui \
+    componentsummary.ui
 
 RESOURCES += resources/installer.qrc
 

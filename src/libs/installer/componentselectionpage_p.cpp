@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -38,7 +38,6 @@
 #include "categorycombobox.h"
 #include "clickablelabel.h"
 #include "sysinfo.h"
-#include "horizontalruler.h"
 #include "spacewidget.h"
 
 #include <QTreeView>
@@ -209,7 +208,6 @@ ComponentSelectionPagePrivate::ComponentSelectionPagePrivate(ComponentSelectionP
     treeViewVLayout->setObjectName(QLatin1String("TreeviewLayout"));
     treeViewVLayout->addWidget(m_treeView, 3);
 
-    treeViewVLayout->addWidget(new HorizontalRuler());
     m_spaceWidget = new SpaceWidget(m_core);
     treeViewVLayout->addWidget(m_spaceWidget);
 
@@ -228,6 +226,9 @@ ComponentSelectionPagePrivate::ComponentSelectionPagePrivate(ComponentSelectionP
     m_stackedLayout->addWidget(mainStackedWidget);
     m_stackedLayout->addWidget(progressStackedWidget);
     m_stackedLayout->setCurrentIndex(0);
+
+    if (m_core->settings().wizardShowPageList())
+        m_mainGLayout->setContentsMargins(QMargins(0, -1, -1, -1));
 
     connect(m_allModel, &ComponentModel::checkStateChanged,
             this, &ComponentSelectionPagePrivate::onModelStateChanged);
