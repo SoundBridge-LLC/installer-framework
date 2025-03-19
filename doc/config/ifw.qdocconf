@@ -55,6 +55,11 @@ macro.QOI = "Qt Online Installer"
 # For docs, QT_VERSION resolves to IFW version
 macro.ifwversion = $QT_VERSION
 
+
+# Show IFW version at the top of the sidebar TOC and in the <title> element of each HTML file
+version = $QT_VERSION
+buildversion = Qt Installer Framework $QT_VERSION
+
 # commands borrowed from qtbase/doc/global/macros.qdocconf
 
 macro.gui               = "\\b"
