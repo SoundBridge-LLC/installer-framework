@@ -3110,45 +3110,48 @@ void FinishedPage::entering()
     finishedText.append(QLatin1String("\n\n"));
     finishedText.append(tr("Click %1 to close the %2 Setup.")
                             .arg(gui()->defaultButtonText(QWizard::FinishButton).remove(QLatin1Char('&')), productName()));
-    if (packageManagerCore()->status() == PackageManagerCore::Success
+
+    bool installationSucceeded = true;
+    if (packageManagerCore()->containsValue(QLatin1String("FinishedText"))) {
+        finishedText = packageManagerCore()->value(QLatin1String("FinishedText"));
+    } else if (packageManagerCore()->status() == PackageManagerCore::Success
             || packageManagerCore()->status() == PackageManagerCore::EssentialUpdated) {
 
-        if (packageManagerCore()->containsValue(QLatin1String("FinishedText"))) {
-            finishedText = packageManagerCore()->value(QLatin1String("FinishedText"));
-        } else {
-            if (!packageManagerCore()->isUninstaller()) {
-                finishedText.prepend(packageManagerCore()->value(scTargetDir));
-                finishedText.prepend(QLatin1String("\n"));
-                finishedText.prepend(tr("You will find your installation in this location on your computer:"));
-                finishedText.prepend(QLatin1String("\n\n"));
-            }
-            if (packageManagerCore()->isUninstaller())
-                finishedText.prepend(tr("%1 has now been uninstalled from your computer.").arg(productName()));
-            else if (packageManagerCore()->isUpdater())
-                finishedText.prepend(tr("%1 has now been updated on your computer.").arg(productName()));
-            else if (packageManagerCore()->isOfflineGenerator())
-                finishedText.prepend(tr("Offline installer has now been generated."));
-            else
-                finishedText.prepend(tr("%1 has now been installed on your computer.").arg(productName()));
+        if (!packageManagerCore()->isUninstaller()) {
+            finishedText.prepend(packageManagerCore()->value(scTargetDir));
+            finishedText.prepend(QLatin1String("\n"));
+            finishedText.prepend(tr("You will find your installation in this location on your computer:"));
+            finishedText.prepend(QLatin1String("\n\n"));
         }
-        if (!packageManagerCore()->isUninstaller()
-                && !packageManagerCore()->isOfflineGenerator()
-                && !packageManagerCore()->value(scRunProgram).isEmpty()) {
-            m_runItCheckBox->show();
-            m_runItCheckBox->setText(packageManagerCore()->value(scRunProgramDescription,
-                tr("Run %1 now.")).arg(productName()));
-            m_msgLabel->setText(finishedText);
-            return; // job done
-        }
+        if (packageManagerCore()->isUninstaller())
+            finishedText.prepend(tr("%1 has now been uninstalled from your computer.").arg(productName()));
+        else if (packageManagerCore()->isUpdater())
+            finishedText.prepend(tr("%1 has now been updated on your computer.").arg(productName()));
+        else if (packageManagerCore()->isOfflineGenerator())
+            finishedText.prepend(tr("Offline installer has now been generated."));
+        else
+            finishedText.prepend(tr("%1 has now been installed on your computer.").arg(productName()));
     } else {
         // TODO: how to handle this using the config.xml
         finishedText.prepend(tr("%1 installation was not complete or was interrupted by some reason.").arg(productName()));
         setColoredTitle(tr("%1 installation was unsuccessful.").arg(productName()));
         setPageListTitle(tr("Finished"));
+        installationSucceeded = false;
     }
+
     m_msgLabel->setText(finishedText);
-    m_runItCheckBox->hide();
-    m_runItCheckBox->setChecked(false);
+
+    if (!packageManagerCore()->isUninstaller()
+            && !packageManagerCore()->isOfflineGenerator()
+            && !packageManagerCore()->value(scRunProgram).isEmpty()
+            && installationSucceeded) {
+        m_runItCheckBox->show();
+        m_runItCheckBox->setText(packageManagerCore()->value(scRunProgramDescription,
+                tr("Run %1 now.")).arg(productName()));
+    } else {
+        m_runItCheckBox->hide();
+        m_runItCheckBox->setChecked(false);
+    }
 }
 
 /*!
