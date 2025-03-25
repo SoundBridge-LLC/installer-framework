@@ -1746,7 +1746,7 @@ Heruntergeladen: %2</translation>
     </message>
     <message>
         <source>The directory you selected already exists and contains an installation. Choose a different target for installation.</source>
-        <translation>Der ausgewählte Verzeichnis existiert bereits und enthält eine Installation. Bitte wählen Sie einen anderen Zielordner aus.</translation>
+        <translation>Das ausgewählte Verzeichnis existiert bereits und enthält eine Installation. Bitte wählen Sie einen anderen Zielordner aus.</translation>
     </message>
     <message>
         <source>Warning</source>
