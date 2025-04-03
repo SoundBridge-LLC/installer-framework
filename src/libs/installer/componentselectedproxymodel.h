@@ -50,6 +50,10 @@ public:
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+
+private:
+    bool childSelected(const Component *component) const;
 
 private:
     PackageManagerCore *m_core;

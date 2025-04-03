@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2023 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -386,7 +386,7 @@ void Component::loadDataFromPackage(const Package &package)
 }
 
 /*!
-    Returns the size of a compressed archive.
+    Returns the size of a uncompressed archive.
 */
 quint64 Component::updateUncompressedSize()
 {
@@ -406,6 +406,23 @@ quint64 Component::updateUncompressedSize()
         setData(QVariant(), UncompressedSize);
     else
         setData(humanReadableSize(size), UncompressedSize);
+
+    return size;
+}
+
+/*!
+    Returns the uncompressed size of the component and its children.
+    Size contains values only from components when the \a action matches.
+*/
+quint64 Component::uncompressedSize(const InstallAction &action)
+{
+    quint64 size = 0;
+
+    if (installAction() == action)
+        size = d->m_vars.value(scUncompressedSize).toLongLong();
+
+    for (Component* comp : std::as_const(d->m_allChildComponents))
+        size += comp->uncompressedSize(action);
 
     return size;
 }

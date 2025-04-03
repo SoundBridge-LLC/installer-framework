@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2023 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -165,6 +165,7 @@ public:
     QString treeName() const;
     bool treeNameMoveChildren() const;
     quint64 updateUncompressedSize();
+    quint64 uncompressedSize(const InstallAction &action);
 
     QUrl repositoryUrl() const;
     void setRepositoryUrl(const QUrl &url);

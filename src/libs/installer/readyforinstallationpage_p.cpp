@@ -215,12 +215,13 @@ void ReadyForInstallationPagePrivate::updateView(QSortFilterProxyModel *model, Q
 void ReadyForInstallationPagePrivate::decorateTreeView(QTreeView *treeView)
 {
     treeView->setHeaderHidden(true);
-    treeView->header()->setSectionResizeMode(QHeaderView::Stretch);
+    treeView->header()->setSectionResizeMode(ComponentModelHelper::NameColumn, QHeaderView::Stretch);
+    treeView->header()->setStretchLastSection(false);
     treeView->hideColumn(ComponentModelHelper::ActionColumn);
     treeView->hideColumn(ComponentModelHelper::InstalledVersionColumn);
     treeView->hideColumn(ComponentModelHelper::NewVersionColumn);
     treeView->hideColumn(ComponentModelHelper::ReleaseDateColumn);
-    treeView->hideColumn(ComponentModelHelper::UncompressedSizeColumn);
+
     treeView->setIndentation(0);
     treeView->setRootIsDecorated(false);
     treeView->expandAll();
