@@ -443,6 +443,10 @@
         \li Displays a summary of components to be uninstalled.
 
         \row
+        \li \c ComponentSummaryScrollArea
+        \li Contains the area where both treeviews and message labels are drawn.
+
+        \row
         \li \c RemoveAllMsgLabel
         \li Displays information about full uninstall.
     \endtable
