@@ -343,7 +343,7 @@ public:
     bool checkAvailableSpace();
     QString availableSpaceMessage() const;
 
-    Q_INVOKABLE quint64 requiredDiskSpace() const;
+    Q_INVOKABLE qint64 requiredDiskSpace() const;
     Q_INVOKABLE quint64 requiredTemporaryDiskSpace() const;
 
     Q_INVOKABLE bool isProcessRunning(const QString &name) const;

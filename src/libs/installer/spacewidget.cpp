@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -38,6 +38,7 @@
 
 const QLatin1String SPACE_ITEM("|");
 static const char *scSpaceRequired(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space required: %1"));
+static const char *scSpaceFreed(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space freed: %1"));
 static const char *scSpaceAvailable(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space available: %1"));
 
 using namespace QInstaller;
@@ -71,8 +72,13 @@ SpaceWidget::SpaceWidget(PackageManagerCore *core, QWidget *parent)
 
 void SpaceWidget::updateSpaceRequiredText()
 {
-    if (m_spaceRequiredLabel)
-        m_spaceRequiredLabel->setText(tr(scSpaceRequired).arg(humanReadableSize(m_core->requiredDiskSpace())));
+    if (m_spaceRequiredLabel) {
+        const qint64 requiredDiskSpace = m_core->requiredDiskSpace();
+        if (requiredDiskSpace >= 0)
+            m_spaceRequiredLabel->setText(tr(scSpaceRequired).arg(humanReadableSize(requiredDiskSpace)));
+        else
+            m_spaceRequiredLabel->setText(tr(scSpaceFreed).arg(humanReadableSize(requiredDiskSpace)));
+    }
 }
 
 void SpaceWidget::installDirectoryChanged(const QString &newDirectory)

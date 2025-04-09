@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -136,7 +136,8 @@ void TempPathDeleter::releaseAndDelete(const QString &path)
 */
 QString QInstaller::humanReadableSize(const qint64 &size, int precision)
 {
-    double sizeAsDouble = size;
+    double sizeAsDouble = qAbs(size);
+
     static QStringList measures;
     if (measures.isEmpty())
         measures << QCoreApplication::translate("QInstaller", "bytes")
