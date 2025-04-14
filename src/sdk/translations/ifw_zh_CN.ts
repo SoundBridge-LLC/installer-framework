@@ -264,7 +264,7 @@
     <message numerus="yes">
         <source>%n second(s)</source>
         <translation>
-            <numerusform>%n 秒，</numerusform>
+            <numerusform>%n 秒</numerusform>
         </translation>
     </message>
     <message>
@@ -1314,7 +1314,7 @@ Downloaded: %2</source>
     <message numerus="yes">
         <source>%n second(s)</source>
         <translation>
-            <numerusform>%n 秒，</numerusform>
+            <numerusform>%n 秒</numerusform>
         </translation>
     </message>
     <message>
