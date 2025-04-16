@@ -637,7 +637,8 @@ void QInstallerTools::copyConfigData(const BinaryCreatorArgs &args, const QStrin
                         continue;
                     const QString targetFile = targetDir + QLatin1Char('/') + productImageElement.text();
                     const QFileInfo childFileInfo = QFileInfo(sourceConfigFilePath, productImageElement.text());
-                    QInstallerTools::copyWithException(childFileInfo.absoluteFilePath(), targetFile, imageChildName);
+                    if (!QFileInfo::exists(targetFile))
+                        QInstallerTools::copyWithException(childFileInfo.absoluteFilePath(), targetFile, imageChildName);
                     copyHighDPIImage(childFileInfo, imageChildName, targetFile);
                 }
 
@@ -671,7 +672,8 @@ void QInstallerTools::copyConfigData(const BinaryCreatorArgs &args, const QStrin
             continue;
 
         domElement.replaceChild(dom.createTextNode(newName), domElement.firstChild());
-        QInstallerTools::copyWithException(elementFileInfo.absoluteFilePath(), targetFile, tagName);
+        if (!QFileInfo::exists(targetFile))
+            QInstallerTools::copyWithException(elementFileInfo.absoluteFilePath(), targetFile, tagName);
         copyHighDPIImage(elementFileInfo, tagName, targetFile);
     }
 
@@ -690,7 +692,8 @@ void QInstallerTools::copyHighDPIImage(const QFileInfo &childFileInfo,
     if (childFileInfoHighDpi.exists()) {
         const QFileInfo tf(targetFile);
         const QString highDpiTarget = tf.absolutePath() + QLatin1Char('/') + tf.baseName() + scHighDpi + tf.suffix();
-        QInstallerTools::copyWithException(childFileInfoHighDpi.absoluteFilePath(), highDpiTarget, childName);
+        if (!QFileInfo::exists(highDpiTarget))
+            QInstallerTools::copyWithException(childFileInfoHighDpi.absoluteFilePath(), highDpiTarget, childName);
     }
 }
 
