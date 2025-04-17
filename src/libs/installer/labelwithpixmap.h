@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -25,44 +25,31 @@
 ** $QT_END_LICENSE$
 **
 **************************************************************************/
+#ifndef LABELWITHPIXMAP_H
+#define LABELWITHPIXMAP_H
 
-#ifndef SPACEWIDGET_H
-#define SPACEWIDGET_H
+#include "installer_global.h"
 
 #include <QWidget>
 #include <QLabel>
 
-#include "packagemanagercore.h"
-
 namespace QInstaller {
 
-class LabelWithPixmap;
-
-class INSTALLER_EXPORT SpaceWidget : public QWidget
+class INSTALLER_EXPORT LabelWithPixmap : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit SpaceWidget(PackageManagerCore *core, bool showSpaceExceedWidget = false, QWidget *parent = nullptr);
+    explicit LabelWithPixmap(const QString &text, QString pixmap, QWidget *parent = nullptr);
 
 public:
-    Q_INVOKABLE void updateSpaceRequiredText();
-
-public Q_SLOTS:
-    void installDirectoryChanged(const QString &newDirectory);
-    void availableSpaceChanged(const PackageManagerCore::SpaceInfo spaceStatus);
-
-protected:
-    void paintEvent(QPaintEvent *event) override;
+    void setWarningText(const QString &text);
 
 private:
-    PackageManagerCore *m_core;
-    QLabel *m_spaceRequiredLabel;
-    QLabel *m_spaceAvailableLabel;
-    LabelWithPixmap *m_noSpaceAvailableLabel;
-    bool m_showSpaceExceedWidget;
+    QLabel *m_warningText;
+
 };
 
-}
+} // namespace QInstaller
 
-#endif // SPACEWIDGET_H
+#endif // LABELWITHPIXMAP_H

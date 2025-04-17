@@ -153,7 +153,8 @@ HEADERS += packagemanagercore.h \
     categorycombobox.h \
     horizontalruler.h \
     spacewidget.h \
-    readyforinstallationpage_p.h
+    readyforinstallationpage_p.h \
+    labelwithpixmap.h
 
 SOURCES += packagemanagercore.cpp \
     abstractarchive.cpp \
@@ -249,7 +250,8 @@ SOURCES += packagemanagercore.cpp \
     categorycombobox.cpp \
     horizontalruler.cpp \
     spacewidget.cpp \
-    readyforinstallationpage_p.cpp
+    readyforinstallationpage_p.cpp \
+    labelwithpixmap.cpp
 
 macos:SOURCES += fileutils_mac.mm
 

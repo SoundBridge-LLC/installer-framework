@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -26,43 +26,38 @@
 **
 **************************************************************************/
 
-#ifndef SPACEWIDGET_H
-#define SPACEWIDGET_H
+#include "labelwithpixmap.h"
 
-#include <QWidget>
+#include "fileutils.h"
+
+#include <QHBoxLayout>
 #include <QLabel>
+#include <QStyleOption>
+#include <QPainter>
 
-#include "packagemanagercore.h"
+using namespace QInstaller;
 
-namespace QInstaller {
-
-class LabelWithPixmap;
-
-class INSTALLER_EXPORT SpaceWidget : public QWidget
+LabelWithPixmap::LabelWithPixmap(const QString &text, QString pixmap, QWidget *parent)
+    : QWidget(parent)
 {
-    Q_OBJECT
+    setObjectName(QLatin1String("LabelWithPixmap"));
+    QHBoxLayout *layout = new QHBoxLayout(this);
 
-public:
-    explicit SpaceWidget(PackageManagerCore *core, bool showSpaceExceedWidget = false, QWidget *parent = nullptr);
+    QLabel *labelPixmap = new QLabel(this);
+    labelPixmap->setObjectName(QLatin1String("PixmapLabel"));
+    QInstaller::replaceHighDpiImage(pixmap);
+    labelPixmap->setPixmap(QPixmap(pixmap));
+    layout->addWidget(labelPixmap);
 
-public:
-    Q_INVOKABLE void updateSpaceRequiredText();
+    m_warningText = new QLabel(text, this);
+    m_warningText->setWordWrap(true);
+    m_warningText->setObjectName(QLatin1String("LabelText"));
+    layout->addWidget(m_warningText, 1);
 
-public Q_SLOTS:
-    void installDirectoryChanged(const QString &newDirectory);
-    void availableSpaceChanged(const PackageManagerCore::SpaceInfo spaceStatus);
-
-protected:
-    void paintEvent(QPaintEvent *event) override;
-
-private:
-    PackageManagerCore *m_core;
-    QLabel *m_spaceRequiredLabel;
-    QLabel *m_spaceAvailableLabel;
-    LabelWithPixmap *m_noSpaceAvailableLabel;
-    bool m_showSpaceExceedWidget;
-};
-
+    layout->setContentsMargins(0, 0, 0, 0);
 }
 
-#endif // SPACEWIDGET_H
+void LabelWithPixmap::setWarningText(const QString &text)
+{
+    m_warningText->setText(text);
+}

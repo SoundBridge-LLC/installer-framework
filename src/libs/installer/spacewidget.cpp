@@ -35,19 +35,24 @@
 #include "sysinfo.h"
 #include "fileutils.h"
 #include "horizontalruler.h"
+#include "labelwithpixmap.h"
 
 const QLatin1String SPACE_ITEM("|");
 static const char *scSpaceRequired(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space required: %1"));
 static const char *scSpaceFreed(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space freed: %1"));
 static const char *scSpaceAvailable(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space available: %1"));
+static const char *scNoSpaceAvailable(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "There is not enough disk space for the installation"));
+static const char *scSpaceExceedsLimit(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space exceeds the supported executable size %1 in Windows"));
 
 using namespace QInstaller;
 
-SpaceWidget::SpaceWidget(PackageManagerCore *core, QWidget *parent)
+SpaceWidget::SpaceWidget(PackageManagerCore *core, bool showSpaceExceedWidget, QWidget *parent)
     : QWidget(parent)
     , m_core(core)
     , m_spaceRequiredLabel(nullptr)
     , m_spaceAvailableLabel(nullptr)
+    , m_noSpaceAvailableLabel(nullptr)
+    , m_showSpaceExceedWidget(showSpaceExceedWidget)
 {
     setObjectName(QLatin1String("SpaceItem"));
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -63,11 +68,18 @@ SpaceWidget::SpaceWidget(PackageManagerCore *core, QWidget *parent)
 
     m_spaceAvailableLabel = new QLabel();
     spaceLabelLayout->addWidget(m_spaceAvailableLabel);
-    spaceLabelLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    updateSpaceRequiredText();
+    if (m_showSpaceExceedWidget) {
+        m_noSpaceAvailableLabel = new LabelWithPixmap(tr(scNoSpaceAvailable), QLatin1String(":/Notification-Type.png"));
+        spaceLabelLayout->addWidget(m_noSpaceAvailableLabel, 1);
+        m_noSpaceAvailableLabel->setVisible(false);
+        m_noSpaceAvailableLabel->setObjectName(QLatin1String("SpaceWarning"));
+    }
+
+    spaceLabelLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
     installDirectoryChanged(m_core->value(scTargetDir));
     connect(m_core, &PackageManagerCore::installDirectoryChanged, this, &SpaceWidget::installDirectoryChanged);
+    connect(m_core, &PackageManagerCore::availableSpaceChanged, this, &SpaceWidget::availableSpaceChanged);
 }
 
 void SpaceWidget::updateSpaceRequiredText()
@@ -86,6 +98,23 @@ void SpaceWidget::installDirectoryChanged(const QString &newDirectory)
     if (m_spaceAvailableLabel) {
         const KDUpdater::VolumeInfo targetVolume = KDUpdater::VolumeInfo::fromPath(newDirectory);
         m_spaceAvailableLabel->setText(tr(scSpaceAvailable).arg(humanReadableSize(targetVolume.availableSize())));
+    }
+}
+
+void SpaceWidget::availableSpaceChanged(const PackageManagerCore::SpaceInfo spaceStatus)
+{
+    updateSpaceRequiredText();
+    if (!m_noSpaceAvailableLabel)
+        return;
+
+    if (spaceStatus == PackageManagerCore::SpaceAvailable) {
+        m_noSpaceAvailableLabel->setVisible(false);
+    } else if (m_showSpaceExceedWidget) {
+        if (spaceStatus == PackageManagerCore::ExecutableSizeExceeded)
+            m_noSpaceAvailableLabel->setWarningText(tr(scSpaceExceedsLimit).arg(humanReadableSize(UINT_MAX)));
+        else
+            m_noSpaceAvailableLabel->setWarningText(tr(scNoSpaceAvailable));
+        m_noSpaceAvailableLabel->setVisible(true);
     }
 }
 

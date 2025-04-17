@@ -10,5 +10,7 @@
         <file>search.png</file>
         <file>search@2x.png</file>
         <file>qt/etc/qt.conf</file>
+        <file>Notification-Type.png</file>
+        <file>Notification-Type@2x.png</file>
     </qresource>
 </RCC>

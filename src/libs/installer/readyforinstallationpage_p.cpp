@@ -142,10 +142,11 @@ bool ReadyForInstallationPagePrivate::entering()
     const QString htmlOutput = m_core->componentResolveReasons();
     qCDebug(QInstaller::lcInstallerInstallLog).noquote() << htmlToString(htmlOutput);
 
+    showSpaceWidget(true);
+
     if (!m_core->checkAvailableSpace())
         isComplete = false;
 
-    showSpaceWidget(true);
     return isComplete;
 }
 
@@ -254,7 +255,7 @@ void ReadyForInstallationPagePrivate::showSpaceWidget(bool show)
     }
 
     if (!m_spaceWidget) {
-        m_spaceWidget = new SpaceWidget(m_core);
+        m_spaceWidget = new SpaceWidget(m_core, true);
         m_ui->mainVLayout->addWidget(m_spaceWidget);
     } else {
         m_spaceWidget->show();
