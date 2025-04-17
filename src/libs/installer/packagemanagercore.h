@@ -116,6 +116,12 @@ public:
         Hybrid
     };
 
+    enum SpaceInfo {
+        SpaceAvailable,
+        SpaceExceeded,
+        ExecutableSizeExceeded
+    };
+
     Q_DECLARE_FLAGS(ComponentTypes, ComponentType)
 
     static QFont virtualComponentsFont();
@@ -233,7 +239,7 @@ public:
 
     void setAutoConfirmCommand();
 
-    quint64 size(QInstaller::Component *component, const QString &value) const;
+    quint64 size(const QInstaller::Component *component, const QString &value) const;
 
     Q_INVOKABLE bool isFileExtensionRegistered(const QString &extension) const;
     Q_INVOKABLE bool fileExists(const QString &filePath) const;
@@ -463,6 +469,7 @@ Q_SIGNALS:
     void componentsRecalculated();
     void guiElementsReady();
     void installDirectoryChanged(const QString &newDirectory);
+    void availableSpaceChanged(SpaceInfo spaceInfo);
 
 private:
     struct Data {

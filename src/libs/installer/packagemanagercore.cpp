@@ -801,7 +801,7 @@ void PackageManagerCore::setAutoConfirmCommand()
 /*!
     Returns the size of the component \a component as \a value.
 */
-quint64 PackageManagerCore::size(QInstaller::Component *component, const QString &value) const
+quint64 PackageManagerCore::size(const QInstaller::Component *component, const QString &value) const
 {
     if (component->installAction() == ComponentModelHelper::Install)
         return component->value(value).toLongLong();
@@ -826,6 +826,12 @@ qint64 PackageManagerCore::requiredDiskSpace() const
             continue;
         result -= component->value(scUncompressedSize).toLongLong();
     }
+
+    // if we create offline installer, take current executable size into account
+    if (isOfflineGenerator())
+        result += QFile(QCoreApplication::applicationFilePath()).size();
+    else
+        result += d->installationResourcesSpace();
 
     return result;
 }
@@ -3346,37 +3352,15 @@ QString PackageManagerCore::availableSpaceMessage() const
 bool PackageManagerCore::checkAvailableSpace()
 {
     m_availableSpaceMessage.clear();
-    const quint64 extraSpace = 256 * 1024 * 1024LL;
-    qint64 required(requiredDiskSpace());
 
+    qint64 required(requiredDiskSpace());
     quint64 tempRequired(requiredTemporaryDiskSpace());
-    if (required > 0) {
-        if (required < extraSpace) {
-                required += 0.1 * required;
-                tempRequired += 0.1 * tempRequired;
-        } else {
-            required += extraSpace;
-            tempRequired += extraSpace;
-        }
-    }
-    quint64 repositorySize = 0;
-    const bool createLocalRepository = createLocalRepositoryFromBinary();
-    if (createLocalRepository && isInstaller()) {
-        repositorySize = QFile(QCoreApplication::applicationFilePath()).size();
-        // if we create a local repository, take that space into account as well
-        required += repositorySize;
-    }
-    // if we create offline installer, take current executable size into account
-    if (isOfflineGenerator())
-        required += QFile(QCoreApplication::applicationFilePath()).size();
 
     if (required < 0)
         qDebug() << "Installation space freed:" << humanReadableSize(required);
     else
         qDebug() << "Installation space required:" << humanReadableSize(required);
-    qDebug()<< "Temporary space required:" << humanReadableSize(tempRequired) << "Local repository size:"
-        << humanReadableSize(repositorySize);
-
+    qDebug()<< "Temporary space required:" << humanReadableSize(tempRequired);
     if (d->m_checkAvailableSpace) {
         const VolumeInfo cacheVolume = VolumeInfo::fromPath(settings().localCachePath());
         const VolumeInfo targetVolume = VolumeInfo::fromPath(value(scTargetDir));
@@ -3389,6 +3373,7 @@ bool PackageManagerCore::checkAvailableSpace()
             qDebug().nospace() << "Cannot determine available space on device. "
                                   "Volume descriptor: " << targetVolume.volumeDescriptor()
                                << ", Mount path: " << targetVolume.mountPath() << ". Continue silently.";
+            emit availableSpaceChanged(SpaceInfo::SpaceAvailable);
             return true;
         }
 
@@ -3409,6 +3394,7 @@ bool PackageManagerCore::checkAvailableSpace()
             m_availableSpaceMessage = tr("Not enough disk space to store temporary files and the "
                 "installation. %1 are available, while the minimum required is %2.").arg(
                 humanReadableSize(installVolumeAvailableSize), humanReadableSize(required + tempRequired));
+            emit availableSpaceChanged(SpaceInfo::SpaceExceeded);
             return false;
         }
 
@@ -3416,6 +3402,7 @@ bool PackageManagerCore::checkAvailableSpace()
             m_availableSpaceMessage = tr("Not enough disk space to store all selected components! %1 are "
                 "available, while the minimum required is %2.").arg(humanReadableSize(installVolumeAvailableSize),
                 humanReadableSize(required));
+            emit availableSpaceChanged(SpaceInfo::SpaceExceeded);
             return false;
         }
 
@@ -3424,6 +3411,7 @@ bool PackageManagerCore::checkAvailableSpace()
                 "while the minimum required is %2. You may select another location for the "
                 "temporary files by modifying the local cache path from the installer settings.")
                 .arg(humanReadableSize(cacheVolumeAvailableSize), humanReadableSize(tempRequired));
+            emit availableSpaceChanged(SpaceInfo::SpaceExceeded);
             return false;
         }
 
@@ -3441,6 +3429,8 @@ bool PackageManagerCore::checkAvailableSpace()
             m_availableSpaceMessage = tr("The estimated installer size %1 would exceed the supported executable "
                 "size limit of %2. The application may not be able to run.")
                 .arg(humanReadableSize(required), humanReadableSize(UINT_MAX));
+            emit availableSpaceChanged(SpaceInfo::ExecutableSizeExceeded);
+            return false;
         }
 #endif
     }
@@ -3450,6 +3440,7 @@ bool PackageManagerCore::checkAvailableSpace()
             : tr("Installation will use %1 of disk space."))
         .arg(humanReadableSize(requiredDiskSpace()))).simplified();
 
+    emit availableSpaceChanged(SpaceInfo::SpaceAvailable);
     return true;
 }
 

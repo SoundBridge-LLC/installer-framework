@@ -413,8 +413,6 @@ void ComponentSelectionPagePrivate::currentSelectedChanged(const QModelIndex &cu
         ComponentModelHelper::NameColumn, current.parent()), Qt::ToolTipRole).toString();
 
     m_descriptionLabel->setText(description);
-    if (m_spaceWidget)
-        m_spaceWidget->updateSpaceRequiredText();
 }
 
 void ComponentSelectionPagePrivate::selectAll()
@@ -548,6 +546,10 @@ void ComponentSelectionPagePrivate::onModelStateChanged(QInstaller::ComponentMod
     // update the current selected node (important to reflect possible sub-node changes)
     if (m_treeView->selectionModel())
         currentSelectedChanged(m_treeView->selectionModel()->currentIndex());
+
+    if (m_spaceWidget)
+        m_spaceWidget->updateSpaceRequiredText();
+
 }
 
 /*!

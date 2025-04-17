@@ -201,6 +201,7 @@ PackageManagerCorePrivate::PackageManagerCorePrivate(PackageManagerCore *core)
 #endif
     , m_connectedOperations(0)
     , m_hybridInstaller(PackageManagerCore::NonHybrid)
+    , m_installationResourcesSpace(0)
 {
 }
 
@@ -248,6 +249,7 @@ PackageManagerCorePrivate::PackageManagerCorePrivate(PackageManagerCore *core, q
 #endif
     , m_connectedOperations(0)
     , m_hybridInstaller(PackageManagerCore::NonHybrid)
+    , m_installationResourcesSpace(0)
 {
     foreach (const OperationBlob &operation, performedOperations) {
         std::unique_ptr<QInstaller::Operation> op(KDUpdater::UpdateOperationFactory::instance()
@@ -2734,6 +2736,36 @@ void PackageManagerCorePrivate::setComponentSelection(const QString &id, Qt::Che
         model->setData(idx, state, Qt::CheckStateRole);
 }
 
+quint64 PackageManagerCorePrivate::installationResourcesSpace()
+{
+    if (m_installationResourcesSpace > 0 || !isInstaller()) // already calculated or MT
+        return m_installationResourcesSpace;
+
+    if (m_core->createLocalRepositoryFromBinary()) {
+        QList<Component *> allComponents = m_core->components(PackageManagerCore::ComponentType::All);
+        for (const QInstaller::Component *component : std::as_const(allComponents))
+            m_installationResourcesSpace += m_core->size(component, scCompressedSize);
+    }
+
+    //Maintenancetool size if not extracted from a repository
+    if (m_core->installerBaseBinary().isEmpty() && !m_disableWriteMaintenanceTool) {
+        try {
+            QString binaryName = installerBinaryPath();
+            QFile input;
+            input.setFileName(binaryName);
+
+            QInstaller::openForRead(&input);
+            BinaryLayout layout = BinaryContent::binaryLayout(&input, BinaryContent::MagicCookie);
+
+            m_installationResourcesSpace += layout.endOfBinaryContent - layout.binaryContentSize;
+        } catch (const Error &e) {
+            qCWarning(QInstaller::lcInstallerInstallLog) << "Could not add maintenance tool size to required disk space. " << qPrintable(e.message());
+            m_installationResourcesSpace += scEstimatedMaintenancetoolSize;
+        }
+    }
+    return m_installationResourcesSpace;
+}
+
 // -- private
 
 void PackageManagerCorePrivate::deleteMaintenanceTool()
@@ -2843,19 +2875,9 @@ void PackageManagerCorePrivate::registerMaintenanceTool()
         settings.setValue(QLatin1String("ModifyPath"), QString(quoted(maintenanceTool)
             + QLatin1String(" --") + CommandLineOptions::scStartPackageManagerLong));
     }
-    // required disk space of the installed components
+
     quint64 estimatedSizeKB = m_core->requiredDiskSpace() / 1024;
-    // add required space for the maintenance tool
-    estimatedSizeKB += QFileInfo(maintenanceTool).size() / 1024;
-    if (m_core->createLocalRepositoryFromBinary()) {
-        // add required space for a local repository
-        quint64 result(0);
-        foreach (QInstaller::Component *component,
-            m_core->components(PackageManagerCore::ComponentType::All)) {
-            result += m_core->size(component, scCompressedSize);
-        }
-        estimatedSizeKB += result / 1024;
-    }
+
     // Windows can only handle 32bit REG_DWORD (max. recordable installation size is 4TiB)
     const quint64 limit = std::numeric_limits<quint32>::max(); // maximum 32 bit value
     if (estimatedSizeKB <= limit)

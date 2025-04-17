@@ -183,6 +183,8 @@ public:
 
     void setComponentSelection(const QString &id, Qt::CheckState state);
 
+    quint64 installationResourcesSpace();
+
 signals:
     void installationStarted();
     void installationFinished();
@@ -347,6 +349,7 @@ private:
     int m_connectedOperations;
     QStringList m_componentsToBeInstalled;
     PackageManagerCore::HybridInstaller m_hybridInstaller;
+    quint64 m_installationResourcesSpace;
 };
 
 } // namespace QInstaller
