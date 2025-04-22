@@ -43,6 +43,7 @@
 #include "componentselectionpage_p.h"
 #include "loggingutils.h"
 #include "readyforinstallationpage_p.h"
+#include "clickablelabel.h"
 
 #include "sysinfo.h"
 #include "globals.h"
@@ -2962,12 +2963,23 @@ FinishedPage::FinishedPage(PackageManagerCore *core)
     m_msgLabel->setObjectName(QLatin1String("MessageLabel"));
     m_msgLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
 
+    m_locationLabel = new ClickableLabel(QLatin1String(), QLatin1String("LocationLabel"));
+    m_locationLabel->setVisible(false);
+    connect(m_locationLabel, &ClickableLabel::clicked, this, &FinishedPage::locationLinkActivated);
+
+    m_clickFinishLabel = new QLabel(this);
+    m_clickFinishLabel->setVisible(false);
+    m_clickFinishLabel->setWordWrap(true);
+    m_clickFinishLabel->setObjectName(QLatin1String("FinishText"));
+
     m_runItCheckBox = new QCheckBox(this);
     m_runItCheckBox->setObjectName(QLatin1String("RunItCheckBox"));
     m_runItCheckBox->setChecked(true);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(m_msgLabel);
+    layout->addWidget(m_locationLabel);
+    layout->addWidget(m_clickFinishLabel);
     layout->addWidget(m_runItCheckBox);
     if (packageManagerCore()->settings().wizardShowPageList())
         layout->setContentsMargins(QMargins(0, -1, -1, -1));
@@ -3025,20 +3037,19 @@ void FinishedPage::entering()
         connect(m_commitButton, &QAbstractButton::clicked, this, &FinishedPage::handleFinishClicked);
     }
 
-    QString finishedText;
-    finishedText.append(QLatin1String("\n\n"));
-    finishedText.append(tr("Click %1 to close the %2 Setup.")
+    m_clickFinishLabel->setText(tr("\nClick %1 to close the %2 Setup.")
                             .arg(gui()->defaultButtonText(QWizard::FinishButton).remove(QLatin1Char('&')), productName()));
+    QString finishedText;
 
     bool installationSucceeded = true;
     if (packageManagerCore()->containsValue(QLatin1String("FinishedText"))) {
         finishedText = packageManagerCore()->value(QLatin1String("FinishedText"));
     } else if (packageManagerCore()->status() == PackageManagerCore::Success
             || packageManagerCore()->status() == PackageManagerCore::EssentialUpdated) {
-
+        m_clickFinishLabel->setVisible(true);
         if (!packageManagerCore()->isUninstaller()) {
-            finishedText.prepend(packageManagerCore()->value(scTargetDir));
-            finishedText.prepend(QLatin1String("\n"));
+            m_locationLabel->setText(packageManagerCore()->value(scTargetDir));
+            m_locationLabel->setVisible(true);
             finishedText.prepend(tr("You will find your installation in this location on your computer:"));
             finishedText.prepend(QLatin1String("\n\n"));
         }
@@ -3053,6 +3064,7 @@ void FinishedPage::entering()
     } else {
         // TODO: how to handle this using the config.xml
         finishedText.prepend(tr("%1 installation was not complete or was interrupted by some reason.").arg(productName()));
+        m_clickFinishLabel->setVisible(true);
         setColoredTitle(tr("%1 installation was unsuccessful.").arg(productName()));
         setPageListTitle(tr("Finished"));
         installationSucceeded = false;
@@ -3115,6 +3127,11 @@ void FinishedPage::cleanupChangedConnects()
         disconnect(gui()->button(QWizard::CommitButton), &QAbstractButton::clicked,
                    this, &FinishedPage::cleanupChangedConnects);
     }
+}
+
+void FinishedPage::locationLinkActivated()
+{
+    QInstaller::showInGraphicalShell(m_locationLabel->text());
 }
 
 // -- RestartPage

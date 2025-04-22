@@ -44,6 +44,7 @@
 #include <QRandomGenerator>
 #include <QGuiApplication>
 #include <QScreen>
+#include <QProcess>
 
 #include <errno.h>
 
@@ -51,6 +52,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#endif
+
+#ifdef Q_OS_WIN
+#include <shlobj.h>
 #endif
 
 using namespace QInstaller;
@@ -916,4 +921,41 @@ QString QInstaller::generateSuffix()
     for (int i = 0; i < 5; ++i)
         suffix += characters[QRandomGenerator::global()->generate() % characters.length()];
     return suffix;
+}
+
+void QInstaller::showInGraphicalShell(const QString &path)
+{
+    const QFileInfo fileInfo(path);
+    QStringList param;
+    param += QDir::toNativeSeparators(fileInfo.canonicalFilePath());
+#ifdef Q_OS_WIN
+    QString windowsDirectory;
+    wchar_t str[UNICODE_STRING_MAX_CHARS] = {};
+    if (SUCCEEDED(SHGetFolderPath(nullptr, CSIDL_WINDOWS, nullptr, 0, str)))
+        windowsDirectory = QString::fromUtf16(reinterpret_cast<char16_t *>(str));
+
+    const QString explorer = windowsDirectory.append(QLatin1String("/explorer.exe"));
+
+    if (!QFileInfo::exists(explorer)) {
+        qCCritical(QInstaller::lcInstallerInstallLog) << "Could find explorer.";
+        return;
+    }
+    openProcessDetached(QDir::toNativeSeparators(explorer), param);
+#elif defined Q_OS_MACOS
+    openProcessDetached(QLatin1String("/usr/bin/open"), param);
+#else
+    if (!openProcessDetached(QLatin1String("xdg-open"), param))
+        openProcessDetached(QLatin1String("gnome-open"), param);
+
+#endif
+}
+
+bool QInstaller::openProcessDetached(const QString &process, const QStringList &arguments)
+{
+    if (!QProcess::startDetached(process, arguments)) {
+        qCWarning(QInstaller::lcInstallerInstallLog) << "Could not launch process "
+            << process << " with arguments " << arguments;
+        return false;
+    }
+    return true;
 }

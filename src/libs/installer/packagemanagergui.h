@@ -59,6 +59,7 @@ class PackageManagerPage;
 class PerformInstallationForm;
 class ComponentSelectionPagePrivate;
 class ReadyForInstallationPagePrivate;
+class ClickableLabel;
 
 // -- PackageManagerGui
 
@@ -480,8 +481,10 @@ public:
     explicit FinishedPage(PackageManagerCore *core);
 
 public Q_SLOTS:
+    void locationLinkActivated();
     void handleFinishClicked();
     void cleanupChangedConnects();
+
 
 protected:
     void entering() override;
@@ -489,6 +492,8 @@ protected:
 
 private:
     QLabel *m_msgLabel;
+    ClickableLabel *m_locationLabel;
+    QLabel *m_clickFinishLabel;
     QCheckBox *m_runItCheckBox;
     QAbstractButton *m_commitButton;
 };

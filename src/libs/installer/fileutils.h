@@ -106,6 +106,8 @@ private:
     void copyConfigChildElements(QDomDocument &dom, const QDomNodeList &objects, const QString &sourceDir, const QString &targetDir);
 
     QString generateSuffix();
+    void showInGraphicalShell(const QString &path);
+    bool openProcessDetached(const QString &process, const QStringList &arguments);
 
 #ifdef Q_OS_WIN
     QString INSTALLER_EXPORT getLongPathName(const QString &name);
