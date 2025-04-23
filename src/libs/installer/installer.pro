@@ -62,6 +62,7 @@ HEADERS += packagemanagercore.h \
     binaryformatenginehandler.h \
     fileguard.h \
     repository.h \
+    stopprocessforupdateoperation.h \
     utils.h \
     errors.h \
     component.h \
@@ -179,6 +180,7 @@ SOURCES += packagemanagercore.cpp \
     binaryformatenginehandler.cpp \
     repository.cpp \
     fileutils.cpp \
+    stopprocessforupdateoperation.cpp \
     utils.cpp \
     component.cpp \
     scriptengine.cpp \

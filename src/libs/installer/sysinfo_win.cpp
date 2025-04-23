@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2017 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -185,7 +185,8 @@ bool CALLBACK TerminateAppEnum(HWND hwnd, LPARAM lParam)
    GetWindowThreadProcessId(hwnd, &dwID);
 
    if (dwID == (DWORD)lParam)
-      PostMessage(hwnd, WM_CLOSE, 0, 0);
+      return PostMessage(hwnd, WM_CLOSE, 0, 0);
+
    return true;
 }
 
@@ -201,10 +202,9 @@ bool killProcess(const ProcessInfo &process, int msecs)
         return false;
 
     // TerminateAppEnum() posts WM_CLOSE to all windows whose PID matches your process's.
-    EnumWindows((WNDENUMPROC)TerminateAppEnum, (LPARAM)process.id);
+    bool returnValue = EnumWindows((WNDENUMPROC)TerminateAppEnum, (LPARAM)process.id);
 
     // Wait on the handle. If it signals, great. If it times out, then kill it.
-    bool returnValue = false;
     if (WaitForSingleObject(hProc, dwTimeout) != WAIT_OBJECT_0)
         returnValue = TerminateProcess(hProc, 0);
 

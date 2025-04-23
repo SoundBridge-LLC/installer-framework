@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2021 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -38,6 +38,7 @@
 #include "installiconsoperation.h"
 #include "elevatedexecuteoperation.h"
 #include "fakestopprocessforupdateoperation.h"
+#include "stopprocessforupdateoperation.h"
 #include "createlinkoperation.h"
 #include "simplemovefileoperation.h"
 #include "copydirectoryoperation.h"
@@ -93,6 +94,7 @@ void QInstaller::init()
     factory.registerUpdateOperation<InstallIconsOperation>(QLatin1String("InstallIcons"));
     factory.registerUpdateOperation<ElevatedExecuteOperation>(QLatin1String("Execute"));
     factory.registerUpdateOperation<FakeStopProcessForUpdateOperation>(QLatin1String("FakeStopProcessForUpdate"));
+    factory.registerUpdateOperation<StopProcessForUpdateOperation>(QLatin1String("StopProcessForUpdate"));
     factory.registerUpdateOperation<CreateLinkOperation>(QLatin1String("CreateLink"));
     factory.registerUpdateOperation<SimpleMoveFileOperation>(QLatin1String("SimpleMoveFile"));
     factory.registerUpdateOperation<CopyDirectoryOperation>(QLatin1String("CopyDirectory"));

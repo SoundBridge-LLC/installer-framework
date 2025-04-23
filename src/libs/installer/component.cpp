@@ -1094,7 +1094,11 @@ void Component::setStopProcessForUpdateRequest(const QString &process, bool requ
 */
 QStringList Component::stopProcessForUpdateRequests() const
 {
-    return d->m_stopProcessForUpdateRequests;
+    QStringList normalizedStopProcessForUpdateRequests;
+    for (const QString &path : std::as_const(d->m_stopProcessForUpdateRequests))
+        normalizedStopProcessForUpdateRequests.append(QDir::toNativeSeparators(QDir::cleanPath(path)));
+
+    return normalizedStopProcessForUpdateRequests;
 }
 
 /*!

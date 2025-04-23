@@ -1171,7 +1171,7 @@ void PackageManagerCorePrivate::stopProcessesForUpdates(const QList<Component*> 
     processList.erase(std::unique(processList.begin(), processList.end()), processList.end());
     if (processList.isEmpty())
         return;
-
+#if defined(Q_OS_UNIX)
     uint retryCount = 5;
     while (true) {
         const QStringList processes = checkRunningProcessesFromList(processList);
@@ -1181,8 +1181,8 @@ void PackageManagerCorePrivate::stopProcessesForUpdates(const QList<Component*> 
         const QMessageBox::StandardButton button =
             MessageBoxHandler::warning(MessageBoxHandler::currentBestSuitParent(),
             QLatin1String("stopProcessesForUpdates"), tr("Stop Processes"), tr("These processes "
-            "should be stopped to continue:\n\n%1").arg(QDir::toNativeSeparators(processes
-            .join(QLatin1String("\n")))), QMessageBox::Retry | QMessageBox::Ignore
+            "should be stopped to continue:<br><br>%1").arg(QDir::toNativeSeparators(processes
+            .join(QLatin1String("<br>")))), QMessageBox::Retry | QMessageBox::Ignore
             | QMessageBox::Cancel, QMessageBox::Cancel);
         if (button == QMessageBox::Ignore)
             return;
@@ -1197,6 +1197,50 @@ void PackageManagerCorePrivate::stopProcessesForUpdates(const QList<Component*> 
         if (--retryCount == 0)
             throw Error(tr("Retry count exceeded"));
     }
+#else
+    const QStringList processes = checkRunningProcessesFromList(processList);
+    if (processes.isEmpty())
+        return;
+
+    const QMessageBox::StandardButton button =
+        MessageBoxHandler::warning(MessageBoxHandler::currentBestSuitParent(),
+        QLatin1String("stopProcessesForUpdates"), tr("Stop Processes"), tr("These processes "
+        "will be stopped to continue:<br><br>%1<br><br>Is this ok?").arg(QDir::toNativeSeparators(processes
+        .join(QLatin1String("<br>")))), QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
+    if (button == QMessageBox::Cancel) {
+        m_core->setCanceled();
+        throw Error(tr("Installation canceled by user"));
+    }
+
+    std::unique_ptr<Operation> operation(KDUpdater::UpdateOperationFactory::instance()
+        .create(QLatin1String("StopProcessForUpdate"), m_core));
+
+    const QStringList arguments(processes.join(QLatin1String(",")));
+    operation->setArguments(arguments);
+
+    bool ignoreError = false;
+    bool ok = runOperation(operation.get(), Operation::OperationType::Perform);
+    while (!ok && !ignoreError && m_core->status() != PackageManagerCore::Canceled) {
+        qCDebug(QInstaller::lcInstallerInstallLog) << QString::fromLatin1("Operation \"%1\" with arguments "
+            "\"%2\" failed: %3").arg(operation->name(), operation->arguments()
+            .join(QLatin1String("; ")), operation->errorString());
+        const QMessageBox::StandardButton button =
+            MessageBoxHandler::warning(MessageBoxHandler::currentBestSuitParent(),
+            QLatin1String("stopProcessesForUpdates"), tr("Installer Error"),
+            tr("Error during stopping running processes:<br>%1").arg(operation->errorString()),
+            QMessageBox::Retry | QMessageBox::Ignore | QMessageBox::Cancel, QMessageBox::Cancel);
+
+        if (button == QMessageBox::Retry)
+            ok = runOperation(operation.get(), Operation::OperationType::Perform);
+        else if (button == QMessageBox::Ignore)
+            ignoreError = true;
+        else if (button == QMessageBox::Cancel)
+            m_core->interrupt();
+    }
+
+    if (!ok && !ignoreError)
+        throw Error(tr("Error during stopping running processes: %1").arg(operation->errorString()));
+#endif
 }
 
 int PackageManagerCorePrivate::countProgressOperations(const OperationList &operations)
@@ -2626,7 +2670,11 @@ void PackageManagerCorePrivate::installComponent(Component *component, double pr
 
     if (!component->stopProcessForUpdateRequests().isEmpty()) {
         Operation *stopProcessForUpdatesOp = KDUpdater::UpdateOperationFactory::instance()
+#ifdef Q_OS_WIN
+            .create(QLatin1String("StopProcessForUpdate"), m_core);
+#else
             .create(QLatin1String("FakeStopProcessForUpdate"), m_core);
+#endif
         const QStringList arguments(component->stopProcessForUpdateRequests().join(QLatin1String(",")));
         stopProcessForUpdatesOp->setArguments(arguments);
         addPerformed(stopProcessForUpdatesOp);

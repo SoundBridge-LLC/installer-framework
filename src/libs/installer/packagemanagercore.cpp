@@ -3457,13 +3457,14 @@ bool PackageManagerCore::isProcessRunning(const QString &name) const
 
 /*!
     Returns \c true if a process with \a absoluteFilePath could be killed or is
-    not running.
+    not running. The \a timeout can be used for controlling the time that is waited
+    for the process to close gracefully - after this it is terminated forcefully, if supported.
 
     \note This is implemented in a semi blocking way (to keep the main thread to paint the UI).
 
     \sa {installer::killProcess}{installer.killProcess}
 */
-bool PackageManagerCore::killProcess(const QString &absoluteFilePath) const
+bool PackageManagerCore::killProcess(const QString &absoluteFilePath, int timeout) const
 {
     QString normalizedPath = replaceVariables(absoluteFilePath);
     normalizedPath = QDir::cleanPath(normalizedPath.replace(QLatin1Char('\\'), QLatin1Char('/')));
@@ -3479,7 +3480,7 @@ bool PackageManagerCore::killProcess(const QString &absoluteFilePath) const
 
             //to keep the ui responsible use QtConcurrent::run
             QFutureWatcher<bool> futureWatcher;
-            const QFuture<bool> future = QtConcurrent::run(KDUpdater::killProcess, process, 30000);
+            const QFuture<bool> future = QtConcurrent::run(KDUpdater::killProcess, process, timeout);
 
             QEventLoop loop;
             connect(&futureWatcher, &QFutureWatcher<bool>::finished,

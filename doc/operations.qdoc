@@ -289,6 +289,12 @@
                 the repository, you can overwrite the \e UNDO by passing \e UNDOOPERATION
                 and \e "", to the end of the argument list.
         \row
+            \li StopProcessForUpdate
+            \li "StopProcessForUpdate" \c processlist
+            \li Matches running processes against the comma-separated entries in \c processlist
+                during installation and uninstallation. If matches are found, the processes
+                are stopped. Only has effect on Windows.
+        \row
             \li FakeStopProcessForUpdate
             \li "FakeStopProcessForUpdate" \c processlist
             \li Matches running processes against the comma-separated entries in \c processlist
