@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2023 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -293,8 +293,9 @@ QString Metadata::persistentRepositoryPath()
         return m_persistentRepositoryPath;
 
     QFile file(path() + QLatin1String("/repository.txt"));
+
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qCWarning(QInstaller::lcInstallerInstallLog)
+        qCWarning(QInstaller::lcDeveloperBuild)
             << "Cannot open" << file.fileName() << "for reading:" << file.errorString();
         return QString();
     }
