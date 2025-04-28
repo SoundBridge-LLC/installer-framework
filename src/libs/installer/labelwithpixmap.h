@@ -45,9 +45,13 @@ public:
 public:
     void setWarningText(const QString &text);
 
+protected:
+    void paintEvent(QPaintEvent *event) override;
+    QSize sizeHint() const override;
+
 private:
     QLabel *m_warningText;
-
+    QLabel *m_labelPixmap;
 };
 
 } // namespace QInstaller

@@ -43,21 +43,54 @@ LabelWithPixmap::LabelWithPixmap(const QString &text, QString pixmap, QWidget *p
     setObjectName(QLatin1String("LabelWithPixmap"));
     QHBoxLayout *layout = new QHBoxLayout(this);
 
-    QLabel *labelPixmap = new QLabel(this);
-    labelPixmap->setObjectName(QLatin1String("PixmapLabel"));
+    m_labelPixmap = new QLabel(this);
+    m_labelPixmap->setObjectName(QLatin1String("PixmapLabel"));
     QInstaller::replaceHighDpiImage(pixmap);
-    labelPixmap->setPixmap(QPixmap(pixmap));
-    layout->addWidget(labelPixmap);
+    m_labelPixmap->setPixmap(QPixmap(pixmap));
+    layout->addWidget(m_labelPixmap);
 
     m_warningText = new QLabel(text, this);
     m_warningText->setWordWrap(true);
     m_warningText->setObjectName(QLatin1String("LabelText"));
-    layout->addWidget(m_warningText, 1);
 
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(m_warningText, 1);
 }
 
 void LabelWithPixmap::setWarningText(const QString &text)
 {
     m_warningText->setText(text);
+}
+
+void LabelWithPixmap::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event)
+    QStyleOption opt;
+    opt.initFrom(this);
+    QPainter p(this);
+    style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
+}
+
+QSize LabelWithPixmap::sizeHint() const
+{
+    int width = 10; // includes padding
+    int height = 0;
+
+    if (!m_warningText->text().isEmpty()) {
+        QFontMetrics metrics(m_warningText->font());
+        width += metrics.horizontalAdvance(m_warningText->text());
+        height = metrics.height(); // Single line height
+    }
+
+    if (!m_labelPixmap->pixmap().isNull()) {
+        QSize pixmapSize = m_labelPixmap->pixmap().size();
+        width += pixmapSize.width();
+        height = qMax(height, pixmapSize.height());
+    }
+
+    width += layout()->spacing();
+    QMargins margins = layout()->contentsMargins();
+    width += margins.left() + margins.right();
+    height += margins.top() + margins.bottom();
+
+    return QSize(width, height);
 }

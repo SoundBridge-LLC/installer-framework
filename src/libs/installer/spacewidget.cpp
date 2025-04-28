@@ -71,12 +71,11 @@ SpaceWidget::SpaceWidget(PackageManagerCore *core, bool showSpaceExceedWidget, Q
 
     if (m_showSpaceExceedWidget) {
         m_noSpaceAvailableLabel = new LabelWithPixmap(tr(scNoSpaceAvailable), QLatin1String(":/Notification-Type.png"));
-        spaceLabelLayout->addWidget(m_noSpaceAvailableLabel, 1);
+        spaceLabelLayout->addWidget(m_noSpaceAvailableLabel);
         m_noSpaceAvailableLabel->setVisible(false);
         m_noSpaceAvailableLabel->setObjectName(QLatin1String("SpaceWarning"));
     }
-
-    spaceLabelLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
+    spaceLabelLayout->addStretch();
     installDirectoryChanged(m_core->value(scTargetDir));
     connect(m_core, &PackageManagerCore::installDirectoryChanged, this, &SpaceWidget::installDirectoryChanged);
     connect(m_core, &PackageManagerCore::availableSpaceChanged, this, &SpaceWidget::availableSpaceChanged);
