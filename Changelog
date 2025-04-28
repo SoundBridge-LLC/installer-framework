@@ -1,3 +1,23 @@
+4.10.0
+- Remove empty folders when uninstalling (QTIFW-3656)
+- Add operation for stopping processes (QTIFW-3745)
+- Make installation location a link (QTIFW-3628)
+- Update documentation screenshots (QTIFW-3739)
+- Show space exceeded -warning(QTIFW-3740)
+- Fix calculation of installation size (QTIFW-3757)
+- Binarycreator: Fix image reading from config.xml (QTIFW-3800)
+- fix: remove trailing comma in Chinese translation for seconds (QTIFW-3799)
+- CLI: Fix unnecessary uninstall of virtual, non-tristate components (QTIFW-3798)
+- Add size information to component summary view (QTIFW-3752)
+- Update size to contain also uninstallable components (QTIFW-3742)
+- Allow hybrid MT with offline installer (QTIFW-3726)
+- Update 'Ready for Installation' -page (QTIFW-3548, QTIFW-3549)
+- Fix FinishedText overriding (QTIFW-3746)
+- Add CLI option to change language for testing (QTIFW-3635)
+- DOC: Fix bug in maintenance tool update documentation (QTIFW-3715)
+- Force use of content verification
+- Fix build against Qt 6.8
+
 4.9.0
 - Build IFW binaries with Qt6.7.2
 - 3rdparty: update libarchive sources to 3.7.7 (QTIFW-3688)
