@@ -2751,6 +2751,9 @@ quint64 PackageManagerCorePrivate::installationResourcesSpace()
     if (m_core->installerBaseBinary().isEmpty() && !m_disableWriteMaintenanceTool) {
         try {
             QString binaryName = installerBinaryPath();
+#ifdef Q_OS_MACOS
+            m_installationResourcesSpace += QFile(binaryName).size();
+#else
             QFile input;
             input.setFileName(binaryName);
 
@@ -2758,8 +2761,9 @@ quint64 PackageManagerCorePrivate::installationResourcesSpace()
             BinaryLayout layout = BinaryContent::binaryLayout(&input, BinaryContent::MagicCookie);
 
             m_installationResourcesSpace += layout.endOfBinaryContent - layout.binaryContentSize;
+#endif
         } catch (const Error &e) {
-            qCWarning(QInstaller::lcInstallerInstallLog) << "Could not add maintenance tool size to required disk space. " << qPrintable(e.message());
+            qCWarning(QInstaller::lcDeveloperBuild) << "Could not add maintenance tool size to required disk space. " << qPrintable(e.message());
             m_installationResourcesSpace += scEstimatedMaintenancetoolSize;
         }
     }

@@ -254,14 +254,15 @@ private slots:
         child1->setUninstalled();
         child2->setInstalled();
         core.calculateComponentsToInstall();
-        QCOMPARE(core.requiredDiskSpace(), scEstimatedMaintenancetoolSize + 2500ULL);
+        core.disableWriteMaintenanceTool();
+        QCOMPARE(core.requiredDiskSpace(), 2500ULL);
 
         // additionally install child2
         root->setInstalled();
         child1->setInstalled();
         child2->setUninstalled();
         core.calculateComponentsToInstall();
-        QCOMPARE(core.requiredDiskSpace(), scEstimatedMaintenancetoolSize + 250ULL);
+        QCOMPARE(core.requiredDiskSpace(), 250ULL);
     }
 
     void testDirectoryWritable()
