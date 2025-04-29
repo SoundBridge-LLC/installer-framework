@@ -76,14 +76,19 @@ const char scControlScript[] = "ControlScript";
 
 #ifdef LUMIT_INSTALLER
 
-const QString kOrganizationName(QLatin1String("SoundBridge"));
-const QString kApplicationName(QLatin1String("SoundBridge")); // todo: so far this is used for SoundBridge only
+static const QString kOrganizationName(QLatin1String("SoundBridge"));
+static const QString kApplicationName(QLatin1String("SoundBridge")); // todo: so far this is used for SoundBridge only
 
-const QString kPluginFormatsGroup(QLatin1String("PluginFormats"));
-const QString kVSTKey(QLatin1String("VST"));
-const QString kInstallerGroup(QLatin1String("Installer"));
+static const QString kPluginFormatsGroup(QLatin1String("PluginFormats"));
+static const QString kVSTKey(QLatin1String("VST"));
+static const QString kInstallerGroup(QLatin1String("Installer"));
 
-const QString scSoundBankDir(QLatin1String("SoundBankDir"));
+static const QString kRecentFilesArray(QLatin1String("RecentFiles"));
+static const QString kRecentFileNameKey(QLatin1String("RecentFileName"));
+static const QString kRecentFileRevisionKey(QLatin1String("RecentFileRevision"));
+const int kResentFilesListMaxSize = 10;
+
+static  QString scSoundBankDir(QLatin1String("SoundBankDir"));
 
 #endif
 
@@ -793,6 +798,123 @@ void Settings::setVSTPlugins(const QStringList &plugins)
 	settings->beginGroup(kPluginFormatsGroup);
 	settings->setValue(kVSTKey, plugins);
 	settings->endGroup();
+}
+
+void Settings::addRecentFiles(const QStringList &items)
+{
+    QScopedPointer<QSettings> settings(createQtSettings());
+
+	// load
+	QVector<QPair<QString, int>> recentFilesList; // name <-> revision
+
+    int count = settings->beginReadArray(kRecentFilesArray);
+    for(int i = 0; i < count; i++)
+    {
+        settings->setArrayIndex(i);
+
+        QPair<QString, int> pair;
+        pair.first = settings->value(kRecentFileNameKey).toString();
+        pair.second = settings->value(kRecentFileRevisionKey).toInt();
+
+        recentFilesList.push_back(pair);
+    }
+
+    settings->endArray();
+
+	// add
+    for(auto &item : items)
+        addRecentFilePath(recentFilesList, item, 0); // 0 revision
+
+	// save
+    // clear database
+    settings->beginGroup(kRecentFilesArray);
+    settings->remove(QString());
+    settings->endGroup();
+
+    // write to db
+    count = (int)recentFilesList.size();
+    settings->beginWriteArray(kRecentFilesArray);
+    for(int i = 0; i < count; i++)
+    {
+        settings->setArrayIndex(i);
+
+        const QPair<QString, int> &pair = recentFilesList[i];
+        settings->setValue(kRecentFileNameKey, pair.first);
+        settings->setValue(kRecentFileRevisionKey, pair.second);
+    }
+
+    settings->endArray();
+}
+
+void Settings::addRecentFilePath(QVector<QPair<QString, int>> &recentFilesList, const QString &path, int revision) const
+{
+    if(path.isEmpty())
+        return;
+
+    QString recentPath = path;
+    if(recentPath.endsWith(QChar::fromLatin1('/')))
+        recentPath = recentPath.remove(recentPath.length() - 1, 1);
+
+    if(removeRecentFilePath(recentFilesList, recentPath, revision))
+    {
+        recentFilesList.prepend(QPair<QString, int>(recentPath, revision));
+    }
+    else
+    {
+        if(recentFilesList.size() == kResentFilesListMaxSize)
+            recentFilesList.pop_back();
+
+        recentFilesList.prepend(QPair<QString, int>(recentPath, revision));
+    }
+}
+
+static QString standardisePath(const QString& path)
+{
+    QString outPath = path;
+
+    outPath.replace(QChar::fromLatin1('\\'), QChar::fromLatin1('/'));
+    if(!outPath.isEmpty() && outPath[outPath.length() - 1] != QChar::fromLatin1('/'))
+        outPath += QChar::fromLatin1('/');
+
+    return outPath;
+}
+
+static int comparePath(const QString& path1, const QString& path2)
+{
+    // using Qt's way
+#ifdef Q_OS_WIN
+    // case-insensitive
+    return path1.compare(path2, Qt::CaseInsensitive);
+#else
+    // case-sensitive
+    return path1.compare(path2, Qt::CaseSensitive);
+#endif
+}
+
+bool Settings::removeRecentFilePath(QVector<QPair<QString, int>> &recentFilesList, const QString &path, int revision) const
+{
+    bool removed = false;
+    QString absolutePath = standardisePath(path);
+    auto it = recentFilesList.begin();
+    auto iend = recentFilesList.end();
+    for(; it != iend; it++)
+    {
+        if(comparePath(standardisePath(it->first), absolutePath) == 0 &&
+           (revision < 0 || revision == it->second))
+        {
+            it = recentFilesList.erase(it);
+            if(revision >= 0)
+            {
+                return true;
+            }
+            else // remove all
+            {
+                removed = true;
+                iend = recentFilesList.end();
+            }
+        }
+    }
+    return removed;
 }
 
 QString Settings::soundBankDir()

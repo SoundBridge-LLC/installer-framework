@@ -258,6 +258,12 @@ void GuiProxy::printTextBrowserContents(const QString &widgetName, const QString
 		}
 }
 
+void GuiProxy::addRecentFiles(const QStringList &items)
+{
+	if(!m_gui) return;
+	m_gui->core()->settings().addRecentFiles(items);
+}
+
 void GuiProxy::addItem(const QString &widgetName, const QString &listWidgetName, const QString &value)
 {
 	if(!m_gui) return;

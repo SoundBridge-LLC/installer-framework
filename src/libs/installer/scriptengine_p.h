@@ -193,6 +193,7 @@ public:
 	Q_INVOKABLE void setupTextBrowserMargins(const QString &widgetName, const QString &textBrowserName, int margin);
 	Q_INVOKABLE void printTextBrowserContents(const QString &widgetName, const QString &textBrowserName);
 
+	Q_INVOKABLE void addRecentFiles(const QStringList &items);
 	Q_INVOKABLE void addItem(const QString &widgetName, const QString &listWidgetName, const QString &value);
 	Q_INVOKABLE void removeSelectedItems(const QString &widgetName, const QString &listWidgetName);
 	Q_INVOKABLE void loadVST(const QString &widgetName, const QString &listWidgetName);

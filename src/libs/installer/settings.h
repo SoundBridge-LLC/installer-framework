@@ -168,6 +168,8 @@ public:
     QStringList VSTPlugins() const;
     void setVSTPlugins(const QStringList &plugins);
 
+    void addRecentFiles(const QStringList &items);
+
     QString soundBankDir();
 
     void saveQtSettings(QHash<QString, QString> &variables);
@@ -175,6 +177,9 @@ public:
 
 private:
 #ifdef LUMIT_INSTALLER
+    void addRecentFilePath(QVector<QPair<QString, int>> &recentFilesList, const QString &path, int revision) const;
+    bool removeRecentFilePath(QVector<QPair<QString, int>> &recentFilesList, const QString &path, int revision) const;
+
     QSettings *createQtSettings() const;
     void loadQtSettings();
 #endif
