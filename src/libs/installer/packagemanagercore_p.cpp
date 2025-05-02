@@ -1180,8 +1180,8 @@ void PackageManagerCorePrivate::stopProcessesForUpdates(const QList<Component*> 
 
         const QMessageBox::StandardButton button =
             MessageBoxHandler::warning(MessageBoxHandler::currentBestSuitParent(),
-            QLatin1String("stopProcessesForUpdates"), tr("Stop Processes"), tr("These processes "
-            "should be stopped to continue:<br><br>%1").arg(QDir::toNativeSeparators(processes
+            QLatin1String("stopProcessesForUpdates"), tr("Stop Processes"), tr("These processes need to be "
+            "terminated to continue setup:<br><br>%1").arg(QDir::toNativeSeparators(processes
             .join(QLatin1String("<br>")))), QMessageBox::Retry | QMessageBox::Ignore
             | QMessageBox::Cancel, QMessageBox::Cancel);
         if (button == QMessageBox::Ignore)
@@ -1204,8 +1204,8 @@ void PackageManagerCorePrivate::stopProcessesForUpdates(const QList<Component*> 
 
     const QMessageBox::StandardButton button =
         MessageBoxHandler::warning(MessageBoxHandler::currentBestSuitParent(),
-        QLatin1String("stopProcessesForUpdates"), tr("Stop Processes"), tr("These processes "
-        "will be stopped to continue:<br><br>%1<br><br>Is this ok?").arg(QDir::toNativeSeparators(processes
+        QLatin1String("stopProcessesForUpdates"), tr("Stop Processes"), tr("These processes need to be "
+        "terminated to continue setup:<br><br>%1<br><br>Is this ok?").arg(QDir::toNativeSeparators(processes
         .join(QLatin1String("<br>")))), QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
     if (button == QMessageBox::Cancel) {
         m_core->setCanceled();
