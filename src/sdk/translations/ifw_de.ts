@@ -1994,14 +1994,6 @@ Möchten Sie trotzdem fortsetzen?</translation>
         <translation>Wartungstool wird erstellt.</translation>
     </message>
     <message>
-        <source>These processes should be stopped to continue:
-
-%1</source>
-        <translation>Diese Prozesse sollten beendet werden, um fortsetzen zu können:
-
-%1</translation>
-    </message>
-    <message>
         <source>Retry count exceeded</source>
         <translation>Anzahl der Wiederholungsversuche überschritten</translation>
     </message>
@@ -2193,6 +2185,22 @@ Möchten Sie trotzdem fortsetzen?</translation>
         <source>Cyclic dependency between aliases &quot;%1&quot; and &quot;%2&quot; detected.</source>
         <translation>Es wurde eine zyklische Abhängigkeit zwischen den Aliassen &quot;%1&quot; und &quot;%2&quot; festgestellt.</translation>
     </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1</source>
+        <translation>Diese Prozesse müssen beendet werden, damit die Installation fortgesetzt werden kann:&lt;br&gt;&lt;br&gt;%1</translation>
+    </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Is this ok?</source>
+        <translation>Diese Prozesse müssen beendet werden, damit die Installation fortgesetzt werden kann:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Bitte bestätigen Sie.</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes:&lt;br&gt;%1</source>
+        <translation>Fehler beim Beenden der laufenden Prozesse:&lt;br&gt;%1</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes: %1</source>
+        <translation>Fehler beim Beenden der laufenden Prozesse: %1</translation>
+    </message>
 </context>
 <context>
     <name>QInstaller::PackageManagerGui</name>
@@ -2345,61 +2353,6 @@ Bitte kopieren Sie den Installer auf ein lokales Laufwerk</translation>
     <message>
         <source>User input is required but the output device is not associated with a terminal.</source>
         <translation>Eine Benutzereingabe ist erforderlich, aber das Ausgabegerät ist nicht mit einem Terminal verbunden.</translation>
-    </message>
-</context>
-<context>
-    <name>QInstaller::ReadyForInstallationPage</name>
-    <message>
-        <source>U&amp;ninstall</source>
-        <translation>&amp;Deinstallieren</translation>
-    </message>
-    <message>
-        <source>Ready to Uninstall</source>
-        <translation>Bereit zum Deinstallieren</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
-        <translation>Das Einrichtungsprogramm ist jetzt bereit, %1 von Ihrem Computer zu entfernen. &lt;br&gt;&lt;font color=&quot;red&quot;&gt;Das Programmverzeichnis %2 wird vollständig gelöscht&lt;/font&gt;, inklusive allen Inhalten in diesem Verzeichnis!</translation>
-    </message>
-    <message>
-        <source>U&amp;pdate</source>
-        <translation>&amp;Aktualisieren</translation>
-    </message>
-    <message>
-        <source>Ready to Update Packages</source>
-        <translation>Bereit zum Aktualisieren der Pakete</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin updating your installation.</source>
-        <translation>Das Einrichtungsprogramm ist jetzt bereit, Ihre Installation zu aktualisieren.</translation>
-    </message>
-    <message>
-        <source>&amp;Install</source>
-        <translation>&amp;Installieren</translation>
-    </message>
-    <message>
-        <source>Ready to Install</source>
-        <translation>Bereit zum Installieren</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin installing %1 on your computer.</source>
-        <translation>Das Einrichtungsprogramm ist jetzt bereit, %1 auf Ihrem Computer zu installieren.</translation>
-    </message>
-    <message>
-        <source>Ready to Update</source>
-        <translation>Bereit für Aktualisierung</translation>
-    </message>
-    <message>
-        <source>Create Offline Installer</source>
-        <translation>Offline-Installer Erstellen</translation>
-    </message>
-    <message>
-        <source>Ready to Create Offline Installer</source>
-        <translation>Bereit zum Erstellen des Offline-Installers</translation>
-    </message>
-    <message>
-        <source>All required information is now available to create an offline installer for selected components.</source>
-        <translation>Die erforderlichen Informationen zum Erstellen eines  Offline-Installers für die ausgewählten Komponenten stehen bereit.</translation>
     </message>
 </context>
 <context>
@@ -3149,6 +3102,82 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Space available: %1</source>
         <translation>Verfügbarer Festplattenplatz: %1</translation>
+    </message>
+    <message>
+        <source>Space freed: %1</source>
+        <translation>Freigegebener Festplattenplatz: %1</translation>
+    </message>
+    <message>
+        <source>There is not enough disk space for the installation</source>
+        <translation>Es ist nicht genügend Festplattenplatz für die Installation vorhanden</translation>
+    </message>
+    <message>
+        <source>Space exceeds the supported executable size %1 in Windows</source>
+        <translation>Der Festplattenplatz übersteigt die unterstützte Größe ausführbarer Dateien auf Windows (%1)</translation>
+    </message>
+</context>
+<context>
+    <name>ComponentSummaryForm</name>
+    <message>
+        <source>You are installing</source>
+        <translation>Sie installieren</translation>
+    </message>
+    <message>
+        <source>You are uninstalling</source>
+        <translation>Sie deinstallieren</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPage</name>
+    <message>
+        <source>Installation Summary</source>
+        <translation>Zusammenfassung</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPagePrivate</name>
+    <message>
+        <source>You are updating</source>
+        <translation>Sie aktualisieren</translation>
+    </message>
+    <message>
+        <source>U&amp;pdate</source>
+        <translation>&amp;Aktualisieren</translation>
+    </message>
+    <message>
+        <source>You are installing</source>
+        <translation>Sie installieren</translation>
+    </message>
+    <message>
+        <source>U&amp;ninstall</source>
+        <translation>&amp;Deinstallieren</translation>
+    </message>
+    <message>
+        <source>You are including following packages</source>
+        <translation>Sie installieren die folgenden Pakete</translation>
+    </message>
+    <message>
+        <source>Create Offline Installer</source>
+        <translation>Offline-Installer Erstellen</translation>
+    </message>
+    <message>
+        <source>&amp;Install</source>
+        <translation>&amp;Installieren</translation>
+    </message>
+    <message>
+        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
+        <translation>Das Einrichtungsprogramm ist jetzt bereit, %1 von Ihrem Computer zu entfernen. &lt;br&gt;&lt;font color=&quot;red&quot;&gt;Das Programmverzeichnis %2 wird vollständig gelöscht&lt;/font&gt;, inklusive allen Inhalten in diesem Verzeichnis!</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::StopProcessForUpdateOperation</name>
+    <message>
+        <source>Cannot get package manager core.</source>
+        <translation>Konnte PackageManagerCore nicht erhalten.</translation>
+    </message>
+    <message>
+        <source>Could not terminate process &quot;%1&quot;</source>
+        <translation>Der Prozess konnte nicht beendet werden &quot;%1&quot;</translation>
     </message>
 </context>
 </TS>
