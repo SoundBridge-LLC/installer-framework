@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -174,6 +174,7 @@ bool ExtractArchiveOperation::performOperation()
     //    -<filename>.txt (file)
 
     QStringList files = callback.extractedFiles();
+    addParentFolders(targetDir, files);
 
     QString installDir = targetDir;
     // If we have package manager in use (normal installer run) then use
@@ -327,6 +328,31 @@ bool ExtractArchiveOperation::prepareForFile(const QString &filename)
     }
     m_backupFiles.append(qMakePair(filename, backup));
     return true;
+}
+
+void ExtractArchiveOperation::addParentFolders(const QString &componentDirectory, QStringList &files)
+{
+    // Add parent folders, until targetdir is reached, to the list of files which is used when
+    // figuring out what needs to be removed when uninstalling component. When the archive operation
+    // in component's xml overrides extract operation, install folders would be missing without
+    // separate addition, if multiple components contains the same folders.
+    if (!packageManager())
+        return;
+    QDir componentDir(componentDirectory);
+    QDir installDir(packageManager()->value(scTargetDir));
+    if (componentDir == installDir)
+        return;
+    QString componentAbsolutePath = QDir::toNativeSeparators(componentDir.absolutePath());
+    if (componentAbsolutePath.startsWith(QDir::toNativeSeparators(installDir.absolutePath()))) {
+        if (!files.contains(componentAbsolutePath))
+            files.append(componentAbsolutePath);
+        while (componentDir.cdUp() && componentDir != installDir) {
+            componentAbsolutePath = QDir::toNativeSeparators(componentDir.absolutePath());
+            if (files.contains(componentAbsolutePath))
+                continue;
+            files.append(componentAbsolutePath);
+        }
+    }
 }
 
 bool ExtractArchiveOperation::testOperation()

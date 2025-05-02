@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2022 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -62,6 +62,7 @@ private:
 
     QString generateBackupName(const QString &fn);
     bool prepareForFile(const QString &filename);
+    void addParentFolders(const QString &componentDirectory, QStringList &files);
 
 private:
     typedef QPair<QString, QString> Backup;
