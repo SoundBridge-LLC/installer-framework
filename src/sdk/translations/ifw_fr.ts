@@ -126,7 +126,7 @@
     </message>
     <message>
         <source>Selected components without dependencies:</source>
-        <translation>Les composants sélectionnés n'ont pas de dépendances :</translation>
+        <translation>Les composants sélectionnés n&apos;ont pas de dépendances :</translation>
     </message>
     <message>
         <source>Recursion detected, component &quot;%1&quot; already added with reason: &quot;%2&quot;</source>
@@ -518,15 +518,15 @@
     </message>
     <message>
         <source>PackageUpdate element without Name</source>
-        <translation>L'élément PackageUpdate n'a pas de nom.</translation>
+        <translation>L&apos;élément PackageUpdate n&apos;a pas de nom.</translation>
     </message>
     <message>
         <source>PackageUpdate element without Version</source>
-        <translation>L'élément PackageUpdate n'a pas de version</translation>
+        <translation>L&apos;élément PackageUpdate n&apos;a pas de version</translation>
     </message>
     <message>
         <source>PackageUpdate element without ReleaseDate</source>
-        <translation>L'élément PackageUpdate n'a pas de date de publication</translation>
+        <translation>L&apos;élément PackageUpdate n&apos;a pas de date de publication</translation>
     </message>
 </context>
 <context>
@@ -581,7 +581,7 @@
     </message>
     <message>
         <source>Unsupported archive type.</source>
-        <translation>Ce type d’archive n'est pas pris en charge.</translation>
+        <translation>Ce type d’archive n&apos;est pas pris en charge.</translation>
     </message>
     <message>
         <source>Cannot create archive &quot;%1&quot;</source>
@@ -964,7 +964,7 @@
     <name>QInstaller::CopyFileTask</name>
     <message>
         <source>Invalid task item count.</source>
-        <translation>Le nombre d'éléments de la tâche est invalide.</translation>
+        <translation>Le nombre d&apos;éléments de la tâche est invalide.</translation>
     </message>
     <message>
         <source>Cannot open file &quot;%1&quot; for reading: %2</source>
@@ -1456,7 +1456,7 @@ Téléchargé: %2</translation>
     </message>
     <message>
         <source>No updates available.</source>
-        <translation>Aucune mise à jour n'est disponible.</translation>
+        <translation>Aucune mise à jour n&apos;est disponible.</translation>
     </message>
     <message>
         <source>&amp;Quit</source>
@@ -1781,7 +1781,7 @@ Souhaitez-vous continuer ?</translation>
     </message>
     <message>
         <source>The volume you selected for installation seems to have sufficient space for installation, but there will be less than 1% of the volume&apos;s space available afterwards.</source>
-        <translation>Le volume que vous avez sélectionné pour l&apos;installation semble avoir suffisamment d&apos;espace pour l&apos;installation, mais il restera moins de 1% d'&apos;espace disponible sur le volume par la suite.</translation>
+        <translation>Le volume que vous avez sélectionné pour l&apos;installation semble avoir suffisamment d&apos;espace pour l&apos;installation, mais il restera moins de 1% d&apos;&apos;espace disponible sur le volume par la suite.</translation>
     </message>
     <message>
         <source>The volume you selected for installation seems to have sufficient space for installation, but there will be less than 100 MB available afterwards.</source>
@@ -1861,14 +1861,6 @@ Souhaitez-vous continuer ?</translation>
     <message>
         <source>Stop Processes</source>
         <translation>Arrêter les processus</translation>
-    </message>
-    <message>
-        <source>These processes should be stopped to continue:
-
-%1</source>
-        <translation>Ces processus doivent être arrêtés pour poursuivre :
-
-%1</translation>
     </message>
     <message>
         <source>Installation canceled by user</source>
@@ -2114,6 +2106,22 @@ Souhaitez-vous continuer ?</translation>
         <source>Cyclic dependency between aliases &quot;%1&quot; and &quot;%2&quot; detected.</source>
         <translation>Dépendance cyclique entre les alias &quot;%1&quot; et &quot;%2&quot; détectée.</translation>
     </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1</source>
+        <translation>Ces processus doivent être terminés pour continuer la configuration :&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;%1</translation>
+    </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Is this ok?</source>
+        <translation>Ces processus doivent être terminés pour continuer l&apos;installation :&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;%1&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;Est-ce possible ?</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes:&lt;br&gt;%1</source>
+        <translation>Erreur lors de l&apos;arrêt des processus en cours d&apos;exécution : &amp;lt;br&amp;gt;%1</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes: %1</source>
+        <translation>Erreur lors de l&apos;arrêt des processus en cours d&apos;exécution : %1</translation>
+    </message>
 </context>
 <context>
     <name>QInstaller::PackageManagerGui</name>
@@ -2259,61 +2267,6 @@ Copiez le programme d’installation sur un disque local</translation>
     <message>
         <source>Proxy Credentials</source>
         <translation>Informations d&apos;authentification du proxy</translation>
-    </message>
-</context>
-<context>
-    <name>QInstaller::ReadyForInstallationPage</name>
-    <message>
-        <source>U&amp;ninstall</source>
-        <translation>Dés&amp;installer</translation>
-    </message>
-    <message>
-        <source>Ready to Uninstall</source>
-        <translation>Prêt pour la désinstallation</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
-        <translation>Le programme d’installation est maintenant prêt à supprimer %1 de votre ordinateur.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;Le répertoire du programme %2 va être entièrement supprimé&lt;/font&gt;, y compris tout son contenu !</translation>
-    </message>
-    <message>
-        <source>U&amp;pdate</source>
-        <translation>M&amp;ettre à jour</translation>
-    </message>
-    <message>
-        <source>Ready to Update Packages</source>
-        <translation>La mise à jour des paquets est prête</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin updating your installation.</source>
-        <translation>Le programme d’installation est maintenant prêt à mettre à jour votre installation.</translation>
-    </message>
-    <message>
-        <source>&amp;Install</source>
-        <translation>&amp;Installer</translation>
-    </message>
-    <message>
-        <source>Ready to Install</source>
-        <translation>Prêt pour l’installation</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin installing %1 on your computer.</source>
-        <translation>Le programme d’installation est maintenant prêt à installer %1 sur votre ordinateur.</translation>
-    </message>
-    <message>
-        <source>Ready to Update</source>
-        <translation>Prêt pour la mise à jour</translation>
-    </message>
-    <message>
-        <source>Create Offline Installer</source>
-        <translation>Créer un programme d’installation hors ligne</translation>
-    </message>
-    <message>
-        <source>Ready to Create Offline Installer</source>
-        <translation>Prêt pour la création du programme d’installation hors ligne</translation>
-    </message>
-    <message>
-        <source>All required information is now available to create an offline installer for selected components.</source>
-        <translation>La création du programme d’installation hors ligne pour les composants sélectionnés est maintenant prête.</translation>
     </message>
 </context>
 <context>
@@ -2491,7 +2444,7 @@ Copiez le programme d’installation sur un disque local</translation>
     </message>
     <message>
         <source>Empty repository URL.</source>
-        <translation>L'URL du dossier est vide.</translation>
+        <translation>L&apos;URL du dossier est vide.</translation>
     </message>
     <message>
         <source>Download canceled.</source>
@@ -2574,7 +2527,7 @@ Copiez le programme d’installation sur un disque local</translation>
     </message>
     <message>
         <source>Please make sure that the current user has read access to file &quot;%1&quot; or try running %2 as an administrator.</source>
-        <translation>Veillez à ce que l’utilisateur actuel dispose d’un accès en lecture du fichier &amp;quot;%1&amp;quot; ou essayez de d'exécuter %2 en tant qu’administrateur.</translation>
+        <translation>Veillez à ce que l’utilisateur actuel dispose d’un accès en lecture du fichier &amp;quot;%1&amp;quot; ou essayez de d&apos;exécuter %2 en tant qu’administrateur.</translation>
     </message>
     <message>
         <source>Invalid value for &apos;max-concurrent-operations&apos;.</source>
@@ -3131,6 +3084,10 @@ Ou acceptez l’élévation des droits d’accès si un message vous y invite.</
         <source>Select the Start Menu folder in which you would like to create the program’s shortcuts. You can also enter a name to create a new directory</source>
         <translation>Sélectionnez le dossier du menu Démarrer dans lequel vous souhaitez créer les raccourcis du programme. Vous pouvez également saisir un nom pour créer un nouveau répertoire</translation>
     </message>
+    <message>
+        <source>Start Menu Folder</source>
+        <translation>Dossier du menu Démarrer</translation>
+    </message>
 </context>
 <context>
     <name>QInstaller::RestartPage</name>
@@ -3148,6 +3105,82 @@ Ou acceptez l’élévation des droits d’accès si un message vous y invite.</
     <message>
         <source>Space available: %1</source>
         <translation>Espace disponible : %1</translation>
+    </message>
+    <message>
+        <source>Space freed: %1</source>
+        <translation>Espace libéré : %1</translation>
+    </message>
+    <message>
+        <source>There is not enough disk space for the installation</source>
+        <translation>Espace disque insuffisant pour l&apos;installation</translation>
+    </message>
+    <message>
+        <source>Space exceeds the supported executable size %1 in Windows</source>
+        <translation>L&apos;espace disque dépasse la taille exécutable prise en charge par Windows : %1</translation>
+    </message>
+</context>
+<context>
+    <name>ComponentSummaryForm</name>
+    <message>
+        <source>You are installing</source>
+        <translation>Installation en cours</translation>
+    </message>
+    <message>
+        <source>You are uninstalling</source>
+        <translation>Désinstallation en cours</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPage</name>
+    <message>
+        <source>Installation Summary</source>
+        <translation>Résumé de l&apos;installation</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPagePrivate</name>
+    <message>
+        <source>You are updating</source>
+        <translation>Mise à jour en cours</translation>
+    </message>
+    <message>
+        <source>U&amp;pdate</source>
+        <translation>M&amp;ettre à jour</translation>
+    </message>
+    <message>
+        <source>You are installing</source>
+        <translation>Installation en cours</translation>
+    </message>
+    <message>
+        <source>U&amp;ninstall</source>
+        <translation>Dés&amp;installer</translation>
+    </message>
+    <message>
+        <source>You are including following packages</source>
+        <translation>Vous incluez les paquets suivants</translation>
+    </message>
+    <message>
+        <source>Create Offline Installer</source>
+        <translation>Créer un programme d’installation hors ligne</translation>
+    </message>
+    <message>
+        <source>&amp;Install</source>
+        <translation>&amp;Installer</translation>
+    </message>
+    <message>
+        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
+        <translation>Le programme d&apos;installation est maintenant prêt à supprimer %1 de votre ordinateur.&amp;lt;br&amp;gt;&amp;lt;font color=&amp;quot;red&amp;quot;&amp;gt;Le répertoire du programme %2 va être entièrement supprimé&amp;lt;/font&amp;gt;, y compris tout son contenu !</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::StopProcessForUpdateOperation</name>
+    <message>
+        <source>Cannot get package manager core.</source>
+        <translation>Impossible d’obtenir le moteur principal du gestionnaire de paquetages.</translation>
+    </message>
+    <message>
+        <source>Could not terminate process &quot;%1&quot;</source>
+        <translation>Impossible de terminer le processus &amp;quot;%1&amp;quot;</translation>
     </message>
 </context>
 </TS>
