@@ -1853,14 +1853,6 @@ Do you want to continue?</source>
         <translation>停止过程</translation>
     </message>
     <message>
-        <source>These processes should be stopped to continue:
-
-%1</source>
-        <translation>应停止这些过程以继续：
-
-%1</translation>
-    </message>
-    <message>
         <source>Installation canceled by user</source>
         <translation>用户已取消安装</translation>
     </message>
@@ -2104,6 +2096,22 @@ Do you want to continue?</source>
         <source>Cyclic dependency between aliases &quot;%1&quot; and &quot;%2&quot; detected.</source>
         <translation>检测到别名“%1”和“%2”之间的依赖项循环。</translation>
     </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1</source>
+        <translation>为了继续安装，这些进程应该被终止：&lt;br&gt;&lt;br&gt;%1</translation>
+    </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Is this ok?</source>
+        <translation>为了继续安装，这些进程应该被终止：&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;可以么？</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes:&lt;br&gt;%1</source>
+        <translation>停止正在运行的进程过程中发生错误：&lt;br&gt;%1</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes: %1</source>
+        <translation>停止正在运行的进程过程中发生错误：%1</translation>
+    </message>
 </context>
 <context>
     <name>QInstaller::PackageManagerGui</name>
@@ -2249,61 +2257,6 @@ Please copy the installer to a local drive</source>
     <message>
         <source>Proxy Credentials</source>
         <translation>代理凭据</translation>
-    </message>
-</context>
-<context>
-    <name>QInstaller::ReadyForInstallationPage</name>
-    <message>
-        <source>U&amp;ninstall</source>
-        <translation>卸载(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Ready to Uninstall</source>
-        <translation>准备卸载</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
-        <translation>安装程序现已准备好从您的计算机中移除 %1。&lt;br&gt;&lt;font color=&quot;red&quot;&gt;将彻底删除程序目录 %2&lt;/font&gt;，目录内所有内容也将被删除!</translation>
-    </message>
-    <message>
-        <source>U&amp;pdate</source>
-        <translation>更新(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Ready to Update Packages</source>
-        <translation>准备更新包</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin updating your installation.</source>
-        <translation>安装程序现已准备好安装您的更新。</translation>
-    </message>
-    <message>
-        <source>&amp;Install</source>
-        <translation>安装(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Ready to Install</source>
-        <translation>准备安装</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin installing %1 on your computer.</source>
-        <translation>安装程序现已准备好在您的计算器中安装 %1。</translation>
-    </message>
-    <message>
-        <source>Ready to Update</source>
-        <translation>准备更新</translation>
-    </message>
-    <message>
-        <source>Create Offline Installer</source>
-        <translation>创建离线安装程序</translation>
-    </message>
-    <message>
-        <source>Ready to Create Offline Installer</source>
-        <translation>准备创建离线安装程序</translation>
-    </message>
-    <message>
-        <source>All required information is now available to create an offline installer for selected components.</source>
-        <translation>为所选组件创建离线安装程序的所需信息都已经准备好。</translation>
     </message>
 </context>
 <context>
@@ -3138,6 +3091,82 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Space available: %1</source>
         <translation>可用空间：%1</translation>
+    </message>
+    <message>
+        <source>Space freed: %1</source>
+        <translation>已释放空间：%1</translation>
+    </message>
+    <message>
+        <source>There is not enough disk space for the installation</source>
+        <translation>没有足够的硬盘空间进行安装</translation>
+    </message>
+    <message>
+        <source>Space exceeds the supported executable size %1 in Windows</source>
+        <translation>所需空间超过了Windows下所支持的可执行文件大小%1</translation>
+    </message>
+</context>
+<context>
+    <name>ComponentSummaryForm</name>
+    <message>
+        <source>You are installing</source>
+        <translation>您正在安装</translation>
+    </message>
+    <message>
+        <source>You are uninstalling</source>
+        <translation>您正在卸载</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPage</name>
+    <message>
+        <source>Installation Summary</source>
+        <translation>安装总结</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPagePrivate</name>
+    <message>
+        <source>You are updating</source>
+        <translation>您正在更新</translation>
+    </message>
+    <message>
+        <source>U&amp;pdate</source>
+        <translation>更新(&amp;P)</translation>
+    </message>
+    <message>
+        <source>You are installing</source>
+        <translation>您正在安装</translation>
+    </message>
+    <message>
+        <source>U&amp;ninstall</source>
+        <translation>卸载(&amp;N)</translation>
+    </message>
+    <message>
+        <source>You are including following packages</source>
+        <translation>您正在包含如下包</translation>
+    </message>
+    <message>
+        <source>Create Offline Installer</source>
+        <translation>创建离线安装程序</translation>
+    </message>
+    <message>
+        <source>&amp;Install</source>
+        <translation>安装(&amp;I)</translation>
+    </message>
+    <message>
+        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
+        <translation>安装程序现已准备好从您的计算机中移除 %1。&lt;br&gt;&lt;font color=&quot;red&quot;&gt;将彻底删除程序目录 %2&lt;/font&gt;，目录内所有内容也将被删除!</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::StopProcessForUpdateOperation</name>
+    <message>
+        <source>Cannot get package manager core.</source>
+        <translation>无法获取包管理器核心内容。</translation>
+    </message>
+    <message>
+        <source>Could not terminate process &quot;%1&quot;</source>
+        <translation>无法终止进程“%1”</translation>
     </message>
 </context>
 </TS>
