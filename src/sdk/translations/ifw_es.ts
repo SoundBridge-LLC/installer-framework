@@ -1863,14 +1863,6 @@ No es recomendable instalar en este directorio, ya que la instalación podría g
         <translation>Detener procesos</translation>
     </message>
     <message>
-        <source>These processes should be stopped to continue:
-
-%1</source>
-        <translation>Estos procesos se deben detener para continuar:
-
-%1</translation>
-    </message>
-    <message>
         <source>Installation canceled by user</source>
         <translation>Instalación cancelada por el usuario</translation>
     </message>
@@ -2114,6 +2106,22 @@ No es recomendable instalar en este directorio, ya que la instalación podría g
         <source>Cyclic dependency between aliases &quot;%1&quot; and &quot;%2&quot; detected.</source>
         <translation>Se detectó dependencia cíclica entre los alias &quot;%1&quot; y &quot;%2&quot;.</translation>
     </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1</source>
+        <translation>Es necesario finalizar estos procesos para continuar con la configuración:&lt;br&gt;&lt;br&gt;%1</translation>
+    </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Is this ok?</source>
+        <translation>Estos procesos deben finalizarse para continuar con la configuración:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;¿Está bien?</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes:&lt;br&gt;%1</source>
+        <translation>Error al detener procesos en ejecución:&lt;br&gt;%1</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes: %1</source>
+        <translation>Error al detener procesos en ejecución: %1</translation>
+    </message>
 </context>
 <context>
     <name>QInstaller::PackageManagerGui</name>
@@ -2259,61 +2267,6 @@ Copie el instalador en una unidad local</translation>
     <message>
         <source>Proxy Credentials</source>
         <translation>Credenciales del Proxy</translation>
-    </message>
-</context>
-<context>
-    <name>QInstaller::ReadyForInstallationPage</name>
-    <message>
-        <source>U&amp;ninstall</source>
-        <translation>Desi&amp;nstalar</translation>
-    </message>
-    <message>
-        <source>Ready to Uninstall</source>
-        <translation>Preparado para desinstalar</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
-        <translation>El programa de instalación está preparado para empezar a eliminar %1 del equipo.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;El directorio del programa %2 se eliminará completamente&lt;/font&gt;, incluido todo el contenido del directorio!</translation>
-    </message>
-    <message>
-        <source>U&amp;pdate</source>
-        <translation>Actu&amp;alizar</translation>
-    </message>
-    <message>
-        <source>Ready to Update Packages</source>
-        <translation>Preparado para actualizar paquetes</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin updating your installation.</source>
-        <translation>El programa de instalación está preparado para empezar a actualizar la instalación.</translation>
-    </message>
-    <message>
-        <source>&amp;Install</source>
-        <translation>&amp;Instalar</translation>
-    </message>
-    <message>
-        <source>Ready to Install</source>
-        <translation>Preparado para instalar</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin installing %1 on your computer.</source>
-        <translation>El programa de instalación está preparado para empezar a instalar %1 en su equipo.</translation>
-    </message>
-    <message>
-        <source>Ready to Update</source>
-        <translation>Listo para la actualización</translation>
-    </message>
-    <message>
-        <source>Create Offline Installer</source>
-        <translation>Crear instalador sin conexión</translation>
-    </message>
-    <message>
-        <source>Ready to Create Offline Installer</source>
-        <translation>Listo para crear instalador sin conexión</translation>
-    </message>
-    <message>
-        <source>All required information is now available to create an offline installer for selected components.</source>
-        <translation>Toda la información requerida ahora está disponible para crear un instalador sin conexión para los componentes seleccionados.</translation>
     </message>
 </context>
 <context>
@@ -3150,6 +3103,82 @@ O bien acepte la elevación de los derechos de acceso si se le pide.</translatio
     <message>
         <source>Space available: %1</source>
         <translation>Espacio disponible: %1</translation>
+    </message>
+    <message>
+        <source>Space freed: %1</source>
+        <translation>Espacio liberado %1</translation>
+    </message>
+    <message>
+        <source>There is not enough disk space for the installation</source>
+        <translation>No hay suficiente espacio en disco para la instalación</translation>
+    </message>
+    <message>
+        <source>Space exceeds the supported executable size %1 in Windows</source>
+        <translation>El espacio excede el tamaño ejecutable admitido %1 en Windows</translation>
+    </message>
+</context>
+<context>
+    <name>ComponentSummaryForm</name>
+    <message>
+        <source>You are installing</source>
+        <translation>Estas instalando</translation>
+    </message>
+    <message>
+        <source>You are uninstalling</source>
+        <translation>Estas desinstalando</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPage</name>
+    <message>
+        <source>Installation Summary</source>
+        <translation>Resumen de instalación</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPagePrivate</name>
+    <message>
+        <source>You are updating</source>
+        <translation>Estas actualizando</translation>
+    </message>
+    <message>
+        <source>U&amp;pdate</source>
+        <translation>Actu&amp;alizar</translation>
+    </message>
+    <message>
+        <source>You are installing</source>
+        <translation>Estas instalando</translation>
+    </message>
+    <message>
+        <source>U&amp;ninstall</source>
+        <translation type="unfinished">Desi&amp;nstalar</translation>
+    </message>
+    <message>
+        <source>You are including following packages</source>
+        <translation>Estas incluyendo los siguientes paquetes</translation>
+    </message>
+    <message>
+        <source>Create Offline Installer</source>
+        <translation>Crear instalador sin conexión</translation>
+    </message>
+    <message>
+        <source>&amp;Install</source>
+        <translation>&amp;Instalar</translation>
+    </message>
+    <message>
+        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
+        <translation>El programa de instalación está preparado para empezar a eliminar %1 del equipo.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;El directorio del programa %2 se eliminará completamente&lt;/font&gt;, incluido todo el contenido del directorio!</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::StopProcessForUpdateOperation</name>
+    <message>
+        <source>Cannot get package manager core.</source>
+        <translation>No se puede obtener el componente base del administrador de paquetes.</translation>
+    </message>
+    <message>
+        <source>Could not terminate process &quot;%1&quot;</source>
+        <translation>No se pudo finalizar el proceso &quot;%1&quot;</translation>
     </message>
 </context>
 </TS>
