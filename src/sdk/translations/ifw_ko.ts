@@ -1726,14 +1726,6 @@ Do you want to continue?</source>
         <translation>프로세스 중지</translation>
     </message>
     <message>
-        <source>These processes should be stopped to continue:
-
-%1</source>
-        <translation>계속하기 전에 중지해야 하는 프로세스:
-
-%1</translation>
-    </message>
-    <message>
         <source>Installation canceled by user</source>
         <translation>사용자가 설치를 취소함</translation>
     </message>
@@ -1977,6 +1969,22 @@ Do you want to continue?</source>
         <source>Cyclic dependency between aliases &quot;%1&quot; and &quot;%2&quot; detected.</source>
         <translation>별칭들 &quot;%1&quot;와 &quot;%2&quot; 사이에 순환 의존성 발견됨.</translation>
     </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1</source>
+        <translation>설정을 계속하려면 다음 프로세스를 종료해야 합니다:&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;%1</translation>
+    </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Is this ok?</source>
+        <translation>설정을 계속하려면 다음 프로세스를 종료해야 합니다:&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;%1&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;괜찮습니까?</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes:&lt;br&gt;%1</source>
+        <translation>실행 중인 프로세스 중지 중 오류:&amp;lt;br&amp;gt;%1</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes: %1</source>
+        <translation>실행 중인 프로세스 중지 중 오류: %1</translation>
+    </message>
 </context>
 <context>
     <name>QInstaller::PackageManagerGui</name>
@@ -2136,61 +2144,6 @@ Please copy the installer to a local drive</source>
     <message>
         <source>Select Installation Folder</source>
         <translation>설치 폴더 선택</translation>
-    </message>
-</context>
-<context>
-    <name>QInstaller::ReadyForInstallationPage</name>
-    <message>
-        <source>U&amp;ninstall</source>
-        <translation>설치 제거(&amp;N)</translation>
-    </message>
-    <message>
-        <source>Ready to Uninstall</source>
-        <translation>설치 제거 준비 완료</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
-        <translation>컴퓨터에 %1 제거를 시작할 준비가 되었습니다.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;%2 프로그램 디렉터리는 모두 삭제되며&lt;/font&gt;, 해당 디렉토리에 포함된 모든 콘텐츠도 삭제됩니다!</translation>
-    </message>
-    <message>
-        <source>U&amp;pdate</source>
-        <translation>업데이트(&amp;P)</translation>
-    </message>
-    <message>
-        <source>Ready to Update Packages</source>
-        <translation>패키지 업데이트 준비 완료</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin updating your installation.</source>
-        <translation>이제 설치 업데이트를 시작할 준비가 되었습니다.</translation>
-    </message>
-    <message>
-        <source>&amp;Install</source>
-        <translation>설치(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Ready to Install</source>
-        <translation>설치 준비 완료</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin installing %1 on your computer.</source>
-        <translation>컴퓨터에 %1 설치를 시작할 준비가 되었습니다.</translation>
-    </message>
-    <message>
-        <source>Ready to Update</source>
-        <translation>업데이트 준비 완료</translation>
-    </message>
-    <message>
-        <source>Create Offline Installer</source>
-        <translation>오프라인 설치 프로그램을 생성합니다.</translation>
-    </message>
-    <message>
-        <source>Ready to Create Offline Installer</source>
-        <translation>오프라인 설치 프로그램을 생성하기 위해 준비합니다.</translation>
-    </message>
-    <message>
-        <source>All required information is now available to create an offline installer for selected components.</source>
-        <translation>선택된 구성요소들에 대한 오프라인 설치 프로그램을 생성하기 위한 모든 필요한 정보가 사용 가능합니다</translation>
     </message>
 </context>
 <context>
@@ -3134,6 +3087,82 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Space available: %1</source>
         <translation>사용 가능 공간: %1</translation>
+    </message>
+    <message>
+        <source>Space freed: %1</source>
+        <translation>확보된 공간: %1</translation>
+    </message>
+    <message>
+        <source>There is not enough disk space for the installation</source>
+        <translation>설치할 디스크 공간이 부족합니다.</translation>
+    </message>
+    <message>
+        <source>Space exceeds the supported executable size %1 in Windows</source>
+        <translation>공간이 Windows에서 지원되는 실행 파일 크기 %1을(를) 초과합니다</translation>
+    </message>
+</context>
+<context>
+    <name>ComponentSummaryForm</name>
+    <message>
+        <source>You are installing</source>
+        <translation>설치 중</translation>
+    </message>
+    <message>
+        <source>You are uninstalling</source>
+        <translation>설치 중</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPage</name>
+    <message>
+        <source>Installation Summary</source>
+        <translation>설치 개요</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPagePrivate</name>
+    <message>
+        <source>You are updating</source>
+        <translation>업데이트 중</translation>
+    </message>
+    <message>
+        <source>U&amp;pdate</source>
+        <translation>업데이트(&amp;P)</translation>
+    </message>
+    <message>
+        <source>You are installing</source>
+        <translation>설치 중</translation>
+    </message>
+    <message>
+        <source>U&amp;ninstall</source>
+        <translation>설치 제거(&amp;N)</translation>
+    </message>
+    <message>
+        <source>You are including following packages</source>
+        <translation>다음 패키지가 포함되어 있습니다</translation>
+    </message>
+    <message>
+        <source>Create Offline Installer</source>
+        <translation>오프라인 설치 관리자 만들기s</translation>
+    </message>
+    <message>
+        <source>&amp;Install</source>
+        <translation>설치(&amp;I)</translation>
+    </message>
+    <message>
+        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
+        <translation>컴퓨터에 %1 제거를 시작할 준비가 되었습니다.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;%2 프로그램 디렉터리는 모두 삭제되며&lt;/font&gt;, 해당 디렉토리에 포함된 모든 콘텐츠도 삭제됩니다!</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::StopProcessForUpdateOperation</name>
+    <message>
+        <source>Cannot get package manager core.</source>
+        <translation>패키지 관리자 코어를 가져올 수 없습니다.</translation>
+    </message>
+    <message>
+        <source>Could not terminate process &quot;%1&quot;</source>
+        <translation>&amp;quot;%1&amp;quot; 프로세스를 종료할 수 없습니다</translation>
     </message>
 </context>
 </TS>
