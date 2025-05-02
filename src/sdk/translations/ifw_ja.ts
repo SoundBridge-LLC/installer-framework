@@ -1844,14 +1844,6 @@ Do you want to continue?</source>
         <translation>処理の終了</translation>
     </message>
     <message>
-        <source>These processes should be stopped to continue:
-
-%1</source>
-        <translation>次に進むには、これらの処理を終了する必要があります:
-
-%1</translation>
-    </message>
-    <message>
         <source>Installation canceled by user</source>
         <translation>ユーザーがインストールをキャンセルしました</translation>
     </message>
@@ -2095,6 +2087,22 @@ Do you want to continue?</source>
         <source>Cyclic dependency between aliases &quot;%1&quot; and &quot;%2&quot; detected.</source>
         <translation>エイリアス &quot;%1&quot; と &quot;%2&quot;&#x3000;の間の循環依存関係が検出されました。</translation>
     </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1</source>
+        <translation>セットアップを継続するには起動中のプロセスを終了する必要があります:&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;%1</translation>
+    </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Is this ok?</source>
+        <translation>セットアップを継続するには起動中のプロセスを終了する必要があります:&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;%1&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;終了してもよろしいですか？</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes:&lt;br&gt;%1</source>
+        <translation>起動プロセスの終了中にエラーが発生しました:&amp;lt;br&amp;gt;%1</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes: %1</source>
+        <translation>起動プロセスの終了中にエラーが発生しました:&amp;lt;br&amp;gt;%1</translation>
+    </message>
 </context>
 <context>
     <name>QInstaller::PackageManagerGui</name>
@@ -2240,61 +2248,6 @@ Please copy the installer to a local drive</source>
     <message>
         <source>Proxy Credentials</source>
         <translation>プロキシ認証情報</translation>
-    </message>
-</context>
-<context>
-    <name>QInstaller::ReadyForInstallationPage</name>
-    <message>
-        <source>U&amp;ninstall</source>
-        <translation>アンインストール (&amp;N)</translation>
-    </message>
-    <message>
-        <source>Ready to Uninstall</source>
-        <translation>アンインストールの準備ができました</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
-        <translation>コンピューターから %1 を削除する準備が整っています。&lt;br&gt;&lt;font color=&quot;red&quot;&gt;プログラム ディレクトリ %2 が完全に削除されます&lt;/font&gt;。このディレクトリ内のコンテンツもすべて削除されます。</translation>
-    </message>
-    <message>
-        <source>U&amp;pdate</source>
-        <translation>更新 (&amp;P)</translation>
-    </message>
-    <message>
-        <source>Ready to Update Packages</source>
-        <translation>パッケージを更新する準備ができました</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin updating your installation.</source>
-        <translation>インストールを更新する準備が整っています。</translation>
-    </message>
-    <message>
-        <source>&amp;Install</source>
-        <translation>インストール(&amp;I)</translation>
-    </message>
-    <message>
-        <source>Ready to Install</source>
-        <translation>インストールの準備ができました</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin installing %1 on your computer.</source>
-        <translation>コンピューターに %1 をインストールする準備が整っています。</translation>
-    </message>
-    <message>
-        <source>Ready to Update</source>
-        <translation>更新の準備ができました</translation>
-    </message>
-    <message>
-        <source>Create Offline Installer</source>
-        <translation>オフラインインストーラーを作成</translation>
-    </message>
-    <message>
-        <source>Ready to Create Offline Installer</source>
-        <translation>オフラインインストーラーの準備ができました</translation>
-    </message>
-    <message>
-        <source>All required information is now available to create an offline installer for selected components.</source>
-        <translation>選択したコンポーネントのオフラインインストーラーを作成するために準備が整っています</translation>
     </message>
 </context>
 <context>
@@ -3108,6 +3061,10 @@ or accept the elevation of access rights if being asked.</source>
         <source>Select the Start Menu folder in which you would like to create the program’s shortcuts. You can also enter a name to create a new directory</source>
         <translation>プログラムのショートカットを作成するスタートメニューフォルダを選択します。新しいディレクトリを作成するために名前を入力することも可能です。</translation>
     </message>
+    <message>
+        <source>Start Menu Folder</source>
+        <translation>スタートメニューフォルダ</translation>
+    </message>
 </context>
 <context>
     <name>QInstaller::RestartPage</name>
@@ -3125,6 +3082,82 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Space available: %1</source>
         <translation>使用可能なスペース: %1</translation>
+    </message>
+    <message>
+        <source>Space freed: %1</source>
+        <translation>解放されたスペース: %1</translation>
+    </message>
+    <message>
+        <source>There is not enough disk space for the installation</source>
+        <translation>Windowsでサポートされている実行ファイルのサイズ %1 を超えています</translation>
+    </message>
+    <message>
+        <source>Space exceeds the supported executable size %1 in Windows</source>
+        <translation>インストールしています</translation>
+    </message>
+</context>
+<context>
+    <name>ComponentSummaryForm</name>
+    <message>
+        <source>You are installing</source>
+        <translation>アンインストールしています</translation>
+    </message>
+    <message>
+        <source>You are uninstalling</source>
+        <translation>インストールサマリー</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPage</name>
+    <message>
+        <source>Installation Summary</source>
+        <translation>インストールサマリー</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPagePrivate</name>
+    <message>
+        <source>You are updating</source>
+        <translation>更新しています</translation>
+    </message>
+    <message>
+        <source>U&amp;pdate</source>
+        <translation>更新 (&amp;P)</translation>
+    </message>
+    <message>
+        <source>You are installing</source>
+        <translation>インストールしています</translation>
+    </message>
+    <message>
+        <source>U&amp;ninstall</source>
+        <translation>アンインストール (&amp;N)</translation>
+    </message>
+    <message>
+        <source>You are including following packages</source>
+        <translation>以下のパッケージをインストールしています</translation>
+    </message>
+    <message>
+        <source>Create Offline Installer</source>
+        <translation>オフライン インストーラーの作成</translation>
+    </message>
+    <message>
+        <source>&amp;Install</source>
+        <translation>インストール(&amp;I)</translation>
+    </message>
+    <message>
+        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
+        <translation>コンピューターから %1 を削除する準備が整っています。&lt;br&gt;&lt;font color=&quot;red&quot;&gt;プログラム ディレクトリ %2 が完全に削除されます&lt;/font&gt;。このディレクトリ内のコンテンツもすべて削除されます。</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::StopProcessForUpdateOperation</name>
+    <message>
+        <source>Cannot get package manager core.</source>
+        <translation>パッケージ マネージャー コアを取得できません。</translation>
+    </message>
+    <message>
+        <source>Could not terminate process &quot;%1&quot;</source>
+        <translation>プロセスを中止できません &amp;quot;%1&amp;quot;</translation>
     </message>
 </context>
 </TS>
