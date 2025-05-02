@@ -1951,14 +1951,6 @@ Do you want to continue?</source>
         <translation>Остановить процессы</translation>
     </message>
     <message>
-        <source>These processes should be stopped to continue:
-
-%1</source>
-        <translation>Для продолжения необходимо остановить следующие процессы:
-
-%1</translation>
-    </message>
-    <message>
         <source>Installation canceled by user</source>
         <translation>Установка отменена пользователем</translation>
     </message>
@@ -2205,6 +2197,22 @@ Do you want to continue?</source>
         <source>Cyclic dependency between aliases &quot;%1&quot; and &quot;%2&quot; detected.</source>
         <translation>Цикличная зависимость между псевдонимами &quot;%1&quot; и &quot;%2&quot; замечена.</translation>
     </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1</source>
+        <translation>Для продолжения установки необходимо завершить эти процессы:&lt;br&gt;&lt;br&gt;%1</translation>
+    </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Is this ok?</source>
+        <translation>Для продолжения установки необходимо завершить эти процессы:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Продолжить?</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes:&lt;br&gt;%1</source>
+        <translation>Произошла ошибка при завершении активных процессов:&lt;br&gt;%1</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes: %1</source>
+        <translation>Произошла ошибка при завершении активных процессов: %1</translation>
+    </message>
 </context>
 <context>
     <name>QInstaller::PackageManagerGui</name>
@@ -2350,61 +2358,6 @@ Please copy the installer to a local drive</source>
     <message>
         <source>Proxy Credentials</source>
         <translation>Аутентификация на прокси-сервере</translation>
-    </message>
-</context>
-<context>
-    <name>QInstaller::ReadyForInstallationPage</name>
-    <message>
-        <source>U&amp;ninstall</source>
-        <translation>У&amp;далить</translation>
-    </message>
-    <message>
-        <source>Ready to Uninstall</source>
-        <translation>Всё готово к удалению</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
-        <translation>Программа установки готова начать удаление %1 с вашего компьютера. &lt;br&gt;&lt;font color=&quot;red&quot;&gt;Директория с программой %2 будет полностью удалена&lt;/font&gt;, включая содержимое этой директории!</translation>
-    </message>
-    <message>
-        <source>U&amp;pdate</source>
-        <translation>О&amp;бновить</translation>
-    </message>
-    <message>
-        <source>Ready to Update Packages</source>
-        <translation>Готов к обновлению пакетов</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin updating your installation.</source>
-        <translation>Программа установки готова к обновлению файлов.</translation>
-    </message>
-    <message>
-        <source>&amp;Install</source>
-        <translation>&amp;Установить</translation>
-    </message>
-    <message>
-        <source>Ready to Install</source>
-        <translation>Всё готово к установке</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin installing %1 on your computer.</source>
-        <translation>Программа установки готова начать установку %1 на ваш компьютер.</translation>
-    </message>
-    <message>
-        <source>Ready to Update</source>
-        <translation>Всё готово к обновлению</translation>
-    </message>
-    <message>
-        <source>Create Offline Installer</source>
-        <translation>Создать Автономный Установщик.</translation>
-    </message>
-    <message>
-        <source>Ready to Create Offline Installer</source>
-        <translation>Готов к установке Автономного Установщика.</translation>
-    </message>
-    <message>
-        <source>All required information is now available to create an offline installer for selected components.</source>
-        <translation>Вся необходимая информация доступна для создания автономного установщика для выбранных компонентов.</translation>
     </message>
 </context>
 <context>
@@ -3165,6 +3118,82 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Space available: %1</source>
         <translation>Доступно: %1</translation>
+    </message>
+    <message>
+        <source>Space freed: %1</source>
+        <translation>Освобождено места: %1</translation>
+    </message>
+    <message>
+        <source>There is not enough disk space for the installation</source>
+        <translation>Недостаточно места на диске для установки.</translation>
+    </message>
+    <message>
+        <source>Space exceeds the supported executable size %1 in Windows</source>
+        <translation>Превышен допустимый размер исполняемого файла %1 для Windows</translation>
+    </message>
+</context>
+<context>
+    <name>ComponentSummaryForm</name>
+    <message>
+        <source>You are installing</source>
+        <translation>Установка</translation>
+    </message>
+    <message>
+        <source>You are uninstalling</source>
+        <translation>Удаление</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPage</name>
+    <message>
+        <source>Installation Summary</source>
+        <translation>Сводка установки</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPagePrivate</name>
+    <message>
+        <source>You are updating</source>
+        <translation>Обновление</translation>
+    </message>
+    <message>
+        <source>U&amp;pdate</source>
+        <translation>О&amp;бновить</translation>
+    </message>
+    <message>
+        <source>You are installing</source>
+        <translation>Установка</translation>
+    </message>
+    <message>
+        <source>U&amp;ninstall</source>
+        <translation>У&amp;даление</translation>
+    </message>
+    <message>
+        <source>You are including following packages</source>
+        <translation>Будут установлены следующие пакеты</translation>
+    </message>
+    <message>
+        <source>Create Offline Installer</source>
+        <translation>Создать офлайн-установщик</translation>
+    </message>
+    <message>
+        <source>&amp;Install</source>
+        <translation>&amp;Установить</translation>
+    </message>
+    <message>
+        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
+        <translation>Программа установки готова начать удаление %1 с вашего компьютера. &lt;br&gt;&lt;font color=&quot;red&quot;&gt;Директория с программой %2 будет полностью удалена&lt;/font&gt;, включая содержимое этой директории!</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::StopProcessForUpdateOperation</name>
+    <message>
+        <source>Cannot get package manager core.</source>
+        <translation>Невозможно получить ядро менеджера пакетов.</translation>
+    </message>
+    <message>
+        <source>Could not terminate process &quot;%1&quot;</source>
+        <translation>Не удалось завершить процесс &quot;%1&quot;</translation>
     </message>
 </context>
 </TS>
