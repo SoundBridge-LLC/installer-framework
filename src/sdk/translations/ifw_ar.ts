@@ -1978,12 +1978,6 @@ Do you want to continue?</source>
         <translation>اكتُشفت دورة اعتماديات بين المكونان &quot;%1&quot; و&quot;%2&quot;.</translation>
     </message>
     <message>
-        <source>These processes should be stopped to continue:
-
-%1</source>
-        <translation>يجب إيقاف هذه العمليات للمتابعة:%1</translation>
-    </message>
-    <message>
         <source>Preparing to unpack components...</source>
         <translation>جاري التحضير لتفريغ المكونات ...</translation>
     </message>
@@ -2026,6 +2020,22 @@ Do you want to continue?</source>
     <message>
         <source>Cyclic dependency between aliases &quot;%1&quot; and &quot;%2&quot; detected.</source>
         <translation>تم اكتشاف تبعية دورية بين الأسماء المستعارة &quot;%1&quot; و &quot;%2&quot;.</translation>
+    </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1</source>
+        <translation>يجب إنهاء هذه العمليات لمتابعة الإعداد:&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;%1</translation>
+    </message>
+    <message>
+        <source>These processes need to be terminated to continue setup:&lt;br&gt;&lt;br&gt;%1&lt;br&gt;&lt;br&gt;Is this ok?</source>
+        <translation>يجب إنهاء هذه العمليات لمتابعة الإعداد:&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;%1&amp;lt;br&amp;gt;&amp;lt;br&amp;gt;هل هذا مقبول؟</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes:&lt;br&gt;%1</source>
+        <translation>حدث خطأ أثناء إيقاف العمليات الجارية:&amp;lt;br&amp;gt;%1</translation>
+    </message>
+    <message>
+        <source>Error during stopping running processes: %1</source>
+        <translation>حدث خطأ أثناء إيقاف العمليات الجارية: %1</translation>
     </message>
 </context>
 <context>
@@ -2186,61 +2196,6 @@ Please copy the installer to a local drive</source>
     <message>
         <source>Select Installation Folder</source>
         <translation>اختر مجلد التثبيت</translation>
-    </message>
-</context>
-<context>
-    <name>QInstaller::ReadyForInstallationPage</name>
-    <message>
-        <source>U&amp;ninstall</source>
-        <translation>أ&amp;زل التثبيت</translation>
-    </message>
-    <message>
-        <source>Ready to Uninstall</source>
-        <translation>جاهز لإزالة التثبيت</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
-        <translation>الإعداد جاهز الآن لبدأ حذف %1 من حاسوبك. .&lt;br&gt;&lt;font color=&quot;red&quot;&gt;مجلد البرنامج %2 سيُحذف تماماً&lt;/font&gt; مع كل المحتوى فيه!</translation>
-    </message>
-    <message>
-        <source>U&amp;pdate</source>
-        <translation>ح&amp;دث</translation>
-    </message>
-    <message>
-        <source>Ready to Update Packages</source>
-        <translation>جاهز لتحديث الحزم</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin updating your installation.</source>
-        <translation>الإعداد جاهز لبدأ تحديث تثبيتك.</translation>
-    </message>
-    <message>
-        <source>&amp;Install</source>
-        <translation>&amp;ثبت</translation>
-    </message>
-    <message>
-        <source>Ready to Install</source>
-        <translation>جاهز للتثبيت</translation>
-    </message>
-    <message>
-        <source>All required information is now available to begin installing %1 on your computer.</source>
-        <translation>الإعداد جاهز الآن لبدأ تثبيت %1 على حاسوبك.</translation>
-    </message>
-    <message>
-        <source>Ready to Update</source>
-        <translation>جاهز للتحديث</translation>
-    </message>
-    <message>
-        <source>Create Offline Installer</source>
-        <translation>إنشاء المثبت دون اتصال</translation>
-    </message>
-    <message>
-        <source>Ready to Create Offline Installer</source>
-        <translation>جاهز لإنشاء برنامج التثبيت دون اتصال</translation>
-    </message>
-    <message>
-        <source>All required information is now available to create an offline installer for selected components.</source>
-        <translation>جميع المعلومات المطلوبة متاحة الآن لإنشاء برنامج تثبيت دون اتصال للمكونات المحددة.</translation>
     </message>
 </context>
 <context>
@@ -3196,7 +3151,7 @@ or accept the elevation of access rights if being asked.</source>
     <name>QInstaller::RestartPage</name>
     <message>
         <source>Finished</source>
-        <translation type="unfinished">مكتمل</translation>
+        <translation>مكتمل</translation>
     </message>
 </context>
 <context>
@@ -3208,6 +3163,82 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Space available: %1</source>
         <translation>المساحة المتوفرة: %1</translation>
+    </message>
+    <message>
+        <source>Space freed: %1</source>
+        <translation>المساحة المحررة: %1</translation>
+    </message>
+    <message>
+        <source>There is not enough disk space for the installation</source>
+        <translation>لا توجد مساحة كافية على القرص للتثبيت</translation>
+    </message>
+    <message>
+        <source>Space exceeds the supported executable size %1 in Windows</source>
+        <translation>المساحة تتجاوز حجم الملف القابل للتنفيذ المدعوم %1 في Windows</translation>
+    </message>
+</context>
+<context>
+    <name>ComponentSummaryForm</name>
+    <message>
+        <source>You are installing</source>
+        <translation>أنت تقوم بالتثبيت</translation>
+    </message>
+    <message>
+        <source>You are uninstalling</source>
+        <translation>أنت تقوم بإلغاء التثبيت</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPage</name>
+    <message>
+        <source>Installation Summary</source>
+        <translation>ملخص التثبيت</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::ReadyForInstallationPagePrivate</name>
+    <message>
+        <source>You are updating</source>
+        <translation>أنت تقوم بالتحديث</translation>
+    </message>
+    <message>
+        <source>U&amp;pdate</source>
+        <translation>ح&amp;دث</translation>
+    </message>
+    <message>
+        <source>You are installing</source>
+        <translation>أنت تقوم بالتثبيت</translation>
+    </message>
+    <message>
+        <source>U&amp;ninstall</source>
+        <translation>أ&amp;زل التثبيت</translation>
+    </message>
+    <message>
+        <source>You are including following packages</source>
+        <translation>أنت تقوم بتضمين الحزم التالية</translation>
+    </message>
+    <message>
+        <source>Create Offline Installer</source>
+        <translation>إنشاء مُثبّت غير متصل بالإنترنت</translation>
+    </message>
+    <message>
+        <source>&amp;Install</source>
+        <translation>&amp;ثبت</translation>
+    </message>
+    <message>
+        <source>All required information is now available to begin removing %1 from your computer.&lt;br&gt;&lt;font color=&quot;red&quot;&gt;The program directory %2 will be deleted completely&lt;/font&gt;, including all content in that directory!</source>
+        <translation>الإعداد جاهز الآن لبدأ حذف %1 من حاسوبك. .&lt;br&gt;&lt;font color=&quot;red&quot;&gt;مجلد البرنامج %2 سيُحذف تماماً&lt;/font&gt; مع كل المحتوى فيه!</translation>
+    </message>
+</context>
+<context>
+    <name>QInstaller::StopProcessForUpdateOperation</name>
+    <message>
+        <source>Cannot get package manager core.</source>
+        <translation>لا يمكن الحصول على نواة مدير الحزم.</translation>
+    </message>
+    <message>
+        <source>Could not terminate process &quot;%1&quot;</source>
+        <translation>تعذر إنهاء العملية &amp;quot;%1&amp;quot;</translation>
     </message>
 </context>
 </TS>
