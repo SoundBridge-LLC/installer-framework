@@ -3037,7 +3037,7 @@ void FinishedPage::entering()
         connect(m_commitButton, &QAbstractButton::clicked, this, &FinishedPage::handleFinishClicked);
     }
 
-    m_clickFinishLabel->setText(tr("\nClick %1 to close the %2 Setup.")
+    m_clickFinishLabel->setText(QLatin1String("\n") + tr("Click %1 to close the %2 Setup.")
                             .arg(gui()->defaultButtonText(QWizard::FinishButton).remove(QLatin1Char('&')), productName()));
     QString finishedText;
 
