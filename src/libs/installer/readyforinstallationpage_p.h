@@ -56,7 +56,6 @@ public:
     explicit TreeItemDelegate(QObject *parent);
 
 protected:
-    void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const override;
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };
 

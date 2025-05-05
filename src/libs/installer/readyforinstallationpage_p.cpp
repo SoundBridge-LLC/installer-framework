@@ -52,17 +52,10 @@ TreeItemDelegate::TreeItemDelegate(QObject *parent)
 {
 }
 
-void TreeItemDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
-{
-    QStyledItemDelegate::initStyleOption(option, index);
-    if (index.column() == ComponentModelHelper::UncompressedSizeColumn)
-        option->displayAlignment = Qt::AlignRight;
-}
-
 void TreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QStyleOptionViewItem opt = option;
-    initStyleOption(&opt, index);
+    QStyledItemDelegate::initStyleOption(&opt, index);
     if (!index.parent().isValid() && index.column() == ComponentModelHelper::NameColumn) {
         QFont font = opt.font;
         font.setBold(true);
@@ -78,12 +71,27 @@ void TreeItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         }
         opt.rect.adjust(scIndentation * depth, 0, 0, 0);
     }
-    if (index.column() == ComponentModelHelper::UncompressedSizeColumn)
-        opt.displayAlignment = Qt::AlignRight;
-
     opt.features &= ~QStyleOptionViewItem::HasCheckIndicator;
+
     QStyle *style = opt.widget ? opt.widget->style() : QApplication::style();
-    style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
+    if (index.column() == ComponentModelHelper::UncompressedSizeColumn) {
+        style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
+
+        // Column has for some reason saved space for checkbox indicator, although we have remove it with
+        // ~QStyleOptionViewItem::HasCheckIndicator. Drawing the text here to avoid gap between text and
+        // column edge. Without this fix the text has sometimes ellipsis although there would be enough space.
+        QRect textRect = style->subElementRect(QStyle::SE_ItemViewItemText, &opt, opt.widget);
+        int checkboxWidth = style->pixelMetric(QStyle::PM_IndicatorWidth, &opt);
+        textRect.adjust(-checkboxWidth, 0, 0, 0); // shift text left
+
+        painter->save();
+        painter->setFont(opt.font);
+        painter->setPen(opt.palette.color(QPalette::Text));
+        painter->drawText(textRect, Qt::AlignRight | Qt::AlignVCenter, index.data().toString());
+        painter->restore();
+    } else {
+        style->drawControl(QStyle::CE_ItemViewItem, &opt, painter, opt.widget);
+    }
 }
 
 ReadyForInstallationPagePrivate::ReadyForInstallationPagePrivate(ReadyForInstallationPage *qq, PackageManagerCore *core)
