@@ -2460,7 +2460,7 @@ TargetDirectoryPage::TargetDirectoryPage(PackageManagerCore *core)
     layout->addWidget(m_warningLabel);
 
     if (packageManagerCore()->settings().wizardShowPageList())
-        layout->setContentsMargins(QMargins(0, -1, -1, -1));
+        layout->setContentsMargins(QMargins(0, -1, -1, 0));
     setLayout(layout);
 }
 
