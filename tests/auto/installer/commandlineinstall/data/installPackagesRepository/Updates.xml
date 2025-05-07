@@ -168,6 +168,7 @@
   <AutoDependOn>componentC</AutoDependOn>
   <DownloadableArchives>content.7z</DownloadableArchives>
   <Virtual>true</Virtual>
+  <Checkable>false</Checkable>
  </PackageUpdate>
   <PackageUpdate>
   <Name>componentJ</Name>
@@ -178,5 +179,14 @@
   <SortingPriority>50</SortingPriority>
   <DownloadableArchives>content.7z</DownloadableArchives>
   <Script postLoad="True">postLoadscript.js</Script>
+ </PackageUpdate>
+ <PackageUpdate>
+  <Name>componentK</Name>
+  <DisplayName>component K</DisplayName>
+  <Description>This component depends on virtual component</Description>
+  <Version>1.0.0</Version>
+  <ReleaseDate>2014-08-25</ReleaseDate>
+  <Dependencies>componentI</Dependencies>
+  <DownloadableArchives>content.7z</DownloadableArchives>
  </PackageUpdate>
 </Updates>

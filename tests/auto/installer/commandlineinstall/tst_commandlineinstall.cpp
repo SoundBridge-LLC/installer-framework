@@ -377,7 +377,7 @@ private slots:
         QTest::addColumn<ComponentResourceHash>("componentResourcesAfterUninstall");
         QTest::addColumn<QStringList >("installedFilesAfterUninstall");
         QTest::addColumn<ComponentResourceHash >("deletedComponentResources");
-        QTest::addColumn<bool >("virtualSetVisible");
+        QTest::addColumn<bool >("noDefaultInstallation");
 
         /*********** Uninstallation **********/
         ComponentResourceHash componentResourcesAfterUninstall;
@@ -407,7 +407,8 @@ private slots:
                 << PackageManagerCore::Success
                 << componentResourcesAfterUninstall
                 << filesAfterUninstall
-                << deletedComponentResources;
+                << deletedComponentResources
+                << false;
 
         /*********** Uninstall with dependency **********/
         componentResourcesAfterUninstall.clear();
@@ -444,7 +445,8 @@ private slots:
                 << PackageManagerCore::Success
                 << componentResourcesAfterUninstall
                 << filesAfterUninstall
-                << deletedComponentResources;
+                << deletedComponentResources
+                << false;
 
         /*********** Uninstall with subcomponents **********/
         componentResourcesAfterUninstall.clear();
@@ -481,7 +483,8 @@ private slots:
                 << PackageManagerCore::Success
                 << componentResourcesAfterUninstall
                 << filesAfterUninstall
-                << deletedComponentResources;
+                << deletedComponentResources
+                << false;
 
         /*********** Uninstall forced packages **********/
         componentResourceAfterInstall.clear();
@@ -511,7 +514,8 @@ private slots:
                 << PackageManagerCore::Success
                 << componentResourceAfterInstall
                 << filesAfterUninstall
-                << deletedComponentResources;
+                << deletedComponentResources
+                << false;
 
         /*********** Uninstall autodependency packages **********/
         componentResourceAfterInstall.clear();
@@ -543,7 +547,43 @@ private slots:
                 << PackageManagerCore::Success
                 << componentResourceAfterInstall
                 << filesAfterUninstall
-                << deletedComponentResources;
+                << deletedComponentResources
+                << false;
+
+        /*********** Uninstall packages, where virtual remains (QTIFW-3798) **********/
+        componentResourceAfterInstall.clear();
+        componentResourceAfterInstall.append(ComponentResource("componentB", "1.0.0content.txt")); //Selected
+        componentResourceAfterInstall.append(ComponentResource("componentE", "1.0.0content.txt")); //Forced
+        componentResourceAfterInstall.append(ComponentResource("componentK", "1.0.0content.txt")); //Selected
+        componentResourceAfterInstall.append(ComponentResource("componentI", "1.0.0content.txt")); //Virtual, installed as dependency to componentK
+
+        filesAfterInstall.clear();
+        filesAfterInstall << "components.xml" << "installcontentB.txt"
+                          << "installcontentK.txt" << "installcontentI.txt" << "installcontentE.txt";
+
+        componentResourcesAfterUninstall.clear();
+        componentResourcesAfterUninstall.append(ComponentResource("componentE", "1.0.0content.txt")); //Forced
+        componentResourcesAfterUninstall.append(ComponentResource("componentK", "1.0.0content.txt")); //Selected
+        componentResourcesAfterUninstall.append(ComponentResource("componentI", "1.0.0content.txt")); //Virtual, installed as dependency to componentK
+
+
+        filesAfterUninstall.clear();
+        filesAfterUninstall << "components.xml" << "installcontentK.txt" << "installcontentI.txt" << "installcontentE.txt";
+
+        deletedComponentResources.clear();
+
+        QTest::newRow("Uninstall package, virtual remains")
+            << ":///data/installPackagesRepository"
+            << (QStringList() << "componentB" << "componentK")
+            << PackageManagerCore::Success
+            << componentResourceAfterInstall
+            << filesAfterInstall
+            << (QStringList() << "componentB")
+            << PackageManagerCore::Success
+            << componentResourcesAfterUninstall
+            << filesAfterUninstall
+            << deletedComponentResources
+            << true;
     }
 
     void testUninstall()
@@ -558,10 +598,12 @@ private slots:
         QFETCH(ComponentResourceHash, componentResourcesAfterUninstall);
         QFETCH(QStringList, installedFilesAfterUninstall);
         QFETCH(ComponentResourceHash, deletedComponentResources);
+        QFETCH(bool, noDefaultInstallation);
 
         QScopedPointer<PackageManagerCore> core(PackageManager::getPackageManagerWithInit
                 (m_installDir, repository));
 
+        core->setNoDefaultInstallation(noDefaultInstallation);
         QCOMPARE(status, core->installSelectedComponentsSilently(QStringList() << installComponents));
         for (const ComponentResource &resource : componentResources)
             VerifyInstaller::verifyInstallerResources(m_installDir, resource.first, resource.second);
@@ -651,6 +693,7 @@ private slots:
 
         QScopedPointer<PackageManagerCore> core(PackageManager::getPackageManagerWithInit
                 (m_installDir, repository));
+        core->setNoDefaultInstallation(false);
         QCOMPARE(status, core->installSelectedComponentsSilently(installComponents));
         QCOMPARE(status, core->status());
 
@@ -679,6 +722,7 @@ private slots:
     {
         QScopedPointer<PackageManagerCore> core(PackageManager::getPackageManagerWithInit
                 (m_installDir, ":///data/installPackagesRepository"));
+        core->setNoDefaultInstallation(false);
         QCOMPARE(PackageManagerCore::Success, core->installDefaultComponentsSilently());
         QCOMPARE(PackageManagerCore::Success, core->status());
         VerifyInstaller::verifyInstallerResources(m_installDir, "componentA", "1.0.0content.txt"); //Dependency for componentG
@@ -705,6 +749,7 @@ private slots:
     {
         QScopedPointer<PackageManagerCore> core(PackageManager::getPackageManagerWithInit
                 (m_installDir, ":///data/installPackagesRepository"));
+        core->setNoDefaultInstallation(false);
         QCOMPARE(PackageManagerCore::Success, core->installSelectedComponentsSilently(QStringList()
             << QLatin1String("componentA")));
         VerifyInstaller::verifyFileExistence(m_installDir, QStringList() << "components.xml" << "installcontentE.txt"
