@@ -188,7 +188,7 @@ CONFIG(libarchive):equals(TEMPLATE, app) {
         LIBS += $$IFW_LZMA_LIBRARY
     } else {
         unix:LIBS += -llzma
-        win32:LIBS += -lliblzma
+        win32:LIBS += -llzma
     }
     macos {
         !isEmpty(IFW_ICONV_LIBRARY) {
