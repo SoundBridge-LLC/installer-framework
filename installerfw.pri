@@ -18,8 +18,7 @@ isEqual(IFW_DISABLE_TRANSLATIONS, 1) {
     DEFINES += IFW_DISABLE_TRANSLATIONS
 }
 
-# libarchive is the only supported archive backend at the moment
-!contains(CONFIG, libarchive): CONFIG += libarchive
+win32:DEFINES += LIBARCHIVE_STATIC LZMA_API_STATIC
 
 defineTest(minQtVersion) {
     maj = $$1
@@ -105,9 +104,8 @@ macx:QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
 INCLUDEPATH += \
     $$IFW_SOURCE_TREE/src/libs/kdtools \
     $$IFW_SOURCE_TREE/src/libs/ifwtools \
-    $$IFW_SOURCE_TREE/src/libs/installer
-
-CONFIG(libarchive): INCLUDEPATH += $$IFW_SOURCE_TREE/src/libs/3rdparty/libarchive
+    $$IFW_SOURCE_TREE/src/libs/installer \
+    $$IFW_SOURCE_TREE/src/libs/3rdparty/libarchive
 
 LIBS += -L$$IFW_LIB_PATH
 # The order is important. The linker needs to parse archives in reversed dependency order.
@@ -168,9 +166,7 @@ equals(TEMPLATE, app) {
     msvc:POST_TARGETDEPS += $$IFW_LIB_PATH/installer.lib
     win32-g++*:POST_TARGETDEPS += $$IFW_LIB_PATH/libinstaller.a
     unix:POST_TARGETDEPS += $$IFW_LIB_PATH/libinstaller.a
-}
 
-CONFIG(libarchive):equals(TEMPLATE, app) {
     LIBS += -llibarchive
     !isEmpty(IFW_ZLIB_LIBRARY) {
         LIBS += $$IFW_ZLIB_LIBRARY

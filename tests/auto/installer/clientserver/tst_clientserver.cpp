@@ -37,9 +37,7 @@
 #include <remoteserver.h>
 #include <fileutils.h>
 
-#ifdef IFW_LIBARCHIVE
 #include <libarchivewrapper_p.h>
-#endif
 
 #include <QBuffer>
 #include <QSettings>
@@ -612,9 +610,6 @@ private slots:
 
     void testArchiveWrapper()
     {
-#ifndef IFW_LIBARCHIVE
-        QSKIP("Installer Framework built without libarchive support");
-#else
         QFETCH(QString, suffix);
 
         const QString archiveName = generateTemporaryFileName() + suffix;
@@ -651,7 +646,6 @@ private slots:
         QVERIFY(source.remove());
         QVERIFY(QFile::remove(archiveName));
         removeDirectory(targetName);
-#endif
     }
 
     void cleanupTestCase()

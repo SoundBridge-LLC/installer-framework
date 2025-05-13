@@ -38,9 +38,7 @@
 #include <utils.h>
 #include <loggingutils.h>
 
-#ifdef IFW_LIBARCHIVE
 #include <archive.h>
-#endif
 
 #include <QCommandLineParser>
 #include <QDateTime>
@@ -186,9 +184,7 @@ int main(int argc, char *argv[])
 
         if (parser.isSet(CommandLineOptions::scVersionLong)) {
             std::cout << VERSION << std::endl << BUILDDATE << std::endl << SHA << std::endl;
-#ifdef IFW_LIBARCHIVE
             std::cout << "Libarchive version: " << archive_version_details() << std::endl;
-#endif
             const QDateTime dateTime = QDateTime::fromString(QLatin1String(PLACEHOLDER),
                 QLatin1String("yyyy-MM-dd - HH:mm:ss"));
             if (dateTime.isValid())

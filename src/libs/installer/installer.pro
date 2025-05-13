@@ -268,17 +268,16 @@ unix {
     else: SOURCES += adminauthorization_x11.cpp
 }
 
-CONFIG(libarchive) {
-    HEADERS += libarchivearchive.h \
-        libarchivewrapper.h \
-        libarchivewrapper_p.h
+# libarchive
+HEADERS += libarchivearchive.h \
+    libarchivewrapper.h \
+    libarchivewrapper_p.h
 
-    SOURCES += libarchivearchive.cpp \
-        libarchivewrapper.cpp \
-        libarchivewrapper_p.cpp
+SOURCES += libarchivearchive.cpp \
+    libarchivewrapper.cpp \
+    libarchivewrapper_p.cpp
 
-    LIBS += -llibarchive
-}
+LIBS += -llibarchive
 
 win32 {
     SOURCES += adminauthorization_win.cpp sysinfo_win.cpp

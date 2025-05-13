@@ -34,9 +34,7 @@
 #include "utils.h"
 #include "permissionsettings.h"
 #include "globals.h"
-#ifdef IFW_LIBARCHIVE
 #include "libarchivearchive.h"
-#endif
 
 #include <QCoreApplication>
 #include <QDataStream>
@@ -199,13 +197,9 @@ void RemoteServerConnection::run()
                 } else if (type == QLatin1String(Protocol::QAbstractFileEngine)) {
                     m_engine.reset(new QFSFileEngine);
                 } else if (type == QLatin1String(Protocol::AbstractArchive)) {
-#ifdef IFW_LIBARCHIVE
                     m_archive.reset(new LibArchiveArchive);
                     m_archiveSignalReceiver = new AbstractArchiveSignalReceiver(
                         static_cast<LibArchiveArchive *>(m_archive.get()));
-#else
-                    Q_ASSERT_X(false, Q_FUNC_INFO, "No compatible archive handler exists for protocol.");
-#endif
                 } else {
                     qCDebug(QInstaller::lcServer) << "Unknown type for Create command:" << type;
                 }
@@ -220,16 +214,12 @@ void RemoteServerConnection::run()
                 }
                 continue;
             } else if (command == QLatin1String(Protocol::GetAbstractArchiveSignals)) {
-#ifdef IFW_LIBARCHIVE
                 if (m_archiveSignalReceiver) {
                     QMutexLocker _(&m_archiveSignalReceiver->m_lock);
                     reply.send(m_archiveSignalReceiver->m_receivedSignals);
                     m_archiveSignalReceiver->m_receivedSignals.clear();
                 }
                 continue;
-#else
-                Q_ASSERT_X(false, Q_FUNC_INFO, "No compatible archive handler exists for protocol.");
-#endif
             }
 
             if (command.startsWith(QLatin1String(Protocol::QProcess))) {
@@ -592,7 +582,6 @@ void RemoteServerConnection::handleQFSFileEngine(RemoteServerReply *reply, const
 
 void RemoteServerConnection::handleArchive(RemoteServerReply *reply, const QString &command, QDataStream &data)
 {
-#ifdef IFW_LIBARCHIVE
     LibArchiveArchive *archive = static_cast<LibArchiveArchive *>(m_archive.get());
     if (command == QLatin1String(Protocol::AbstractArchiveOpen)) {
         qint32 openMode;
@@ -641,9 +630,6 @@ void RemoteServerConnection::handleArchive(RemoteServerReply *reply, const QStri
     } else if (!command.isEmpty()) {
         qCDebug(QInstaller::lcServer) << "Unknown AbstractArchive command:" << command;
     }
-#else
-    Q_ASSERT_X(false, Q_FUNC_INFO, "No compatible archive handler exists for protocol.");
-#endif
 }
 
 } // namespace QInstaller

@@ -30,9 +30,7 @@
 #define REMOTESERVERCONNECTION_P_H
 
 #include "protocol.h"
-#ifdef IFW_LIBARCHIVE
 #include "libarchivearchive.h"
-#endif
 
 #include <QMutex>
 #include <QProcess>
@@ -127,7 +125,6 @@ private:
     QVariantList m_receivedSignals;
 };
 
-#ifdef IFW_LIBARCHIVE
 class AbstractArchiveSignalReceiver : public QObject
 {
     Q_OBJECT
@@ -189,7 +186,6 @@ private:
     QMutex m_lock;
     QVariantList m_receivedSignals;
 };
-#endif
 
 } // namespace QInstaller
 

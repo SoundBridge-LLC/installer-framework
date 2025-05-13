@@ -46,11 +46,8 @@ SUBDIRS += \
     componentreplace \
     metadatacache \
     contentsha1check \
-    componentalias
-
-CONFIG(libarchive) {
-    SUBDIRS += libarchivearchive
-}
+    componentalias \
+    libarchivearchive
 
 win32 {
     SUBDIRS += registerfiletypeoperation \

@@ -87,11 +87,9 @@ private slots:
         QTest::addColumn<QString>("handler");
         QTest::addColumn<QString>("filename");
         QTest::addColumn<QStringList>("types");
-#ifdef IFW_LIBARCHIVE
         QTest::newRow("LibArchive")
             << "LibArchive" << "myfile.zip"
             << (QStringList() << "tar" << "tar.gz" << "tar.bz2" << "tar.xz" << "zip" << "7z" << "qbsp");
-#endif
     }
 
     void testCreateDefaultArchiveHandler()
