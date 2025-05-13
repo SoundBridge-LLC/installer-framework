@@ -1,6 +1,6 @@
 /**************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -44,6 +44,8 @@ const char IFW_DEVELOPER_BUILD[] = "ifw.developer.build";
 
 // Internal-only, hidden in --help text
 const char IFW_PROGRESS_INDICATOR[] = "ifw.progress.indicator";
+
+static const QStringList scReservedCharsInComponentName = QStringList() << QLatin1String(":") << QLatin1String("-");
 
 namespace QInstaller
 {
@@ -172,6 +174,21 @@ void askForCredentials(QString *username, QString *password, const QString &user
 
     *username = username->fromStdString(usernameStdStr);
     *password = password->fromStdString(passwordStdStr);
+}
+
+bool containsReservedCharacters(QString *message, const QStringList &packageEntryList)
+{
+    for (const QString &entry : std::as_const(packageEntryList)) {
+        for (const QString &reservedCharacter : std::as_const(scReservedCharsInComponentName)) {
+            if (!entry.contains(reservedCharacter))
+                continue;
+            *message = QLatin1String("Error: The package directory '%1' contains reserved character '%2'. "
+                "The character is reserved for separating the version number from the "
+                "identifier. ").arg(entry, reservedCharacter);
+            return true;
+        }
+    }
+    return false;
 }
 
 } // namespace QInstaller

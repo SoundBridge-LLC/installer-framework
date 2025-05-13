@@ -60,6 +60,7 @@ QSet<T> toQSet(const C<T> &container)
 }
 
 void askForCredentials(QString *username, QString *password, const QString &usernameTitle, const QString &passwordTitle);
+bool containsReservedCharacters(QString *message, const QStringList &packageEntryList);
 
 }   // QInstaller
 

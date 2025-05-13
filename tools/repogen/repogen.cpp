@@ -36,6 +36,7 @@
 #include <loggingutils.h>
 #include <archivefactory.h>
 #include <abstractarchive.h>
+#include <globals.h>
 
 #include <QDomDocument>
 #include <QtCore/QDir>
@@ -171,10 +172,14 @@ int main(int argc, char** argv)
                     return printErrorAndUsageAndExit(QCoreApplication::translate("QInstaller",
                         "Error: Package directory not found at the specified location"));
                 }
-                if (dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot).isEmpty()) {
+                QStringList entryList = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+                if (entryList.isEmpty()) {
                     return printErrorAndUsageAndExit(QCoreApplication::translate("QInstaller",
                         "Error: Package directory is empty"));
                 }
+                QString message;
+                if (QInstaller::containsReservedCharacters(&message, entryList))
+                    return printErrorAndUsageAndExit(message);
 
                 repoInfo.packages.append(args.first());
                 args.removeFirst();

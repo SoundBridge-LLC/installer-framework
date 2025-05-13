@@ -31,6 +31,7 @@
 #include <utils.h>
 #include <loggingutils.h>
 #include <archivefactory.h>
+#include <globals.h>
 
 #include <QtCore/QDebug>
 #include <QMetaEnum>
@@ -155,6 +156,10 @@ int main(int argc, char **argv)
             if (it == args.end()) {
                 return printErrorAndUsageAndExit(QString::fromLatin1("Error: Packages parameter missing argument."));
             }
+            const QDir dir(*it);
+            QString message;
+            if (QInstaller::containsReservedCharacters(&message, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)))
+                return printErrorAndUsageAndExit(message);
             parsedArgs.packagesDirectories.append(*it);
         } else if (*it == QLatin1String("--repository")) {
             ++it;
