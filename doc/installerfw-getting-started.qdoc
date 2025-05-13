@@ -149,15 +149,8 @@
     against the following libraries; \c liblzma, \c zlib, \c libbzip2, and on
     macOS, \c libiconv.
 
-    To enable the use of \c libarchive, add the \c libarchive configuration
-    feature to the list of values specified by the \c CONFIG variable.
-    Installers created with this configuration support the creating and
-    extracting of 7zip, zip, and tar archive files, with \c gzip, bzip2, and
-    \c xz as available compression methods.
-
-    \code
-    qmake CONFIG+=libarchive
-    \endcode
+    This enables support of creating and extracting 7zip, zip, and tar archive
+    files, with \c gzip, bzip2, and \c xz as available compression methods.
 
     You can use the \c IFW_ZLIB_LIBRARY, \c IFW_BZIP2_LIBRARY, \c IFW_LZMA_LIBRARY, and \c IFW_ICONV_LIBRARY
     variables to specify the exact library files.
@@ -165,12 +158,6 @@
     If you add the \c{-qt-zlib} configuration to the Qt version used to build the Qt Installer Framework, and
     \c IFW_ZLIB_LIBRARY variable is empty, \c libarchive will try to use the \c zlib library compiled
     into the QtCore module, which removes the need for an external library.
-
-    If you do not enable \c libarchive support, the builtin LZMA SDK library will act as a fallback and
-    installation of the extra dependencies will not occur, but created installers will
-    only support the 7zip format.
-
-    \note Building IFW with LZMA SDK is deprecated and may not be available in future versions.
 
     \section2 Installing Dependencies for Windows
 

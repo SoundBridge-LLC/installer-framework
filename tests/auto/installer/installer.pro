@@ -52,10 +52,6 @@ CONFIG(libarchive) {
     SUBDIRS += libarchivearchive
 }
 
-CONFIG(lzmasdk) {
-    SUBDIRS += lib7zarchive
-}
-
 win32 {
     SUBDIRS += registerfiletypeoperation \
         createshortcutoperation

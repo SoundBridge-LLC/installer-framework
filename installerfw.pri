@@ -18,16 +18,8 @@ isEqual(IFW_DISABLE_TRANSLATIONS, 1) {
     DEFINES += IFW_DISABLE_TRANSLATIONS
 }
 
-# Still default to LZMA SDK if nothing is defined by user
-!contains(CONFIG, libarchive|lzmasdk): CONFIG += lzmasdk
-
-CONFIG(lzmasdk) {
-    LZMA_WARNING_MSG = "LZMA SDK as an archive handler in IFW is deprecated. Consider" \
-        "switching to libarchive by appending 'libarchive' to your 'CONFIG' variable." \
-        "This requires linking against additional external libraries, see the" \
-        "'INSTALL' file for more details."
-    !build_pass:warning($$LZMA_WARNING_MSG)
-}
+# libarchive is the only supported archive backend at the moment
+!contains(CONFIG, libarchive): CONFIG += libarchive
 
 defineTest(minQtVersion) {
     maj = $$1
@@ -116,14 +108,6 @@ INCLUDEPATH += \
     $$IFW_SOURCE_TREE/src/libs/installer
 
 CONFIG(libarchive): INCLUDEPATH += $$IFW_SOURCE_TREE/src/libs/3rdparty/libarchive
-
-CONFIG(lzmasdk) {
-    INCLUDEPATH += $$IFW_SOURCE_TREE/src/libs/3rdparty/7zip
-    win32:INCLUDEPATH += $$IFW_SOURCE_TREE/src/libs/3rdparty/7zip/win/CPP \
-        $$IFW_SOURCE_TREE/src/libs/3rdparty/7zip/win/C
-    unix:INCLUDEPATH += $$IFW_SOURCE_TREE/src/libs/3rdparty/7zip/unix/CPP \
-        $$IFW_SOURCE_TREE/src/libs/3rdparty/7zip/unix/C
-}
 
 LIBS += -L$$IFW_LIB_PATH
 # The order is important. The linker needs to parse archives in reversed dependency order.
@@ -217,12 +201,4 @@ CONFIG(libarchive):equals(TEMPLATE, app) {
     msvc:POST_TARGETDEPS += $$IFW_LIB_PATH/libarchive.lib
     win32-g++*:POST_TARGETDEPS += $$IFW_LIB_PATH/liblibarchive.a
     unix:POST_TARGETDEPS += $$IFW_LIB_PATH/liblibarchive.a
-}
-
-CONFIG(lzmasdk):equals(TEMPLATE, app) {
-    LIBS += -l7z
-
-    msvc:POST_TARGETDEPS += $$IFW_LIB_PATH/7z.lib
-    win32-g++*:POST_TARGETDEPS += $$IFW_LIB_PATH/lib7z.a
-    unix:POST_TARGETDEPS += $$IFW_LIB_PATH/lib7z.a
 }

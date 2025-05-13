@@ -32,10 +32,6 @@
 #include <init.h>
 #include <archivefactory.h>
 
-#ifdef IFW_LIB7Z
-#include <lib7z_facade.h>
-#endif
-
 #include <QFile>
 #include <QTest>
 #include <QRegularExpression>
@@ -292,9 +288,6 @@ private slots:
 
     void initTestCase()
     {
-#ifdef IFW_LIB7Z
-        Lib7z::initSevenZ();
-#endif
     }
 
     void testWithComponentMeta()

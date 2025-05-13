@@ -8,9 +8,6 @@ QT -= gui
 QT += qml xml concurrent
 
 CONFIG -= import_plugins
-CONFIG(lzmasdk) {
-    LIBS += -l7z
-}
 CONFIG += console
 DESTDIR = $$IFW_APP_PATH
 

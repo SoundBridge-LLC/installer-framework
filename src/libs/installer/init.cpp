@@ -50,10 +50,6 @@
 #include "consumeoutputoperation.h"
 #include "loggingutils.h"
 
-#ifdef IFW_LIB7Z
-#include "lib7z_facade.h"
-#endif
-
 #include "updateoperationfactory.h"
 #include "filedownloaderfactory.h"
 
@@ -70,14 +66,11 @@ static void initResources()
 #endif
 
 /*!
-    Initializes the 7z library and installer resources. Registers
+    Initializes the installer resources. Registers
     custom operations and installs a custom message handler.
 */
 void QInstaller::init()
 {
-#ifdef IFW_LIB7Z
-    Lib7z::initSevenZ();
-#endif
 #if defined(QT_STATIC)
     ::initResources();
 #endif

@@ -38,9 +38,6 @@
 #include <utils.h>
 #include <loggingutils.h>
 
-#ifdef IFW_LIB7Z
-#include <7zVersion.h>
-#endif
 #ifdef IFW_LIBARCHIVE
 #include <archive.h>
 #endif
@@ -189,9 +186,6 @@ int main(int argc, char *argv[])
 
         if (parser.isSet(CommandLineOptions::scVersionLong)) {
             std::cout << VERSION << std::endl << BUILDDATE << std::endl << SHA << std::endl;
-#ifdef IFW_LIB7Z
-            std::cout << "LZMA SDK version: " << MY_VERSION << std::endl;
-#endif
 #ifdef IFW_LIBARCHIVE
             std::cout << "Libarchive version: " << archive_version_details() << std::endl;
 #endif

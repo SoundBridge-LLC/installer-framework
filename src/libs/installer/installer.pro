@@ -280,23 +280,6 @@ CONFIG(libarchive) {
     LIBS += -llibarchive
 }
 
-CONFIG(lzmasdk) {
-    include(../3rdparty/7zip/7zip.pri)
-
-    HEADERS += lib7z_facade.h \
-        lib7z_guid.h \
-        lib7z_create.h \
-        lib7z_extract.h \
-        lib7z_list.h \
-        lib7zarchive.h
-
-    SOURCES += lib7z_facade.cpp \
-        lib7zarchive.cpp
-
-    LIBS += -l7z
-    win32:LIBS += -loleaut32 -luser32
-}
-
 win32 {
     SOURCES += adminauthorization_win.cpp sysinfo_win.cpp
 

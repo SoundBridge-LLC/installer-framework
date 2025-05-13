@@ -1285,9 +1285,6 @@
     For manual archive creation you can use either the \l archivegen tool that is
     delivered with the Qt Installer Framework or some other tool that generates archives in
     any of the file formats: \c{7z}, \c{zip}, \c{tar.gz}, \c{tar.bz2} and \c{tar.xz}.
-
-    \note If the Installer Framework tools were built without libarchive support,
-    only \c{7z} format is supported.
 */
 
 /*!
@@ -1449,8 +1446,6 @@
             \li --af or --archive-format 7z|zip|tar|tar.gz|tar.bz2|tar.xz
             \li Set the format used when packaging new component data archives. If
                 you omit this option, the 7z format will be used as a default.
-                \note If the Installer Framework tools were built without libarchive
-                support, only \c{7z} format is supported.
         \row
             \li --ac or --compression <5>
             \li Defaults to 5 (Normal compression). \note Some formats do not support
@@ -1578,8 +1573,6 @@
             \li --af or --archive-format 7z|zip|tar|tar.gz|tar.bz2|tar.xz
             \li Set the format used when packaging new component data archives. If
                 you omit this option, the 7z format will be used as a default.
-                \note If the Installer Framework tools were built without libarchive
-                support, only \c{7z} format is supported.
         \row
             \li --ac, --compression <5>
             \li Defaults to 5 (Normal compression). \note Some formats do not support
@@ -1631,8 +1624,6 @@
         \row
             \li -f, --format <format>
             \li Format for the archive. Defaults to 7z.
-                \note If the Installer Framework tools were built without libarchive
-                support, only \c{7z} format is supported.
                 \list
                     \li 7z (7z archive)
                     \li zip (ZIP archive)
