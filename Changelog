@@ -1,4 +1,7 @@
 4.10.0
+- 3rdparty: remove bundled LZMA SDK (QTIFW-3819)
+- 3rdparty: patch libarchive to use GetTempPath2 when available
+- 3rdparty: update libarchive sources to 3.7.9 (QTIFW-3770)
 - Remove empty folders when uninstalling (QTIFW-3656)
 - Add operation for stopping processes (QTIFW-3745)
 - Make installation location a link (QTIFW-3628)
