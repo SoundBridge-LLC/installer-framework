@@ -1608,27 +1608,27 @@ Błąd podczas wczytywania %2</translation>
     </message>
     <message>
         <source>Fetching latest update information...</source>
-        <translation type="unfinished"></translation>
+        <translation>Pobieranie najnowszych informacji o aktualizacji...</translation>
     </message>
     <message numerus="yes">
         <source>Updating local cache with %n new items...</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Aktualizowanie lokalnej pamięci podręcznej o %n nowy element...</numerusform>
+            <numerusform>Aktualizowanie lokalnej pamięci podręcznej o %n nowe elementy...</numerusform>
+            <numerusform>Aktualizowanie lokalnej pamięci podręcznej o %n nowych elementów...</numerusform>
         </translation>
     </message>
     <message>
         <source>Clearing the cache directory and restarting the application may solve this.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyczyszczenie katalogu pamięci podręcznej i ponowne uruchomienie aplikacji może rozwiązać ten problem.</translation>
     </message>
     <message>
         <source>Unknown exception during updating cache.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieznany wyjątek podczas aktualizowania pamięci podręcznej.</translation>
     </message>
     <message>
         <source>Cannot open extracted file &quot;%1&quot; for reading: %2</source>
-        <translation type="unfinished"></translation>
+        <translation>Nie można otworzyć wyodrębnionego pliku &quot;%1&quot; do odczytu: %2</translation>
     </message>
     <message>
         <source>Cannot open file &quot;%1&quot; for writing: %2</source>
