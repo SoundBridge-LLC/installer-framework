@@ -60,6 +60,7 @@ private:
     QLabel *m_spaceRequiredLabel;
     QLabel *m_spaceAvailableLabel;
     LabelWithPixmap *m_noSpaceAvailableLabel;
+    LabelWithPixmap *m_spaceRecommendationLabel;
     bool m_showSpaceExceedWidget;
 };
 

@@ -119,7 +119,8 @@ public:
     enum SpaceInfo {
         SpaceAvailable,
         SpaceExceeded,
-        ExecutableSizeExceeded
+        ExecutableSizeExceeded,
+        RecommendedSizeExceeded
     };
 
     Q_DECLARE_FLAGS(ComponentTypes, ComponentType)

@@ -12,5 +12,7 @@
         <file>qt/etc/qt.conf</file>
         <file>Notification-Type.png</file>
         <file>Notification-Type@2x.png</file>
+        <file>warning.png</file>
+        <file>warning@2x.png</file>
     </qresource>
 </RCC>

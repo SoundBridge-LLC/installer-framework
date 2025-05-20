@@ -42,6 +42,7 @@ static const char *scSpaceRequired(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", 
 static const char *scSpaceFreed(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space freed: %1"));
 static const char *scSpaceAvailable(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space available: %1"));
 static const char *scNoSpaceAvailable(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "There is not enough disk space for the installation"));
+static const char *scExceedsRecommended(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space required on your hard drive is more than %1"));
 static const char *scSpaceExceedsLimit(QT_TRANSLATE_NOOP("QInstaller::SpaceWidget", "Space exceeds the supported executable size %1 in Windows"));
 
 using namespace QInstaller;
@@ -74,6 +75,11 @@ SpaceWidget::SpaceWidget(PackageManagerCore *core, bool showSpaceExceedWidget, Q
         spaceLabelLayout->addWidget(m_noSpaceAvailableLabel);
         m_noSpaceAvailableLabel->setVisible(false);
         m_noSpaceAvailableLabel->setObjectName(QLatin1String("SpaceWarning"));
+
+        m_spaceRecommendationLabel = new LabelWithPixmap(tr(scNoSpaceAvailable), QLatin1String(":/warning.png"));
+        spaceLabelLayout->addWidget(m_spaceRecommendationLabel);
+        m_spaceRecommendationLabel->setVisible(false);
+        m_spaceRecommendationLabel->setObjectName(QLatin1String("SpaceRecommendation"));
     }
     spaceLabelLayout->addStretch();
     installDirectoryChanged(m_core->value(scTargetDir));
@@ -103,17 +109,21 @@ void SpaceWidget::installDirectoryChanged(const QString &newDirectory)
 void SpaceWidget::availableSpaceChanged(const PackageManagerCore::SpaceInfo spaceStatus)
 {
     updateSpaceRequiredText();
-    if (!m_noSpaceAvailableLabel)
+    if (!m_showSpaceExceedWidget || !m_noSpaceAvailableLabel || !m_spaceRecommendationLabel)
         return;
 
-    if (spaceStatus == PackageManagerCore::SpaceAvailable) {
-        m_noSpaceAvailableLabel->setVisible(false);
-    } else if (m_showSpaceExceedWidget) {
-        if (spaceStatus == PackageManagerCore::ExecutableSizeExceeded)
-            m_noSpaceAvailableLabel->setWarningText(tr(scSpaceExceedsLimit).arg(humanReadableSize(UINT_MAX)));
-        else
-            m_noSpaceAvailableLabel->setWarningText(tr(scNoSpaceAvailable));
+    m_noSpaceAvailableLabel->setVisible(false);
+    m_spaceRecommendationLabel->setVisible(false);
+
+    if (spaceStatus == PackageManagerCore::ExecutableSizeExceeded) {
+        m_noSpaceAvailableLabel->setWarningText(tr(scSpaceExceedsLimit).arg(humanReadableSize(UINT_MAX)));
         m_noSpaceAvailableLabel->setVisible(true);
+    } else if (spaceStatus == PackageManagerCore::SpaceExceeded) {
+        m_noSpaceAvailableLabel->setWarningText(tr(scNoSpaceAvailable));
+        m_noSpaceAvailableLabel->setVisible(true);
+    } else if (spaceStatus == PackageManagerCore::RecommendedSizeExceeded) {
+        m_spaceRecommendationLabel->setWarningText(tr(scExceedsRecommended).arg(humanReadableSize(scRecommendedMaxSize)));
+        m_spaceRecommendationLabel->setVisible(true);
     }
 }
 

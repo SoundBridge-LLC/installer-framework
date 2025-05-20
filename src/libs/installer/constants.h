@@ -180,6 +180,7 @@ static const QLatin1String scAliasDefinitionsFile("AliasDefinitionsFile");
 const char scRelocatable[] = "@RELOCATABLE_PATH@";
 
 const quint64 scEstimatedMaintenancetoolSize = 56 * 1024 * 1024LL; // MT size is approximately 56 MB
+const quint64 scRecommendedMaxSize = 50 * 1024 * 1024 * 1024LL;
 
 static const QStringList scMetaElements = {
     QLatin1String("Script"),
