@@ -1222,7 +1222,7 @@ QString PackageManagerCore::targetDirWarning(const QString &targetDirectory) con
 
     target.setPath(target.canonicalPath());
     if (!target.path().isEmpty() && (target == QDir::root() || target == QDir::home())) {
-        return tr("As the install directory is completely deleted, installing in %1 is forbidden.")
+        return tr("As the install directory is completely deleted on uninstall, installing in %1 is forbidden.")
             .arg(QDir::toNativeSeparators(target.path()));
     }
 
