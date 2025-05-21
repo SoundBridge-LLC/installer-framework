@@ -226,6 +226,10 @@
         \li Brief Description
 
         \row
+        \li \c LicenseInfoLabel
+        \li Additional info label on top of the page. Empty by default.
+
+        \row
         \li \c LicenseListWidget
         \li Lists the available licenses.
 

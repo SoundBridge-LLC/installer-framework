@@ -298,6 +298,7 @@ public:
 
     void entering() override;
     bool isComplete() const override;
+    Q_INVOKABLE void setInfoText(const QString &text);
 
 private Q_SLOTS:
     void openLicenseUrl(const QUrl &url);
@@ -308,6 +309,7 @@ private:
     void updateUi();
 
 private:
+    QLabel *m_infoLabel;
     QTextBrowser *m_textBrowser;
     QListWidget *m_licenseListWidget;
 

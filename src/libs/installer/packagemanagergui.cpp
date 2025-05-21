@@ -2050,6 +2050,11 @@ LicenseAgreementPage::LicenseAgreementPage(PackageManagerCore *core)
     setObjectName(QLatin1String("LicenseAgreementPage"));
     setColoredTitle(tr("License Agreement"));
 
+    m_infoLabel = new QLabel(this);
+    m_infoLabel->setWordWrap(true);
+    m_infoLabel->setObjectName(QLatin1String("LicenseInfoLabel"));
+    m_infoLabel->setVisible(false);
+
     m_licenseListWidget = new QListWidget(this);
     m_licenseListWidget->setObjectName(QLatin1String("LicenseListWidget"));
     connect(m_licenseListWidget, &QListWidget::currentItemChanged,
@@ -2072,6 +2077,7 @@ LicenseAgreementPage::LicenseAgreementPage(PackageManagerCore *core)
     licenseSplitter->setStretchFactor(1, 3);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(m_infoLabel);
     layout->addWidget(licenseSplitter);
 
     m_acceptCheckBox = new QCheckBox(this);
@@ -2130,6 +2136,18 @@ void LicenseAgreementPage::entering()
 bool LicenseAgreementPage::isComplete() const
 {
     return m_acceptCheckBox->isChecked() && ProductKeyCheck::instance()->hasAcceptedAllLicenses();
+}
+
+/*!
+    Adds additional \a text on top of the page. By default the text is empty.
+    Text can be added using script interface.
+    sa \l{Controller Scripting}
+    sa \l{Component Scripting}
+*/
+void LicenseAgreementPage::setInfoText(const QString &text)
+{
+    m_infoLabel->setText(text);
+    m_infoLabel->setVisible(true);
 }
 
 void LicenseAgreementPage::openLicenseUrl(const QUrl &url)
