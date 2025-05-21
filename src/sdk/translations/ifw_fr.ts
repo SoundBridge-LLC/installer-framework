@@ -1354,7 +1354,7 @@ Téléchargé: %2</translation>
         <translation>Cliquez sur %1 pour fermer l’installation %2.</translation>
     </message>
     <message>
-        <source>You will find your installation in this location on your computer:</source>
+        <source>You find your installation in this location on your computer:</source>
         <translation>Vous trouverez votre installation à cet emplacement sur votre ordinateur :</translation>
     </message>
     <message>

@@ -2268,7 +2268,7 @@ Please copy the installer to a local drive</source>
         <translation>اضغط %1 لإغلاق الإعداد %2.</translation>
     </message>
     <message>
-        <source>You will find your installation in this location on your computer:</source>
+        <source>You find your installation in this location on your computer:</source>
         <translation>ستجد التثبيت الخاص بك في هذا الموقع على جهاز الكمبيوتر الخاص بك:</translation>
     </message>
     <message>

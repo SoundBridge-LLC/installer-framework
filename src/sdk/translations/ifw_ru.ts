@@ -1445,7 +1445,7 @@ Downloaded: %2</source>
         <translation>Нажмите %1 для завершения %2 настройки.</translation>
     </message>
     <message>
-        <source>You will find your installation in this location on your computer:</source>
+        <source>You find your installation in this location on your computer:</source>
         <translation>Вы найдете вашу установку в этом месте на вашем компьютере: </translation>
     </message>
     <message>

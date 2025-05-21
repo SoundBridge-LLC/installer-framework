@@ -1354,7 +1354,7 @@ Descargado: %2</translation>
         <translation>Haga clic en %1 para cerrar la configuración %2.</translation>
     </message>
     <message>
-        <source>You will find your installation in this location on your computer:</source>
+        <source>You find your installation in this location on your computer:</source>
         <translation>Encontrará su instalación en esta ubicación en su computadora:</translation>
     </message>
     <message>

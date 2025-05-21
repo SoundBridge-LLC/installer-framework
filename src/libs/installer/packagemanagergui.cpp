@@ -3037,7 +3037,7 @@ void FinishedPage::entering()
         connect(m_commitButton, &QAbstractButton::clicked, this, &FinishedPage::handleFinishClicked);
     }
 
-    m_clickFinishLabel->setText(QLatin1String("\n") + tr("Click %1 to close the %2 Setup.")
+    m_clickFinishLabel->setText(QLatin1String("\n") + tr("Select %1 to close the %2 Setup.")
                             .arg(gui()->defaultButtonText(QWizard::FinishButton).remove(QLatin1Char('&')), productName()));
     QString finishedText;
 
@@ -3050,7 +3050,7 @@ void FinishedPage::entering()
         if (!packageManagerCore()->isUninstaller()) {
             m_locationLabel->setText(packageManagerCore()->value(scTargetDir));
             m_locationLabel->setVisible(true);
-            finishedText.prepend(tr("You will find your installation in this location on your computer:"));
+            finishedText.prepend(tr("You find your installation in this location on your computer:"));
             finishedText.prepend(QLatin1String("\n\n"));
         }
         if (packageManagerCore()->isUninstaller())

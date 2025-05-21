@@ -2149,7 +2149,7 @@ Por favor, copie o instalador para uma unidade de disco local</translation>
         <translation>Clique em %1 para fechar a configuração %2. </translation>
     </message>
     <message>
-        <source>You will find your installation in this location on your computer:</source>
+        <source>You find your installation in this location on your computer:</source>
         <translation>Irá encontrar a sua instalação na seguinte localização:</translation>
     </message>
     <message>

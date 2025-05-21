@@ -1345,7 +1345,7 @@ Downloaded: %2</source>
         <translation>点击%1来关闭%2设置。</translation>
     </message>
     <message>
-        <source>You will find your installation in this location on your computer:</source>
+        <source>You find your installation in this location on your computer:</source>
         <translation>您可以在您的电脑的这个位置找到您的安装：</translation>
     </message>
     <message>

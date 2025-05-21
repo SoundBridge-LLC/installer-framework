@@ -1336,7 +1336,7 @@ Downloaded: %2</source>
         <translation>%2 セットアップを閉じるには、%1 をクリックします。</translation>
     </message>
     <message>
-        <source>You will find your installation in this location on your computer:</source>
+        <source>You find your installation in this location on your computer:</source>
         <translation>インストールはコンピュータ上の次の場所にあります:</translation>
     </message>
     <message>

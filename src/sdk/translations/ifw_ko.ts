@@ -2216,7 +2216,7 @@ Please copy the installer to a local drive</source>
         <translation>%2 설정을 닫기 위해 %1을(를) 클릭하십시오.</translation>
     </message>
     <message>
-        <source>You will find your installation in this location on your computer:</source>
+        <source>You find your installation in this location on your computer:</source>
         <translation>컴퓨터의 이 위치에서 설치파일을 찾을 수 있습니다.</translation>
     </message>
     <message>

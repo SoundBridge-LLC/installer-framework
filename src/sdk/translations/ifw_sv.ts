@@ -1631,7 +1631,7 @@ Hämtade: %2</translation>
         <translation>Klicka på %1 för att stänga %2-konfigurationen.</translation>
     </message>
     <message>
-        <source>You will find your installation in this location on your computer:</source>
+        <source>You find your installation in this location on your computer:</source>
         <translation>Du kan hitta din installation på denna plats på din dator:</translation>
     </message>
     <message>
