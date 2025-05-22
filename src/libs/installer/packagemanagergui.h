@@ -122,6 +122,8 @@ protected Q_SLOTS:
     void wizardWidgetInsertionRequested(QWidget *widget, QInstaller::PackageManagerCore::WizardPage page,
                                         int position);
     void wizardWidgetRemovalRequested(QWidget *widget);
+    void wizardPageWarningInsertionRequested(const QString &message, PackageManagerCore::WizardPage page, const QString &id, int position);
+    void wizardPageWarningRemovalRequested(const QString &id);
     void wizardPageVisibilityChangeRequested(bool visible, int page);
     void setValidatorForCustomPageRequested(QInstaller::Component *component, const QString &name,
                                             const QString &callbackName);

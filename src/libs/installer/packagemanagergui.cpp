@@ -44,6 +44,7 @@
 #include "loggingutils.h"
 #include "readyforinstallationpage_p.h"
 #include "clickablelabel.h"
+#include "labelwithpixmap.h"
 
 #include "sysinfo.h"
 #include "globals.h"
@@ -253,6 +254,25 @@ public:
         m_showSettingsButton = show;
     }
 
+    void addAndOrderCustomWidgets(PackageManagerPage *p, QWidget *widget)
+    {
+        if (p->m_customWidgets.count() > 1 ) {
+            //Reorder the custom widgets based on their position
+            QMultiMap<int, QWidget*>::Iterator it = p->m_customWidgets.begin();
+            while (it != p->m_customWidgets.end()) {
+                p->layout()->removeWidget(it.value());
+                ++it;
+            }
+            it = p->m_customWidgets.begin();
+            while (it != p->m_customWidgets.end()) {
+                p->layout()->addWidget(it.value());
+                ++it;
+            }
+        } else {
+            p->layout()->addWidget(widget);
+        }
+    }
+
     PackageManagerGui *q;
     int m_currentId;
     bool m_modified;
@@ -455,6 +475,10 @@ PackageManagerGui::PackageManagerGui(PackageManagerCore *core, QWidget *parent)
         this, &PackageManagerGui::wizardWidgetInsertionRequested);
     connect(m_core, &PackageManagerCore::wizardWidgetRemovalRequested,
             this, &PackageManagerGui::wizardWidgetRemovalRequested);
+    connect(m_core, &PackageManagerCore::wizardPageWarningInsertionRequested,
+            this, &PackageManagerGui::wizardPageWarningInsertionRequested);
+    connect(m_core, &PackageManagerCore::wizardPageWarningRemovalRequested,
+            this, &PackageManagerGui::wizardPageWarningRemovalRequested);
     connect(m_core, &PackageManagerCore::wizardPageVisibilityChangeRequested,
             this, &PackageManagerGui::wizardPageVisibilityChangeRequested, Qt::QueuedConnection);
 
@@ -889,21 +913,7 @@ void PackageManagerGui::wizardWidgetInsertionRequested(QWidget *widget,
 
     if (PackageManagerPage *p = qobject_cast<PackageManagerPage *>(QWizard::page(page))) {
         p->m_customWidgets.insert(position, widget);
-        if (p->m_customWidgets.count() > 1 ) {
-            //Reorder the custom widgets based on their position
-            QMultiMap<int, QWidget*>::Iterator it = p->m_customWidgets.begin();
-            while (it != p->m_customWidgets.end()) {
-                p->layout()->removeWidget(it.value());
-                ++it;
-            }
-            it = p->m_customWidgets.begin();
-            while (it != p->m_customWidgets.end()) {
-                p->layout()->addWidget(it.value());
-                ++it;
-            }
-        } else {
-            p->layout()->addWidget(widget);
-        }
+        d->addAndOrderCustomWidgets(p, widget);
         packageManagerCore()->controlScriptEngine()->addToGlobalObject(p);
         packageManagerCore()->componentScriptEngine()->addToGlobalObject(p);
     }
@@ -924,6 +934,47 @@ void PackageManagerGui::wizardWidgetRemovalRequested(QWidget *widget)
     widget->setParent(nullptr);
     packageManagerCore()->controlScriptEngine()->removeFromGlobalObject(widget);
     packageManagerCore()->componentScriptEngine()->removeFromGlobalObject(widget);
+}
+
+/*!
+    Requests the insertion of warning label on \a page. Warning label consists of a warning
+    image and \a message. Widget with lower \a position number will be inserted on top.
+    Warning label is identified with \a id.
+*/
+void PackageManagerGui::wizardPageWarningInsertionRequested(const QString &message, PackageManagerCore::WizardPage page, const QString &id, int position)
+{
+    // Check if the warning is already added
+    if (findChild<LabelWithPixmap* >(QLatin1String("LabelWithPixmap_") + id)) {
+        qCDebug(QInstaller::lcDeveloperBuild) << "Warning label with id " << id << "already added";
+        return;
+    }
+
+    if (PackageManagerPage *p = qobject_cast<PackageManagerPage *>(QWizard::page(page))) {
+        LabelWithPixmap *warningLabel = new LabelWithPixmap(message, QLatin1String(":/warning.png"));
+        warningLabel->setObjectName(QLatin1String("LabelWithPixmap_") + id);
+        p->m_customWidgets.insert(position, warningLabel);
+        d->addAndOrderCustomWidgets(p, warningLabel);
+        packageManagerCore()->controlScriptEngine()->addToGlobalObject(warningLabel);
+        packageManagerCore()->componentScriptEngine()->addToGlobalObject(warningLabel);
+    }
+}
+
+/*!
+    Requests the removal of the warning label, identified with \a id, from installer page.
+*/
+void PackageManagerGui::wizardPageWarningRemovalRequested(const QString &id)
+{
+    LabelWithPixmap *warningLabel = findChild<LabelWithPixmap* >(QLatin1String("LabelWithPixmap_") + id);
+    if (!warningLabel)
+        return;
+    const QList<int> pages = pageIds();
+    for (const int id : pages) {
+        PackageManagerPage *managerPage = qobject_cast<PackageManagerPage *>(page(id));
+        managerPage->removeCustomWidget(warningLabel);
+    }
+    warningLabel->setParent(nullptr);
+    packageManagerCore()->controlScriptEngine()->removeFromGlobalObject(warningLabel);
+    packageManagerCore()->componentScriptEngine()->removeFromGlobalObject(warningLabel);
 }
 
 /*!

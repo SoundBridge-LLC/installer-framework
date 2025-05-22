@@ -1999,6 +1999,56 @@ bool PackageManagerCore::removeWizardPageItem(Component *component, const QStrin
 }
 
 /*!
+    \fn QInstaller::PackageManagerCore::addWizardPageWarning(const QString &message,
+    PackageManagerCore::WizardPage page, const QString &id, int position)
+
+    Adds a warning label into the installer's GUI wizard. The label is added on
+    \a page ordered by \a position number. If several widgets are added to the same
+    page, the widget with lower \a position number will be inserted on top. The label
+    is identified with \a id.
+
+    See \l{Controller Scripting} for the possible values of \a page.
+
+    If the installation is not a command line install, returns \c true and emits the
+    wizardPageWarningInsertionRequested() signal.
+
+    \sa {installer::addWizardPageWarning}{installer.addWizardPageWarning}
+    \sa removeWizardPageWarning(), wizardPageWarningInsertionRequested()
+*/
+
+bool PackageManagerCore::addWizardPageWarning(const QString &message, PackageManagerCore::WizardPage page, const QString &id, int position)
+{
+    if (!isCommandLineInstance()) {
+        emit wizardPageWarningInsertionRequested(message, static_cast<WizardPage>(page), id, position);
+        return true;
+    } else {
+        qCDebug(QInstaller::lcDeveloperBuild) << "Headless installation: skip warning page item addition: " << id;
+    }
+    return false;
+}
+
+/*!
+    \fn QInstaller::PackageManagerCore::removeWizardPageWarning(const QString &id)
+
+    Removes the widget with the identification \a id, previously added to the
+    installer's wizard by addWizardPageWarning().
+
+    If the installation is not a command line install, returns \c true and
+    emits the wizardPageWarningRemovalRequested() signal.
+
+    \sa {installer::removeWizardPageWarning}{installer.removeWizardPageWarning}
+    \sa addWizardPageWarning()
+*/
+bool PackageManagerCore::removeWizardPageWarning(const QString &id)
+{
+    if (!isCommandLineInstance()) {
+        emit wizardPageWarningRemovalRequested(id);
+        return true;
+    }
+    return false;
+}
+
+/*!
     Registers additional \a repositories.
 
     \sa {installer::addUserRepositories}{installer.addUserRepositories}
