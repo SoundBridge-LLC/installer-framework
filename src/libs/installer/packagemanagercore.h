@@ -404,6 +404,7 @@ public:
 
     void saveGivenArguments(const QStringList &args);
     QStringList givenArguments() const;
+    bool isHybridInstaller() const;
 
 public Q_SLOTS:
     bool runInstaller();

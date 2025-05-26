@@ -641,6 +641,15 @@ QStringList PackageManagerCore::givenArguments() const
 {
     return m_arguments;
 }
+
+/*!
+    Returns \c true if installation is hybrid.
+    \sa createOfflineInstaller()
+*/
+bool PackageManagerCore::isHybridInstaller() const
+{
+    return d->isHybridInstaller();
+}
 /*!
     \deprecated [4.5] Use recalculateAllComponents() instead.
 
