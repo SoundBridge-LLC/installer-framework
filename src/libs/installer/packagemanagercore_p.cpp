@@ -3116,6 +3116,9 @@ bool PackageManagerCorePrivate::fetchMetaInformationFromRepositories(DownloadTyp
         switch (m_metadataJob.error()) {
             case QInstaller::UserIgnoreError:
                 break;  // we can simply ignore this error, the user knows about it
+            case QInstaller::MetaDownloadError:
+                emit m_core->metadataDownloadFailed();
+                // fall through on purpose
             default:
                 setStatus(PackageManagerCore::Failure, m_metadataJob.errorString());
                 return m_repoFetched;

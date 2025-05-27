@@ -324,7 +324,7 @@ void Downloader::errorOccurred(QNetworkReply::NetworkError error)
             if (data.taskItem.source().contains(QLatin1String("_meta"), Qt::CaseInsensitive)) {
                 QString errorString = tr("Network error while downloading '%1': %2.").arg(data.taskItem.source(), reply->errorString());
                 errorString.append(ProductKeyCheck::instance()->additionalMetaDownloadWarning());
-                m_futureInterface->reportException(TaskException(errorString));
+                m_futureInterface->reportException(MetaDownloadException(errorString));
                 emit finished();
             } else {
                 m_futureInterface->reportException(

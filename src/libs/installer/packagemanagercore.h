@@ -81,7 +81,8 @@ public:
         Unfinished = 4,
         ForceUpdate = 5,
         EssentialUpdated = 6,
-        NoPackagesFound = 7
+        NoPackagesFound = 7,
+        MetaDownloadFailure = 8
     };
     Status status() const;
     QString error() const;
@@ -472,6 +473,7 @@ Q_SIGNALS:
     void guiElementsReady();
     void installDirectoryChanged(const QString &newDirectory);
     void availableSpaceChanged(SpaceInfo spaceInfo);
+    void metadataDownloadFailed();
 
 private:
     struct Data {

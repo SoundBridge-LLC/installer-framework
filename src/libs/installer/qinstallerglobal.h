@@ -42,6 +42,7 @@ enum INSTALLER_EXPORT JobError
     InvalidUrl = 0x24B04,
     Timeout,
     DownloadError,
+    MetaDownloadError,
     InvalidUpdatesXml,
     InvalidMetaInfo,
     ExtractionError,

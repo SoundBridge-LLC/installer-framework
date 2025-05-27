@@ -44,6 +44,23 @@ enum
 };
 }
 
+class MetaDownloadException : public QException
+{
+public:
+    MetaDownloadException() {}
+    ~MetaDownloadException() throw() {}
+    explicit MetaDownloadException(const QString &message)
+        : m_message(message)
+    {}
+
+    void raise() const override { throw *this; }
+    QString message() const { return m_message; }
+    MetaDownloadException *clone() const override{ return new MetaDownloadException(*this); }
+
+private:
+    QString m_message;
+};
+
 class AuthenticationRequiredException : public TaskException
 {
 public:

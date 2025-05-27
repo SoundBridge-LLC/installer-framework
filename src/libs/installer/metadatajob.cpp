@@ -567,6 +567,9 @@ void MetadataJob::xmlTaskFinished()
     } catch (const TaskException &e) {
         reset();
         emitFinishedWithError(QInstaller::DownloadError, e.message());
+    } catch (const MetaDownloadException &e) {
+        reset();
+        emitFinishedWithError(QInstaller::MetaDownloadError, e.message());
     } catch (const QUnhandledException &e) {
         reset();
         emitFinishedWithError(QInstaller::DownloadError, QLatin1String(e.what()));
