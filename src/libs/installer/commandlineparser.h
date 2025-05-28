@@ -30,6 +30,7 @@
 #define COMMANDLINEPARSER_H
 
 #include <QCommandLineParser>
+#include <QHash>
 
 class CommandLineParserPrivate;
 
