@@ -65,7 +65,7 @@ private slots:
         PackageManagerCore core;
         core.setInstaller();
         QSet<Repository> repoList;
-        Repository repo = Repository::fromUserInput(":///data/repositoryActionAdd");
+        Repository repo = Repository::fromUserInput(":///data/repositoryActionAdd/");
         repoList.insert(repo);
         core.settings().setDefaultRepositories(repoList);
         MetadataJob metadata;
@@ -91,8 +91,8 @@ private slots:
         MetadataJob metadata;
         metadata.setPackageManagerCore(&core);
 
-        QTest::ignoreMessage(QtDebugMsg, "Repository to remove: \"file::///data/repository\"");
-        QTest::ignoreMessage(QtDebugMsg, "Repository to remove: \"file::///data/repository\"");
+        QTest::ignoreMessage(QtDebugMsg, "Repository to remove: \"Example repository\"");
+        QTest::ignoreMessage(QtDebugMsg, "Repository to remove: \"Example repository\"");
         metadata.start();
         metadata.waitForFinished();
         QCOMPARE(metadata.metadata().count(), 1);

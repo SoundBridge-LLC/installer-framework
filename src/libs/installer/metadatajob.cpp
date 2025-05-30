@@ -260,7 +260,7 @@ void MetadataJob::doStart()
                         continue;
 
                     QString url;
-                    url = repo.url().toString() + updateFilePath;
+                    url = repo.url().toString(QUrl::StripTrailingSlash) + updateFilePath;
                     if (!m_core->value(scUrlQueryString).isEmpty())
                         url += m_core->value(scUrlQueryString) + QLatin1Char('&');
                     // also append a random string to avoid proxy caches

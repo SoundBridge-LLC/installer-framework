@@ -761,28 +761,52 @@ static bool apply(const RepoHash &updates, QMultiHash<QUrl, Repository> *reposTo
     QList<QPair<Repository, Repository> > values = updates.values(QLatin1String("replace"));
     for (int a = 0; a < values.count(); ++a) {
         const QPair<Repository, Repository> data = values.at(a);
-        if (reposToUpdate->contains(data.first.url())) {
-            update = true;
-            reposToUpdate->remove(data.first.url());
-            reposToUpdate->insert(data.second.url(), data.second);
+        auto it = reposToUpdate->begin();
+        while (it != reposToUpdate->end()) {
+            const QUrl &repoUrl = it.key();
+            if (repoUrl.matches(data.first.url(), QUrl::NormalizePathSegments)) {
+                update = true;
+                reposToUpdate->remove(data.first.url());
+                reposToUpdate->insert(data.second.url(), data.second);
+                break;
+            } else {
+                ++it;
+            }
         }
     }
 
     values = updates.values(QLatin1String("remove"));
     for (int a = 0; a < values.count(); ++a) {
         const QPair<Repository, Repository> data = values.at(a);
-        if (reposToUpdate->contains(data.first.url())) {
-            update = true;
-            reposToUpdate->remove(data.first.url());
+        auto it = reposToUpdate->begin();
+        while (it != reposToUpdate->end()) {
+            const QUrl &repoUrl = it.key();
+            if (repoUrl.matches(data.first.url(), QUrl::NormalizePathSegments)) {
+                it = reposToUpdate->erase(it);
+                update = true;
+            } else {
+                ++it;
+            }
         }
     }
 
     values = updates.values(QLatin1String("add"));
     for (int a = 0; a < values.count(); ++a) {
         const QPair<Repository, Repository> data = values.at(a);
-        if (!reposToUpdate->contains(data.first.url())) {
-            update = true;
+        auto it = reposToUpdate->begin();
+        bool repositoryAlreadyAdded = false;
+        while (it != reposToUpdate->end()) {
+            const QUrl &repoUrl = it.key();
+            if (repoUrl.matches(data.first.url(), QUrl::NormalizePathSegments)) {
+                repositoryAlreadyAdded = true;
+                break;
+            } else {
+                ++it;
+            }
+        }
+        if (!repositoryAlreadyAdded) {
             reposToUpdate->insert(data.first.url(), data.first);
+            update = true;
         }
     }
     return update;

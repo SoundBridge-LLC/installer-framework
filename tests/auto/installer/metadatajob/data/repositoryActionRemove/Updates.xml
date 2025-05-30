@@ -2,7 +2,7 @@
  <ApplicationName>{AnyApplication}</ApplicationName>
  <ApplicationVersion>1.0.0</ApplicationVersion>
  <RepositoryUpdate>
-  <Repository action="remove" url="../repository"/>
+  <Repository action="remove" url="../repository" displayname="Example repository"/>
  </RepositoryUpdate>
  <PackageUpdate>
   <Name>C</Name>
