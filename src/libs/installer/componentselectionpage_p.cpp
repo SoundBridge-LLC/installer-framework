@@ -449,9 +449,11 @@ void ComponentSelectionPagePrivate::updateWidgetVisibility(bool show)
 void ComponentSelectionPagePrivate::fetchRepositoryCategories()
 {
     updateWidgetVisibility(true);
-    for (const QString &category : m_categoryCombobox->checkedItems())
+    QStringList checkedItems = m_categoryCombobox->checkedItems();
+    QStringList uncheckedItems = m_categoryCombobox->uncheckedItems();
+    for (const QString &category : std::as_const(checkedItems))
         m_core->enableRepositoryCategory(category, true);
-    for (const QString &category : m_categoryCombobox->uncheckedItems())
+    for (const QString &category : std::as_const(uncheckedItems))
         m_core->enableRepositoryCategory(category, false);
 
     if (!m_core->fetchRemotePackagesTree()) {

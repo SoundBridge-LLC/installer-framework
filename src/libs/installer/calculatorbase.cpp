@@ -62,7 +62,7 @@ QSet<QString> CalculatorBase::resolvedComponentNames() const
     return m_resolvedComponentNames;
 }
 
-CalculatorBase::Resolution CalculatorBase::resolutionType(Component *component) const
+CalculatorBase::Resolution CalculatorBase::resolutionType(const Component *component) const
 {
     return m_componentNameResolutionHash.value(component->name()).first;
 }
@@ -72,7 +72,7 @@ QString CalculatorBase::error() const
     return m_errorString;
 }
 
-QString CalculatorBase::referencedComponent(Component *component) const
+QString CalculatorBase::referencedComponent(const Component *component) const
 {
     return m_componentNameResolutionHash.value(component->name()).second;
 }

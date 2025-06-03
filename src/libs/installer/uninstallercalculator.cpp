@@ -136,7 +136,7 @@ bool UninstallerCalculator::solve(const QList<Component*> &components)
     return true;
 }
 
-QString UninstallerCalculator::resolutionText(Component *component) const
+QString UninstallerCalculator::resolutionText(const Component *component) const
 {
     Resolution reason = resolutionType(component);
     switch (reason) {

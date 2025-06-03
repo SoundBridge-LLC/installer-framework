@@ -49,7 +49,7 @@ using namespace QInstaller;
 
 QString CreateDesktopEntryOperation::absoluteFileName()
 {
-    const QString filename = arguments().first();
+    const QString &filename = arguments().constFirst();
 
     // give filename is already absolute
     if (QFileInfo(filename).isAbsolute())

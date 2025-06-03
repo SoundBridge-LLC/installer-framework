@@ -791,7 +791,7 @@ void Component::loadLicenses(const QString &directory, const QHash<QString, QVar
 */
 void Component::loadXMLOperations()
 {
-    for (auto operation: std::as_const(m_operationsList)) {
+    for (auto &operation: std::as_const(m_operationsList)) {
         if (operation.first != scExtract)
            addOperation(operation.first, operation.second.toStringList());
     }

@@ -238,7 +238,7 @@ Link Link::create(const QString &link, const QString &targetPath)
     QStringList pathParts = QFileInfo(link).absoluteFilePath().split(QLatin1Char('/'));
     pathParts.removeLast();
     QString linkPath = pathParts.join(QLatin1String("/"));
-    bool linkPathExists = QFileInfo(linkPath).exists();
+    bool linkPathExists = QFileInfo::exists(linkPath);
     if (!linkPathExists)
         linkPathExists = QDir().mkpath(linkPath);
     if (!linkPathExists) {
@@ -270,7 +270,7 @@ QString Link::targetPath() const
 bool Link::exists()
 {
 #ifdef Q_OS_WIN
-    return QFileInfo(m_path).exists();
+    return QFileInfo::exists(m_path);
 #else
     return QFileInfo(m_path).isSymLink();
 #endif
@@ -278,12 +278,12 @@ bool Link::exists()
 
 bool Link::targetExists()
 {
-    return QFileInfo(targetPath()).exists();
+    return QFileInfo::exists(targetPath());
 }
 
 bool Link::isValid()
 {
-    return targetExists() && QFileInfo(m_path).exists();
+    return targetExists() && QFileInfo::exists(m_path);
 }
 
 bool Link::remove()

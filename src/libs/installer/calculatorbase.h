@@ -62,14 +62,14 @@ public:
 
     QList<Component *> resolvedComponents() const;
     QSet<QString> resolvedComponentNames() const;
-    virtual QString resolutionText(Component *component) const = 0;
-    Resolution resolutionType(Component *component) const;
+    virtual QString resolutionText(const Component *component) const = 0;
+    Resolution resolutionType(const Component *component) const;
 
     QString error() const;
 
 protected:
     virtual bool solveComponent(Component *component, const QString &version = QString()) = 0;
-    QString referencedComponent(Component *component) const;
+    QString referencedComponent(const Component *component) const;
 
 protected:
     PackageManagerCore *m_core;

@@ -52,7 +52,7 @@ public:
     ~UninstallerCalculator();
 
     bool solve(const QList<Component*> &components) override;
-    QString resolutionText(Component *component) const override;
+    QString resolutionText(const Component *component) const override;
 
 private:
     bool solveComponent(Component *component, const QString &version = QString()) override;

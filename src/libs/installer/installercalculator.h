@@ -53,7 +53,7 @@ public:
     bool solve(const QList<Component *> &components) override;
     bool solve(const QList<ComponentAlias *> &aliases);
 
-    QString resolutionText(Component *component) const override;
+    QString resolutionText(const Component *component) const override;
 
 private:
     bool solveComponent(Component *component, const QString &version = QString()) override;

@@ -75,20 +75,20 @@ public:
     QDesktopServicesProxy(ScriptEngine *engine)
         : m_engine(engine){}
 
-public slots :
-    bool openUrl(const QString &url) const {
+
+    Q_INVOKABLE bool openUrl(const QString &url) const {
         QString urlToOpen = url;
         urlToOpen.replace(QLatin1String("\\\\"), QLatin1String("/"));
         urlToOpen.replace(QLatin1String("\\"), QLatin1String("/"));
         return QDesktopServices::openUrl(QUrl::fromUserInput(urlToOpen));
     }
-    QString displayName(qint32 location) const {
+    Q_INVOKABLE QString displayName(qint32 location) const {
         return QStandardPaths::displayName(QStandardPaths::StandardLocation(location));
     }
-    QString storageLocation(qint32 location) const {
+    Q_INVOKABLE QString storageLocation(qint32 location) const {
         return QStandardPaths::writableLocation(QStandardPaths::StandardLocation(location));
     }
-    QJSValue findFiles(const QString &path, const QString &pattern);
+    Q_INVOKABLE QJSValue findFiles(const QString &path, const QString &pattern);
 
 private:
     void findRecursion(const QString &path, const QString &pattern, QStringList *result);

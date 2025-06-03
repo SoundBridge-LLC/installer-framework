@@ -29,13 +29,9 @@
 #define PACKAGEMANAGERCORE_H
 
 #include "binaryformat.h"
-#include "binarycontent.h"
 #include "component.h"
 #include "protocol.h"
-#include "repository.h"
 #include "qinstallerglobal.h"
-#include "utils.h"
-#include "commandlineparser.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QObject>
@@ -268,14 +264,14 @@ public:
 
     ComponentAlias *aliasByName(const QString &name) const;
 
-    Q_INVOKABLE bool calculateComponentsToInstall() const;
+    Q_INVOKABLE bool calculateComponentsToInstall();
     QList<Component*> orderedComponentsToInstall() const;
     QSet<QString> componentsToInstallNames() const;
 
     Q_INVOKABLE bool recalculateAllComponents();
     QString componentResolveReasons() const;
 
-    Q_INVOKABLE bool calculateComponentsToUninstall() const;
+    Q_INVOKABLE bool calculateComponentsToUninstall();
     QList<Component*> componentsToUninstall() const;
     QSet<QString> componentsToUninstallNames() const;
 
@@ -285,7 +281,7 @@ public:
     QString componentsToInstallError() const;
     QString componentsToUninstallError() const;
     QString installReason(Component *component) const;
-    QString uninstallReason(Component *component) const;
+    QString uninstallReason(const Component *component) const;
 
     QList<Component*> dependees(const Component *component) const;
     bool isDependencyForRequestedComponent(const Component *component) const;
@@ -423,10 +419,10 @@ public Q_SLOTS:
     void clearComponentsToInstallCalculated() {} // TODO: deprecated, remove
 
 Q_SIGNALS:
-    void aboutCalculateComponentsToInstall() const;
-    void finishedCalculateComponentsToInstall() const;
-    void aboutCalculateComponentsToUninstall() const;
-    void finishedCalculateComponentsToUninstall() const;
+    void aboutCalculateComponentsToInstall();
+    void finishedCalculateComponentsToInstall();
+    void aboutCalculateComponentsToUninstall();
+    void finishedCalculateComponentsToUninstall();
     void componentAdded(QInstaller::Component *comp);
     void valueChanged(const QString &key, const QString &value);
     void statusChanged(QInstaller::PackageManagerCore::Status);

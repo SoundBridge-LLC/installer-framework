@@ -367,7 +367,7 @@ bool Metadata::verifyMetaFiles(QFile *updateFile) const
             continue; // nothing to check for this package
 
         const QString packagePath = QString::fromLatin1("%1/%2/").arg(path(), packageName);
-        for (auto &metaTagName : scMetaElements) {
+        for (const auto &metaTagName : std::as_const(scMetaElements)) {
             const QDomElement metaElement = element.firstChildElement(metaTagName);
             if (metaElement.isNull())
                 continue;

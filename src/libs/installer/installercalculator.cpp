@@ -66,7 +66,7 @@ bool InstallerCalculator::solve()
     return solve(components);
 }
 
-QString InstallerCalculator::resolutionText(Component *component) const
+QString InstallerCalculator::resolutionText(const Component *component) const
 {
     const Resolution reason = resolutionType(component);
     switch (reason) {
@@ -180,7 +180,8 @@ void InstallerCalculator::addComponentForInstall(Component *component, const QSt
 bool InstallerCalculator::addComponentsFromAlias(ComponentAlias *alias)
 {
     QList<Component *> componentsToAdd;
-    for (auto *component : alias->components()) {
+    QList<Component *> components = alias->components();
+    for (auto *component : std::as_const(components)) {
         if (m_resolvedComponentNames.contains(component->name()))
             continue; // Already added
 
@@ -286,7 +287,8 @@ bool InstallerCalculator::solveComponent(Component *component, const QString &ve
 
 bool InstallerCalculator::solveAlias(ComponentAlias *alias)
 {
-    for (auto *requiredAlias : alias->aliases()) {
+    QList<ComponentAlias *> aliases = alias->aliases();
+    for (auto *requiredAlias : std::as_const(aliases)) {
         if (!solveAlias(requiredAlias))
             return false;
     }
@@ -308,7 +310,9 @@ QSet<Component *> InstallerCalculator::autodependencyComponents()
         if (!m_autoDependencyComponentHash.contains(component->name())
                 || (m_core->isUpdater() && !component->updateRequested()))
             continue;
-        for (const QString& autoDependency : m_autoDependencyComponentHash.value(component->name())) {
+
+        const QStringList hashValues =  m_autoDependencyComponentHash.value(component->name());
+        for (const QString& autoDependency : std::as_const(hashValues)) {
             // If a components is already installed or is scheduled for installation, no need to check
             // for auto depend installation.
             if (m_resolvedComponentNames.contains(autoDependency)) {

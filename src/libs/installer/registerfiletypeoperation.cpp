@@ -187,8 +187,10 @@ bool RegisterFileTypeOperation::undoOperation()
         settings.remove(classesFileType);
         settings.beginGroup(classesFileType);
         const QVariantHash keyValues = value(QLatin1String("oldType")).toHash();
-        foreach (const QString &key, keyValues.keys())
+        for (auto it = keyValues.cbegin(); it != keyValues.cend(); ++it) {
+            const QString &key = it.key();
             settings.setValue(key, keyValues.value(key));
+        }
         settings.endGroup();
     } else {
         // some changes happened, remove the only save value we know about

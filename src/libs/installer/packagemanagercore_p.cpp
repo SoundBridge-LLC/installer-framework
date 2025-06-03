@@ -75,8 +75,6 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
-#include <errno.h>
-
 #ifdef Q_OS_WIN
 #include <qt_windows.h>
 #endif
@@ -469,7 +467,8 @@ bool PackageManagerCorePrivate::buildComponentAliases()
         for (const auto *alias : aliasList) {
             // Create a new alias object for package manager core to take ownership of
             ComponentAlias *newAlias = new ComponentAlias(m_core);
-            for (const QString &key : alias->keys())
+            QStringList aliasKeys = alias->keys();
+            for (const QString &key : std::as_const(aliasKeys))
                 newAlias->setValue(key, alias->value(key));
 
             m_componentAliases.insert(alias->name(), newAlias);
@@ -498,7 +497,7 @@ bool PackageManagerCorePrivate::buildComponentAliases()
                 << QInstaller::splitStringWithComma(alias->value(scOptionalAliases)));
         }
     };
-    for (const QString &installComponent : m_componentsToBeInstalled) {
+    for (const QString &installComponent : std::as_const(m_componentsToBeInstalled)) {
         ComponentAlias *alias = m_componentAliases.value(installComponent);
         if (!alias)
             continue;
@@ -719,7 +718,9 @@ UninstallerCalculator *PackageManagerCorePrivate::uninstallerCalculator() const
         PackageManagerCorePrivate *const pmcp = const_cast<PackageManagerCorePrivate *> (this);
 
         QList<Component*> installedComponents;
-        foreach (const QString &name, pmcp->localInstalledPackages().keys()) {
+        LocalPackagesMap packageMap = pmcp->localInstalledPackages();
+        for (auto it = packageMap.cbegin(); it != packageMap.cend(); ++it) {
+            const QString &name = it.key();
             if (Component *component = m_core->componentByName(PackageManagerCore::checkableName(name))) {
                 if (!component->uninstallationRequested())
                     installedComponents.append(component);
@@ -917,7 +918,7 @@ QString PackageManagerCorePrivate::maintenanceToolName() const
 #elif defined(Q_OS_WIN)
     filename += QLatin1String(".exe");
 #endif
-    return QString::fromLatin1("%1/%2").arg(targetDir()).arg(filename);
+    return QString::fromLatin1("%1/%2").arg(targetDir(), filename);
 }
 
 QString PackageManagerCorePrivate::maintenanceToolAliasPath() const
@@ -950,7 +951,7 @@ QString PackageManagerCorePrivate::offlineBinaryName() const
     if (!filename.endsWith(suffix))
         filename += suffix;
 #endif
-    return QString::fromLatin1("%1/%2").arg(targetDir()).arg(filename);
+    return QString::fromLatin1("%1/%2").arg(targetDir(), filename);
 }
 
 void PackageManagerCorePrivate::setHybridInstaller(const PackageManagerCore::HybridInstaller hybridInstaller)
@@ -3178,7 +3179,8 @@ void PackageManagerCorePrivate::restoreCheckState()
     if (m_coreCheckedHash.isEmpty())
         return;
 
-    foreach (Component *component, m_coreCheckedHash.keys()) {
+    for (auto it = m_coreCheckedHash.cbegin(); it != m_coreCheckedHash.cend(); ++it) {
+        Component *component = it.key();
         component->setCheckState(m_coreCheckedHash.value(component));
         // Never allow component to be checked when it is unstable
         // and not installed
@@ -3201,14 +3203,17 @@ void PackageManagerCorePrivate::storeCheckState()
 
 void PackageManagerCorePrivate::updateComponentInstallActions()
 {
-    for (Component *component : m_core->components(PackageManagerCore::ComponentType::All)) {
+    QList<Component *> components = m_core->components(PackageManagerCore::ComponentType::All);
+    for (Component *component : std::as_const(components)) {
         component->setInstallAction(component->isInstalled()
               ? ComponentModelHelper::KeepInstalled
               : ComponentModelHelper::KeepUninstalled);
     }
-    for (Component *component : uninstallerCalculator()->resolvedComponents())
+    QList<Component *> uninstallResolvedComponentList = uninstallerCalculator()->resolvedComponents();
+    for (Component *component : std::as_const(uninstallResolvedComponentList))
         component->setInstallAction(ComponentModelHelper::Uninstall);
-    for (Component *component : installerCalculator()->resolvedComponents())
+    QList<Component *> installResolvedComponentList = installerCalculator()->resolvedComponents();
+    for (Component *component : std::as_const(installResolvedComponentList))
         component->setInstallAction(ComponentModelHelper::Install);
 }
 
@@ -3216,7 +3221,7 @@ bool PackageManagerCorePrivate::enableAllCategories()
 {
     QSet<RepositoryCategory> repoCategories = m_data.settings().repositoryCategories();
     bool additionalRepositoriesEnabled = false;
-    for (const auto &category : repoCategories) {
+    for (const auto &category : std::as_const(repoCategories)) {
         if (!category.isEnabled()) {
             additionalRepositoriesEnabled = true;
             enableRepositoryCategory(category, true);
@@ -3486,7 +3491,7 @@ bool PackageManagerCorePrivate::acceptLicenseAgreements() const
 
         QStringList licenseNames = licenses.keys();
         licenseNames.sort(Qt::CaseInsensitive);
-        for (QString licenseName : licenseNames) {
+        for (const QString &licenseName : std::as_const(licenseNames)) {
             if (m_autoAcceptLicenses
                     || askUserAcceptLicense(licenseName, licenses.value(licenseName))) {
                 qCDebug(QInstaller::lcInstallerInstallLog) << "License"
@@ -3581,7 +3586,8 @@ void PackageManagerCorePrivate::commitPendingUnstableComponents()
     if (m_pendingUnstableComponents.isEmpty())
         return;
 
-    for (auto &componentName : m_pendingUnstableComponents.keys()) {
+    for (auto it = m_pendingUnstableComponents.cbegin(); it != m_pendingUnstableComponents.cend(); ++it) {
+        const QString &componentName = it.key();
         Component *const component = m_core->componentByName(componentName);
         if (!component) {
             qCWarning(lcInstallerInstallLog) << "Failure while marking component "

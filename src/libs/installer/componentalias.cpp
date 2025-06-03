@@ -39,18 +39,18 @@
 
 namespace QInstaller {
 
-static const QStringList scPossibleElements {
-    scName,
-    scDisplayName,
-    scDescription,
-    scVersion,
-    scVirtual,
-    scRequiredComponents,
-    scRequiredAliases,
-    scOptionalComponents,
-    scOptionalAliases,
-    scReleaseDate
-};
+Q_GLOBAL_STATIC_WITH_ARGS(QStringList, scPossibleElements, (QStringList()
+                                                            << scName
+                                                            << scDisplayName
+                                                            << scDescription
+                                                            << scVersion
+                                                            << scVirtual
+                                                            << scRequiredComponents
+                                                            << scRequiredAliases
+                                                            << scOptionalComponents
+                                                            << scOptionalAliases
+                                                            << scReleaseDate))
+
 
 /*!
     \inmodule QtInstallerFramework
@@ -259,7 +259,7 @@ bool AliasFinder::parseXml(AliasSource source)
         for (int j = 0; j < c2.count(); ++j) {
             const QDomElement el2 = c2.at(j).toElement();
             const QString tag2 = el2.tagName();
-            if (!scPossibleElements.contains(tag2)) {
+            if (!scPossibleElements->contains(tag2)) {
                 qCWarning(lcInstallerInstallLog) << "Unexpected element name:" << tag2;
                 continue;
             }
@@ -297,8 +297,10 @@ bool AliasFinder::parseJson(AliasSource source)
         data.insert(QLatin1String("source"), QVariant::fromValue(source));
 
         QJsonObject aliasObj = it.toObject();
-        for (const auto &key : aliasObj.keys()) {
-            if (!scPossibleElements.contains(key)) {
+
+        for (auto it = aliasObj.constBegin(); it != aliasObj.constEnd(); ++it) {
+            const QString &key = it.key();
+            if (!scPossibleElements->contains(key)) {
                 qCWarning(lcInstallerInstallLog) << "Unexpected element name:" << key;
                 continue;
             }
@@ -341,7 +343,8 @@ bool AliasFinder::parseJson(AliasSource source)
 */
 AliasFinder::Resolution AliasFinder::checkPriorityAndVersion(const AliasData &data) const
 {
-    for (const auto &existingData : m_aliasData.values(data.value(scName).toString())) {
+    auto aliasDataValues = m_aliasData.values(data.value(scName).toString());
+    for (const auto &existingData : std::as_const(aliasDataValues)) {
         if (existingData == data)
             continue;
 

@@ -414,9 +414,9 @@ Range<qint64> ResourceCollectionManager::write(QFileDevice *out, qint64 offset) 
     // Q: why do we write the size twice?
     // A: for us to be able to read it beginning from the end of the file as well
     QInstaller::appendInt64(out, collectionCount());
-    foreach (const QByteArray &name, table.keys()) {
-        QInstaller::appendByteArray(out, name);
-        QInstaller::appendInt64Range(out, table.value(name));
+    for (auto it = table.cbegin(); it != table.cend(); ++it) {
+        QInstaller::appendByteArray(out, it.key());
+        QInstaller::appendInt64Range(out, table.value(it.key()));
     }
     QInstaller::appendInt64(out, collectionCount());
 

@@ -164,7 +164,7 @@ public:
     }
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *event)
+    bool eventFilter(QObject *obj, QEvent *event) override
     {
         if (obj == m_widget) {
             switch(event->type()) {
@@ -488,7 +488,7 @@ PackageManagerGui::PackageManagerGui(PackageManagerCore *core, QWidget *parent)
     connect(m_core, &PackageManagerCore::setAutomatedPageSwitchEnabled,
             this, &PackageManagerGui::setAutomatedPageSwitchEnabled);
 
-    connect(this, &QWizard::customButtonClicked, this, &PackageManagerGui::customButtonClicked);
+    connect(this, &QWizard::customButtonClicked, this, &PackageManagerGui::onCustomButtonClicked);
 
     for (int i = QWizard::BackButton; i < QWizard::CustomButton1; ++i)
         d->m_defaultButtonText.insert(i, buttonText(QWizard::WizardButton(i)));
@@ -1196,7 +1196,7 @@ void PackageManagerGui::setSettingsButtonEnabled(bool enabled)
     Emits the settingsButtonClicked() signal when the custom button specified by \a which is
     clicked if \a which is the \uicontrol Settings button.
 */
-void PackageManagerGui::customButtonClicked(int which)
+void PackageManagerGui::onCustomButtonClicked(int which)
 {
     if (QWizard::WizardButton(which) == QWizard::CustomButton1 && d->m_showSettingsButton)
         emit settingsButtonClicked();
@@ -1489,7 +1489,7 @@ bool PackageManagerPage::validatePage()
 */
 void PackageManagerPage::removeCustomWidget(const QWidget *widget)
 {
-    for (auto it = m_customWidgets.begin(); it != m_customWidgets.end();) {
+    for (auto it = m_customWidgets.constBegin(); it != m_customWidgets.constEnd();) {
         if (it.value() == widget)
             it = m_customWidgets.erase(it);
         else
@@ -2224,7 +2224,7 @@ void LicenseAgreementPage::createLicenseWidgets()
         QMap<QString, QString> licenses = priorityHash.value(priority);
         QStringList licenseNames = licenses.keys();
         licenseNames.sort(Qt::CaseInsensitive);
-        for (QString licenseName : licenseNames) {
+        for (const QString &licenseName : std::as_const(licenseNames)) {
             QListWidgetItem *item = new QListWidgetItem(licenseName, m_licenseListWidget);
             item->setData(Qt::UserRole, licenses.value(licenseName));
         }

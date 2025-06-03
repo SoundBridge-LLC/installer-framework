@@ -49,13 +49,13 @@ void MinimumProgressOperation::backup()
 
 bool MinimumProgressOperation::performOperation()
 {
-    progressChanged(1);
+    emit progressChanged(1);
     return true;
 }
 
 bool MinimumProgressOperation::undoOperation()
 {
-    progressChanged(1);
+    emit progressChanged(1);
     return true;
 }
 

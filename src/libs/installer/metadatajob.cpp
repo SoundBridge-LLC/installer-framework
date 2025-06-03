@@ -757,19 +757,19 @@ void MetadataJob::resetCompressedFetch()
     setErrorString(QString());
 
     try {
-        foreach (QFutureWatcher<void> *const watcher, m_unzipTasks.keys()) {
-            watcher->cancel();
-            watcher->deleteLater();
+        for (auto it = m_unzipTasks.cbegin(); it != m_unzipTasks.cend(); ++it) {
+            it.key()->cancel();
+            it.key()->deleteLater();
         }
-        foreach (QObject *const object, m_unzipTasks)
+        for (QObject *const object : std::as_const(m_unzipTasks))
             object->deleteLater();
         m_unzipTasks.clear();
 
-        foreach (QFutureWatcher<void> *const watcher, m_unzipRepositoryTasks.keys()) {
-            watcher->cancel();
-            watcher->deleteLater();
+        for (auto it = m_unzipRepositoryTasks.cbegin(); it != m_unzipRepositoryTasks.cend(); ++it) {
+            it.key()->cancel();
+            it.key()->deleteLater();
         }
-        foreach (QObject *const object, m_unzipRepositoryTasks)
+        for (QObject *const object : std::as_const(m_unzipRepositoryTasks))
             object->deleteLater();
         m_unzipRepositoryTasks.clear();
     } catch (...) {}
@@ -1008,11 +1008,13 @@ QSet<Repository> MetadataJob::getRepositories()
 
     // Fetch repositories under archive which are selected in UI.
     // If repository is already fetched, do not fetch it again.
-    for (const RepositoryCategory &repositoryCategory : m_core->settings().repositoryCategories()) {
+    QSet<RepositoryCategory> repositoryCategories = m_core->settings().repositoryCategories();
+    for (const RepositoryCategory &repositoryCategory : std::as_const(repositoryCategories)) {
         if (!repositoryCategory.isEnabled())
             continue;
 
-        for (const Repository &repository : repositoryCategory.repositories()) {
+        QSet<Repository> repositoriesinCategory = repositoryCategory.repositories();
+        for (const Repository &repository : std::as_const(repositoriesinCategory)) {
             if (!m_fetchedCategorizedRepositories.contains(repository))
                 repositories.insert(repository);
         }

@@ -132,7 +132,7 @@ protected Q_SLOTS:
 
 private Q_SLOTS:
     void onLanguageChanged();
-    void customButtonClicked(int which);
+    void onCustomButtonClicked(int which);
     void dependsOnLocalInstallerBinary();
     void onCurrentIdChanged(int newId);
 

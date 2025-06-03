@@ -88,9 +88,7 @@ public:
             m_serverCommand = QCoreApplication::applicationFilePath();
             m_serverArguments = QStringList() << QLatin1String("--") + CommandLineOptions::scStartServerLong
                 << QString::fromLatin1("%1,%2,%3")
-                    .arg(QLatin1String(Protocol::ModeProduction))
-                    .arg(socketName)
-                    .arg(key);
+                    .arg(QLatin1String(Protocol::ModeProduction), socketName, key);
 
             KeepAliveObject *object = new KeepAliveObject;
             object->moveToThread(&m_thread);

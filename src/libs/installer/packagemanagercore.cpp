@@ -42,7 +42,6 @@
 #include "qprocesswrapper.h"
 #include "qsettingswrapper.h"
 #include "remoteclient.h"
-#include "remotefileengine.h"
 #include "settings.h"
 #include "installercalculator.h"
 #include "uninstallercalculator.h"
@@ -73,16 +72,10 @@
 #include <QFileDialog>
 #include <QRegularExpression>
 #include <QtConcurrentFilter>
+#include <QStandardPaths>
 
 #include "sysinfo.h"
 #include "updateoperationfactory.h"
-
-#ifdef Q_OS_WIN
-#include "qt_windows.h"
-#include <limits>
-#endif
-
-#include <QStandardPaths>
 
 /*!
     \namespace QInstaller
@@ -1564,7 +1557,8 @@ bool PackageManagerCore::fetchLocalPackagesTree()
 
     std::function<void(QList<LocalPackage> *, bool)> loadLocalPackages;
     loadLocalPackages = [&](QList<LocalPackage> *treeNamePackages, bool firstRun) {
-        foreach (auto &package, (firstRun ? installedPackages.values() : *treeNamePackages)) {
+        auto packageValues = installedPackages.values();
+        for (auto &package : (firstRun ? packageValues : *treeNamePackages)) {
             if (firstRun && !package.treeName.first.isEmpty()) {
                 // Package has a tree name, leave for later
                 treeNamePackages->append(package);
@@ -2434,7 +2428,7 @@ QList<ComponentAlias *> PackageManagerCore::aliasesMarkedForInstallation() const
     \sa {installer::calculateComponentsToInstall}{installer.calculateComponentsToInstall}
 
 */
-bool PackageManagerCore::calculateComponentsToInstall() const
+bool PackageManagerCore::calculateComponentsToInstall()
 {
     emit aboutCalculateComponentsToInstall();
 
@@ -2496,14 +2490,16 @@ QString PackageManagerCore::componentResolveReasons() const
         QMap<QString, QStringList> orderedUninstallReasons;
         htmlOutput.append(QString::fromLatin1("<h3>%1</h3><ul>").arg(tr("Components about to "
             "be removed:")));
-        foreach (Component *component, componentsToRemove) {
+        for (const Component *component : std::as_const(componentsToRemove)) {
             const QString reason = uninstallReason(component);
             QStringList value = orderedUninstallReasons.value(reason);
             orderedUninstallReasons.insert(reason, value << component->name());
         }
-        for (auto &reason : orderedUninstallReasons.keys()) {
+        for (auto it = orderedUninstallReasons.cbegin(); it != orderedUninstallReasons.cend(); ++it) {
+            QString reason = it.key();
             htmlOutput.append(QString::fromLatin1("<h4>%1</h4><ul>").arg(reason));
-            foreach (const QString componentName, orderedUninstallReasons.value(reason))
+            QStringList components = orderedUninstallReasons.value(reason);
+            for (const QString &componentName : std::as_const(components))
                 htmlOutput.append(QString::fromLatin1("<li> %1 </li>").arg(componentName));
             htmlOutput.append(QLatin1String("</ul>"));
         }
@@ -2533,7 +2529,7 @@ QString PackageManagerCore::componentResolveReasons() const
 
     \sa {installer::calculateComponentsToUninstall}{installer.calculateComponentsToUninstall}
 */
-bool PackageManagerCore::calculateComponentsToUninstall() const
+bool PackageManagerCore::calculateComponentsToUninstall()
 {
     emit aboutCalculateComponentsToUninstall();
 
@@ -2624,7 +2620,7 @@ QString PackageManagerCore::installReason(Component *component) const
         \li The components autodependencies are uninstalled.
     \endlist
 */
-QString PackageManagerCore::uninstallReason(Component *component) const
+QString PackageManagerCore::uninstallReason(const Component *component) const
 {
     return d->uninstallerCalculator()->resolutionText(component);
 }
@@ -2820,7 +2816,8 @@ bool PackageManagerCore::listAvailablePackages(const QString &regexp, const QHas
         const QModelIndex &idx = model->indexFromComponentName(component->treeName());
         if (idx.isValid() && re.match(name).hasMatch()) {
             bool ignoreComponent = false;
-            for (auto &key : filters.keys()) {
+            for (auto it = filters.cbegin(); it != filters.cend(); ++it) {
+                QString key = it.key();
                 const QString elementValue = component->value(key);
                 QRegularExpression elementRegexp(filters.value(key));
                 elementRegexp.setPatternOptions(QRegularExpression::CaseInsensitiveOption);
@@ -3161,7 +3158,8 @@ void PackageManagerCore::clearLicenses()
 QHash<QString, QMap<QString, QString>> PackageManagerCore::sortedLicenses()
 {
     QHash<QString, QMap<QString, QString>> priorityHash;
-    for (QString licenseName : d->m_licenseItems.keys()) {
+    for (auto it = d->m_licenseItems.constBegin(); it != d->m_licenseItems.constEnd(); ++it) {
+        const QString &licenseName = it.key();
         QMap<QString, QString> licenses;
         QString priority = d->m_licenseItems.value(licenseName).value(QLatin1String("priority")).toString();
         licenses = priorityHash.value(priority);
@@ -4751,14 +4749,16 @@ bool PackageManagerCore::fetchUpdaterPackages(const PackagesList &remotes, const
         }
 
         QHash<QString, QInstaller::Component *> localReplaceMes;
-        foreach (const QString &key, installedPackages.keys()) {
+        for (auto it = installedPackages.cbegin(); it != installedPackages.cend(); ++it) {
+            const QString &key = it.key();
             QInstaller::Component *component = new QInstaller::Component(this);
             component->loadDataFromPackage(installedPackages.value(key));
             d->m_updaterComponentsDeps.append(component);
         }
 
-        foreach (const QString &key, locals.keys()) {
-            LocalPackage package = locals.value(key);
+        for (auto it = locals.cbegin(); it != locals.cend(); ++it) {
+            const QString &key = it.key();
+            LocalPackage package = it.value();
             if (package.virtualComp && package.autoDependencies.isEmpty()) {
                   if (!d->m_localVirtualComponents.contains(package.name))
                       d->m_localVirtualComponents.append(package.name);

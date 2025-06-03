@@ -99,7 +99,7 @@ BinaryFormatEngineHandler::registerResource(const QString &fileName, const QStri
 {
     static const QChar sep = QChar::fromLatin1('/');
     static const QString prefix = QString::fromLatin1("installer://");
-    Q_ASSERT(fileName.toLower().startsWith(prefix));
+    Q_ASSERT(QStringView(fileName).startsWith(prefix, Qt::CaseInsensitive));
 
     // cut the prefix
     QString path = fileName.mid(prefix.length());

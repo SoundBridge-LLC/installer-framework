@@ -120,7 +120,7 @@ void BinaryFormatEngine::setFileName(const QString &file)
 
     static const QChar sep = QLatin1Char('/');
     static const QString prefix = QLatin1String("installer://");
-    Q_ASSERT(m_fileNamePath.toLower().startsWith(prefix));
+    Q_ASSERT(QStringView(m_fileNamePath).startsWith(prefix, Qt::CaseInsensitive));
 
     // cut the prefix
     QString path = m_fileNamePath.mid(prefix.length());

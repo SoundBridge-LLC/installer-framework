@@ -93,7 +93,7 @@ Repository Repository::fromUserInput(const QString &repositoryUrl, bool compress
 {
     QUrl url = QUrl::fromUserInput(repositoryUrl, QDir::currentPath());
     const QStringList supportedSchemes = KDUpdater::FileDownloaderFactory::supportedSchemes();
-    if (!supportedSchemes.contains(url.scheme()) && QFileInfo(url.toString()).exists())
+    if (!supportedSchemes.contains(url.scheme()) && QFileInfo::exists(url.toString()))
         url = QLatin1String("file:///") + url.toString();
 
     QString userName = url.userName();
@@ -326,7 +326,7 @@ void Repository::registerMetaType()
 */
 QDataStream &operator>>(QDataStream &istream, Repository &repository)
 {
-    QByteArray url, username, password, displayname, compressed;
+    QByteArray url, username, password, displayname;
     istream >> url >> repository.m_default >> repository.m_enabled >> username >> password
         >> displayname >> repository.m_categoryname >> repository.m_xmlChecksum >> repository.m_postLoadComponentScript;
     repository.setUrl(QUrl::fromEncoded(QByteArray::fromBase64(url)));
