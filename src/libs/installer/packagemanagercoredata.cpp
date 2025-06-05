@@ -287,7 +287,10 @@ QString PackageManagerCoreData::replaceVariables(const QString &str) const
             break;
         res += str.mid(pos, pos1 - pos);
         const QString name = str.mid(pos1 + 1, pos2 - pos1 - 1);
-        res += value(name).toString();
+        const QString &strValue = value(name).toString();
+        if (strValue.isEmpty())
+            return str;
+        res += strValue;
         pos = pos2 + 1;
     }
     res += str.mid(pos);
@@ -308,7 +311,11 @@ QByteArray PackageManagerCoreData::replaceVariables(const QByteArray &ba) const
             break;
         res += ba.mid(pos, pos1 - pos);
         const QString name = QString::fromLocal8Bit(ba.mid(pos1 + 1, pos2 - pos1 - 1));
-        res += value(name).toString().toLocal8Bit();
+
+        const QString &baValue = value(name).toString();
+        if (baValue.isEmpty())
+            return ba;
+        res += baValue.toLocal8Bit();
         pos = pos2 + 1;
     }
     res += ba.mid(pos);

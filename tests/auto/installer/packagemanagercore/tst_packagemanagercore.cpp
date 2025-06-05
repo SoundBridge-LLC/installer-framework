@@ -346,6 +346,48 @@ private slots:
         QCOMPARE(core.fromNativeSeparators(path), path);
 #endif
     }
+
+    void testReplaceVariablesStr_data()
+    {
+        QTest::addColumn<QString>("key");
+        QTest::addColumn<QString>("value");
+        QTest::addColumn<QString>("result");
+
+        QTest::newRow("Normal variables") << "myKey" << "myValue" << "myValue";
+        QTest::newRow("Nonreplaced variables") << "myNonreplaceKey" << "@myValue1@" << "@myValue1@";
+    }
+
+    void testReplaceVariablesStr()
+    {
+        QFETCH(QString, key);
+        QFETCH(QString, value);
+        QFETCH(QString, result);
+
+        PackageManagerCore core;
+        core.setValue(key, value);
+        QCOMPARE(core.replaceVariables(value), result);
+    }
+
+    void testReplaceVariablesBytearray_data()
+    {
+        QTest::addColumn<QString>("key");
+        QTest::addColumn<QByteArray>("value");
+        QTest::addColumn<QByteArray>("result");
+
+        QTest::newRow("Normal variables") << "myKey" << QByteArray("myValue") << QByteArray("myValue");
+        QTest::newRow("Nonreplaced variables") << "myNonreplaceKey" << QByteArray("@myValue1@") << QByteArray("@myValue1@");
+    }
+
+    void testReplaceVariablesBytearray()
+    {
+        QFETCH(QString, key);
+        QFETCH(QByteArray, value);
+        QFETCH(QByteArray, result);
+
+        PackageManagerCore core;
+        core.setValue(key, value);
+        QCOMPARE(core.replaceVariables(value), result);
+    }
 };
 
 
