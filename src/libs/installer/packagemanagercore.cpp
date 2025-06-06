@@ -3432,7 +3432,7 @@ bool PackageManagerCore::checkAvailableSpace()
             qDebug().nospace() << "Cannot determine available space on device. "
                                   "Volume descriptor: " << targetVolume.volumeDescriptor()
                                << ", Mount path: " << targetVolume.mountPath() << ". Continue silently.";
-            if (required < scRecommendedMaxSize)
+            if (required < 0 || required < scRecommendedMaxSize)
                 emit availableSpaceChanged(SpaceInfo::SpaceAvailable);
             else
                 emit availableSpaceChanged(SpaceInfo::RecommendedSizeExceeded);
@@ -3502,7 +3502,7 @@ bool PackageManagerCore::checkAvailableSpace()
             : tr("Installation will use %1 of disk space."))
         .arg(humanReadableSize(requiredDiskSpace()))).simplified();
 
-    if (required < scRecommendedMaxSize)
+    if (required < 0 || required < scRecommendedMaxSize)
         emit availableSpaceChanged(SpaceInfo::SpaceAvailable);
     else
         emit availableSpaceChanged(SpaceInfo::RecommendedSizeExceeded);
