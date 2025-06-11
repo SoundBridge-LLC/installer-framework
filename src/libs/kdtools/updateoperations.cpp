@@ -37,6 +37,7 @@
 #include <QTextStream>
 #include <QTemporaryFile>
 #include <QFileInfo>
+#include <globals.h>
 
 #include <cerrno>
 
@@ -716,9 +717,10 @@ bool AppendFileOperation::undoOperation()
     const QString filename = arguments().first();
     const QString backupOfFile = value(QLatin1String("backupOfFile")).toString();
     if (!backupOfFile.isEmpty() && !QFile::exists(backupOfFile)) {
-        setError(UserDefinedError, tr("Cannot find backup file for \"%1\".").arg(
-                     QDir::toNativeSeparators(filename)));
-        return false;
+        qCWarning(QInstaller::lcInstallerInstallLog).noquote()
+        << tr("Warning: Cannot find backup file for \"%1\". Undo will be skipped.").arg(
+            QDir::toNativeSeparators(filename));
+        return true;
     }
 
     const bool removed = deleteFileNowOrLater(filename);
