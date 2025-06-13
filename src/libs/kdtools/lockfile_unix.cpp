@@ -67,8 +67,10 @@ bool LockFile::Private::lock()
     errno = 0;
     locked = flock(handle, LOCK_NB | LOCK_EX) != -1;
     if (!locked) {
-        errorString = QCoreApplication::translate("LockFile", "Cannot obtain the lock for "
-            "file \"%1\": %2").arg(QDir::toNativeSeparators(filename), QString::fromLocal8Bit(strerror(errno)));
+        errorString = QCoreApplication::translate("LockFile", "Cannot obtain the lock for \"%1\": %2.\n"
+            "This likely means another instance of the installer is already running.\n"
+            "Please close any other installer sessions and try again.")
+            .arg(QDir::toNativeSeparators(filename), QString::fromLocal8Bit(strerror(errno)));
     }
     return locked;
 }

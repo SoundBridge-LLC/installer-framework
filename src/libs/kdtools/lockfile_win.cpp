@@ -64,8 +64,11 @@ bool LockFile::Private::lock()
     FlushFileBuffers(handle);
 
     if (!::LockFile(handle, 0, 0, QFileInfo(filename).size(), 0)) {
-        errorString = QCoreApplication::translate("LockFile", "Cannot obtain the lock for "
-            "file \"%1\": %2").arg(QDir::toNativeSeparators(filename), QInstaller::windowsErrorString(GetLastError()));
+        errorString = QCoreApplication::translate("LockFile",
+            "Cannot obtain the lock for \"%1\": %2.\n"
+            "This likely means another instance of the installer is already running.\n"
+            "Please close any other installer sessions and try again.")
+            .arg(QDir::toNativeSeparators(filename), QInstaller::windowsErrorString(GetLastError()));
     } else {
         locked = true;
     }
