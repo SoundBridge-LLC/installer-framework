@@ -1418,7 +1418,7 @@ void Lib7z::extractFileFromArchive(QFileDevice* archive, const File& item, QFile
     assert(archive);
     assert(target);
 
-    std::auto_ptr<ExtractCallback> dummyCallback(callback ? 0 : new ExtractCallback);
+    std::unique_ptr<ExtractCallback> dummyCallback(callback ? 0 : new ExtractCallback);
     if (!callback)
         callback = dummyCallback.get();
 

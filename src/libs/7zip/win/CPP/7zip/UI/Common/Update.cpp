@@ -902,7 +902,8 @@ HRESULT UpdateArchive(
       AString path = GetAnsiString(arcPath);
       AString name = GetAnsiString(fileName);
       // Warning!!! MAPISendDocuments function changes Current directory
-      fnSend(0, ";", (LPSTR)(LPCSTR)path, (LPSTR)(LPCSTR)name, 0);
+      char semicolon[] = ";";
+      fnSend(0, semicolon, (LPSTR)(LPCSTR)path, (LPSTR)(LPCSTR)name, 0);
     }
   }
   #endif
