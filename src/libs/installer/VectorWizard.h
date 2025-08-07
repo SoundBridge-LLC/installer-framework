@@ -37,7 +37,7 @@
 #include <QtWidgets/qdialog.h>
 #include "installer_global.h"
 
-#include <BackgroundWidget.h>
+#include <vector-widgets/BackgroundWidget.h>
 
 QT_BEGIN_NAMESPACE
 

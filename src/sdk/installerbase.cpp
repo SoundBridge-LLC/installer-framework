@@ -64,8 +64,8 @@
 #include <QLocalSocket>
 #include <QSystemSemaphore>
 
-#include "VectorStyle.h"
-#include "SkinManager.h"
+#include <vector-widgets/VectorStyle.h>
+#include <vector-widgets/SkinManager.h>
 
 const QString kApplicationId = QLatin1String("SoundBridge Setup");
 

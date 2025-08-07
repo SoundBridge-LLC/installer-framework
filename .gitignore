@@ -74,11 +74,10 @@ qrc_*.cpp
 
 # Directories to ignore
 # ---------------------
+bin
+build
 debug
-/bin/*
-include/*
-include/*/*
-lib/*
+lib
 release
 tmp
 doc-build
@@ -88,3 +87,5 @@ doc-build
 .rcc
 .pch
 .metadata
+.vs
+

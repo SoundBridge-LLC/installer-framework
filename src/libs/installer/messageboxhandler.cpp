@@ -41,7 +41,7 @@
 #include <QPushButton>
 
 #ifdef LUMIT_INSTALLER
-#include "MessageDialog.h"
+#include <vector-widgets/MessageDialog.h>
 #endif
 
 /*!

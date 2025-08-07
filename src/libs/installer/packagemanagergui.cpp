@@ -83,7 +83,7 @@
 #endif
 
 #ifdef LUMIT_INSTALLER
-#include "Models/ListItemDelegate.h"
+#include <vector-widgets/Models/ListItemDelegate.h>
 #endif
 
 using namespace KDUpdater;

@@ -33,9 +33,8 @@
 
 #include "VectorWizard.h"
 
-#include "BackgroundWidget.h"
-#include "Button.h"
-#include "StepIndicatorWidget.h"
+#include <vector-widgets/Button.h>
+#include <vector-widgets/StepIndicatorWidget.h>
 
 #define QT_NO_STYLE_WINDOWSVISTA
 
@@ -3862,10 +3861,6 @@ VectorWizard *VectorWizardPage::wizard() const
 
 QT_END_NAMESPACE
 
-#ifdef Q_OS_WIN
-#include "GeneratedFiles/moc_VectorWizard.cpp"
-#else
 #include "moc_VectorWizard.cpp"
-#endif
 
 #endif // QT_NO_WIZARD
