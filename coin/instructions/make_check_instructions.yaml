@@ -86,7 +86,45 @@ instructions:
         maxTimeBetweenOutput: 120
         userMessageOnFailure: "Failed to change into tests directory."
       - type: ExecuteCommand
-        command: "c:{{.InstallDir}}\\bin\\qmake.exe INSTALL_PREFIX={{.InstallDir}} IFW_LIB_PATH={{.InstallDir}}/lib"
+        command: "c:{{.InstallDir}}\\bin\\qmake.exe CONFIG+=libarchive INSTALL_PREFIX={{.InstallDir}} IFW_LIB_PATH={{.InstallDir}}/lib INCLUDEPATH+={{.Env.BZIP2_ARM}} INCLUDEPATH+={{.Env.XZ_ARM}}/src/liblzma/api INCLUDEPATH+={{.Env.ZLIB_ARM}} LIBS+=-L{{.Env.BZIP2_ARM}} LIBS+=-L{{.Env.XZ_ARM}}/Build/Release LIBS+=-L{{.Env.ZLIB_ARM}}"
+        maxTimeInSeconds: 600
+        maxTimeBetweenOutput: 600
+        userMessageOnFailure: "Failed running qmake, check logs."
+      - type: ExecuteCommand
+        command: "jom"
+        maxTimeInSeconds: 36000
+        maxTimeBetweenOutput: 3600
+        userMessageOnFailure: "Failed to run jom/make, check logs."
+      - type: ChangeDirectory
+        directory: "{{.SourceDir}}/tests/auto"
+        maxTimeInSeconds: 300
+        maxTimeBetweenOutput: 120
+        userMessageOnFailure: "Failed to change dir"
+      - type: RunQtUnitTest
+        testRepetitionAllowance: 3
+        directory: "{{.SourceDir}}/tests/auto"
+        runTestCommand: ["jom", "check", "-j1"]
+        maxTimeInSeconds: 3600
+        maxTimeBetweenOutput: 600
+        userMessageOnFailure: "Failed to run make check, check logs."
+    enable_if:
+        condition: and
+        conditions:
+          - condition: property
+            property: target.compiler
+            in_values: [MSVC2013, MSVC2015, MSVC2017, MSVC2019, MSVC2022]
+          - condition: property
+            property: target.arch
+            equals_value: AARCH64
+  - type: Group
+    instructions:
+      - type: ChangeDirectory
+        directory: "{{.SourceDir}}/tests"
+        maxTimeInSeconds: 300
+        maxTimeBetweenOutput: 120
+        userMessageOnFailure: "Failed to change into tests directory."
+      - type: ExecuteCommand
+        command: "c:{{.InstallDir}}\\bin\\qmake.exe CONFIG+=libarchive INSTALL_PREFIX={{.InstallDir}} IFW_LIB_PATH={{.InstallDir}}/lib"
         maxTimeInSeconds: 600
         maxTimeBetweenOutput: 600
         userMessageOnFailure: "Failed running qmake, check logs."
