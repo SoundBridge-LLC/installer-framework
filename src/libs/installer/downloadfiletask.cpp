@@ -311,7 +311,7 @@ void Downloader::errorOccurred(QNetworkReply::NetworkError error)
             m_downloads.erase(reply);
             m_redirects.remove(reply);
             reply->deleteLater();
-            if (m_downloads.size() <= 0) {
+            if (m_downloads.size() <= 0 || m_downloads.size() == m_finished) {
                 m_futureInterface->reportFinished();
                 emit finished();    // emit finished, so the event loop can shutdown
             }
