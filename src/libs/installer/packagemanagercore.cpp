@@ -1095,12 +1095,15 @@ QString PackageManagerCore::readConsoleLine(const QString &title, qint64 maxlen)
 {
     if (!isCommandLineInstance())
         return QString();
+
+    if (!title.isEmpty())
+        qDebug() << title;
+
     if (LoggingHandler::instance().outputRedirected()) {
         throw Error(tr("User input is required but the output "
             "device is not associated with a terminal."));
     }
-    if (!title.isEmpty())
-        qDebug() << title;
+
     QTextStream stream(stdin);
     QString input;
     stream.readLineInto(&input, maxlen);
