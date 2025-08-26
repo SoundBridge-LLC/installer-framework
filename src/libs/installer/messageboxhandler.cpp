@@ -471,6 +471,23 @@ bool MessageBoxHandler::askAnswerFromUser(QMessageBox::StandardButton &selectedB
     QString answer;
     stream.readLineInto(&answer);
 
+    // Handles user-friendly CLI input like y/n/yes/no
+    if (answer.compare(QStringLiteral("Yes"), Qt::CaseInsensitive) == 0 ||
+        answer.compare(QStringLiteral("y"), Qt::CaseInsensitive) == 0) {
+        if (availableButtons & QMessageBox::Yes) {
+            selectedButton = QMessageBox::Yes;
+            return true;
+        }
+    }
+
+    if (answer.compare(QStringLiteral("No"), Qt::CaseInsensitive) == 0 ||
+        answer.compare(QStringLiteral("n"), Qt::CaseInsensitive) == 0) {
+        if (availableButtons & QMessageBox::No) {
+            selectedButton = QMessageBox::No;
+            return true;
+        }
+    }
+
     const QMetaObject metaObject = QMessageBox::staticMetaObject;
     int enumIndex = metaObject.indexOfEnumerator("StandardButton");
     if (enumIndex != -1) {
