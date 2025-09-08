@@ -86,7 +86,7 @@ instructions:
         maxTimeBetweenOutput: 120
         userMessageOnFailure: "Failed to change into tests directory."
       - type: ExecuteCommand
-        command: "c:{{.InstallDir}}\\bin\\qmake.exe CONFIG+=libarchive INSTALL_PREFIX={{.InstallDir}} IFW_LIB_PATH={{.InstallDir}}/lib INCLUDEPATH+={{.Env.BZIP2_ARM}} INCLUDEPATH+={{.Env.XZ_ARM}}/src/liblzma/api INCLUDEPATH+={{.Env.ZLIB_ARM}} LIBS+=-L{{.Env.BZIP2_ARM}} LIBS+=-L{{.Env.XZ_ARM}}/Build/Release LIBS+=-L{{.Env.ZLIB_ARM}}"
+        command: "c:{{.InstallDir}}\\bin\\qmake.exe INSTALL_PREFIX={{.InstallDir}} IFW_LIB_PATH={{.InstallDir}}/lib INCLUDEPATH+={{.Env.BZIP2_ARM}} INCLUDEPATH+={{.Env.XZ_ARM}}/src/liblzma/api INCLUDEPATH+={{.Env.ZLIB_ARM}} LIBS+=-L{{.Env.BZIP2_ARM}} LIBS+=-L{{.Env.XZ_ARM}}/Build/Release LIBS+=-L{{.Env.ZLIB_ARM}}"
         maxTimeInSeconds: 600
         maxTimeBetweenOutput: 600
         userMessageOnFailure: "Failed running qmake, check logs."
@@ -124,7 +124,7 @@ instructions:
         maxTimeBetweenOutput: 120
         userMessageOnFailure: "Failed to change into tests directory."
       - type: ExecuteCommand
-        command: "c:{{.InstallDir}}\\bin\\qmake.exe CONFIG+=libarchive INSTALL_PREFIX={{.InstallDir}} IFW_LIB_PATH={{.InstallDir}}/lib"
+        command: "c:{{.InstallDir}}\\bin\\qmake.exe INSTALL_PREFIX={{.InstallDir}} IFW_LIB_PATH={{.InstallDir}}/lib"
         maxTimeInSeconds: 600
         maxTimeBetweenOutput: 600
         userMessageOnFailure: "Failed running qmake, check logs."
