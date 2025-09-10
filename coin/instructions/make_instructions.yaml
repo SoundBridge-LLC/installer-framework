@@ -123,7 +123,7 @@ instructions:
       - type: ChangeDirectory
         directory: "{{.InstallRoot}}/{{.AgentWorkingDir}}"
       - type: ExecuteCommand
-        command: "python3 {{.SourceDir}}/dist/create_ifw_installer.py --src-dir {{.SourceDir}} --bld-dir {{.SourceDir}} --target-dir {{.SourceDir}}/IfwInstaller --target-name QtInstallerFramework-macOS-x64-4.11.0.app"
+        command: "python3 {{.SourceDir}}/dist/create_ifw_installer.py --src-dir {{.SourceDir}} --bld-dir {{.SourceDir}} --target-dir {{.SourceDir}}/IfwInstaller --target-name QtInstallerFramework-macOS-universal-4.11.0.app"
         maxTimeInSeconds: 36000
         maxTimeBetweenOutput: 3600
         userMessageOnFailure: "Failed to create ifw installer."
