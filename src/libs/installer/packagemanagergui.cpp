@@ -3100,6 +3100,12 @@ void FinishedPage::entering()
     }
 
     gui()->updateButtonLayout();
+    if (packageManagerCore()->status() != PackageManagerCore::EssentialUpdated
+            && packageManagerCore()->isMaintainer()) {
+        QAbstractButton *cancelB = gui()->button(QWizard::CancelButton);
+        if (QPushButton *const b = qobject_cast<QPushButton *>(cancelB))
+            b->setDefault(true);
+    }
 
     if (m_commitButton) {
         disconnect(m_commitButton, &QAbstractButton::clicked, this, &FinishedPage::handleFinishClicked);
