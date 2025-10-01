@@ -195,7 +195,13 @@ QAbstractFileEngine::Iterator* RemoteFileEngine::beginEntryList(QDir::Filters fi
 #endif
 {
     if (connectToServer()) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 11, 0)
         QStringList entries = entryList(filters, filterNames);
+#else
+        QStringList entries = callRemoteMethod<QStringList>
+            (QString::fromLatin1(Protocol::QAbstractFileEngineEntryList),
+            static_cast<qint32>(filters), filterNames);
+#endif
         entries.removeAll(QString());
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
         return std::make_unique<RemoteFileEngineIterator>(path, filters, filterNames, entries);
@@ -249,6 +255,7 @@ bool RemoteFileEngine::copy(const QString &newName)
     return m_fileEngine.copy(newName);
 }
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 11, 0)
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
 QStringList RemoteFileEngine::entryList(QDirListing::IteratorFlags filters, const QStringList &filterNames) const
 {
@@ -272,6 +279,7 @@ QStringList RemoteFileEngine::entryList(QDir::Filters filters, const QStringList
     }
     return m_fileEngine.entryList(filters, filterNames);
 }
+#endif
 
 /*!
 */

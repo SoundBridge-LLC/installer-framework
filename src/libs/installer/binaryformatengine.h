@@ -63,11 +63,11 @@ public:
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     IteratorUniquePtr beginEntryList(const QString &path, QDirListing::IteratorFlags filters, const QStringList &filterNames) override;
-    QStringList entryList(QDirListing::IteratorFlags filters, const QStringList &filterNames) const override;
+    QStringList entryList(QDirListing::IteratorFlags filters, const QStringList &filterNames) const;
 #else
     Iterator *beginEntryList(QDir::Filters filters, const QStringList &filterNames) override;
 #endif
-    QStringList entryList(QDir::Filters filters, const QStringList &filterNames) const override;
+    QStringList entryList(QDir::Filters filters, const QStringList &filterNames) const;
 
 private:
     QStringList filterResults(QStringList result, const QStringList &filterNames) const;

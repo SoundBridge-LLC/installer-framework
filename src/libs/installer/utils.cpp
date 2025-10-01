@@ -34,6 +34,7 @@
 #include <QCoreApplication>
 #include <QDateTime>
 #include <QDir>
+#include <QElapsedTimer>
 #include <QProcessEnvironment>
 #include <QThread>
 #include <QVector>

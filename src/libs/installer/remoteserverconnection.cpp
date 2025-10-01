@@ -456,7 +456,15 @@ void RemoteServerConnection::handleQFSFileEngine(RemoteServerReply *reply, const
         QStringList filterNames;
         data >>filters;
         data >>filterNames;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 11, 0)
+        QStringList entries;
+        auto it = m_engine->beginEntryList(QString(), static_cast<QDirListing::IteratorFlags> (filters), filterNames);
+        do {
+            entries.push_back(it->currentFilePath());
+        } while (it->advance());
+#else
         reply->send(m_engine->entryList(static_cast<QDir::Filters> (filters), filterNames));
+#endif
     } else if (command == QLatin1String(Protocol::QAbstractFileEngineError)) {
         reply->send(static_cast<qint32> (m_engine->error()));
     } else if (command == QLatin1String(Protocol::QAbstractFileEngineErrorString)) {
