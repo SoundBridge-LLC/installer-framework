@@ -3443,6 +3443,9 @@ bool PackageManagerCorePrivate::calculateComponentsAndRun()
     } else if (componentsOk && acceptLicenseAgreements()) {
         try {
             loadComponentScripts(installerCalculator()->resolvedComponents(), true);
+            // Recalculate components again, script might have added new dependencies etc.
+            if (!m_core->recalculateAllComponents())
+                return false;
         }  catch (const Error &error) {
             qCWarning(QInstaller::lcInstallerInstallLog) << error.message();
             return false;
