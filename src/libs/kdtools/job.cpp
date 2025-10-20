@@ -46,7 +46,7 @@ public:
         , error(Job::NoError)
         , caps(Job::NoCapabilities)
         , autoDelete(true)
-        , totalAmount(100)
+        , totalAmount(0)
         , processedAmount(0)
         , m_timeout(-1)
     {

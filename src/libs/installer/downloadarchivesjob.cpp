@@ -136,7 +136,8 @@ void DownloadArchivesJob::timerEvent(QTimerEvent *event)
     if (event->timerId() == m_progressChangedTimerId) {
         killTimer(m_progressChangedTimerId);
         m_progressChangedTimerId = 0;
-        emit progressChanged(double(processedAmount()) / double(totalAmount()));
+        if (totalAmount() > 0)
+            emit progressChanged(double(processedAmount()) / double(totalAmount()));
         quint64 currentDownloaded = 0;
         for (auto i = m_downloaders.cbegin(), end = m_downloaders.cend(); i != end; ++i)
             currentDownloaded += i.value()->bytesReceived();

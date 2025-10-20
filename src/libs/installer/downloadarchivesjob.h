@@ -72,7 +72,6 @@ protected:
 public Q_SLOTS:
     void registerFile(const QInstaller::FileTaskItem &item);
     void fileDownloaded(const QString &fileName, const QString &componentName);
-    void onDownloadStatusChanged(const quint64 currentDownloaded);
     void setTotalProcessedAmount();
 
 protected Q_SLOTS:
@@ -85,6 +84,7 @@ protected Q_SLOTS:
 
 private:
     void setupDownloaders();
+    void onDownloadStatusChanged(const quint64 currentDownloaded);
 
 private:
     PackageManagerCore *m_core;
