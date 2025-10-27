@@ -216,6 +216,10 @@ public:
 
     bool validatePage();
 
+    void setLocalTempPath(const QString &tempPath);
+    inline QHash<QString, QVariant> scriptHash() const { return d->m_scriptHash; }
+    inline void setScriptHash(QHash<QString, QVariant> hash) { d->m_scriptHash = hash; }
+
 public Q_SLOTS:
     void setAutoCreateOperations(bool autoCreateOperations);
 
@@ -228,7 +232,6 @@ private Q_SLOTS:
     void updateModelData(const QString &key, const QString &value);
 
 private:
-    void setLocalTempPath(const QString &tempPath);
 
     Operation *createOperation(const QString &operationName, const QString &parameter1 = QString(),
         const QString &parameter2 = QString(), const QString &parameter3 = QString(),

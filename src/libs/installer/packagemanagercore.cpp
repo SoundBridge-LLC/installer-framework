@@ -4595,14 +4595,19 @@ bool PackageManagerCore::fetchAllPackages(const PackagesList &remotes, const Loc
             const QString name = localComponent->treeName();
 
             // 1. Component has a treename in local but not in remote, add with local treename
-            if (!remoteTreeNameComponents.contains(localComponent->name()) && !localComponent->value(scTreeName).isEmpty()) {
-                delete allComponents.take(localComponent->name());
+            if (allComponents.contains(localComponent->name())
+                    && !remoteTreeNameComponents.contains(localComponent->name())
+                    && !localComponent->value(scTreeName).isEmpty()) {
+                std::unique_ptr<QInstaller::Component> remoteComponent(allComponents.take(localComponent->name()));
+                updateLocalComponent(*localComponent.get(), remoteComponent.get());
             // 2. Component has different treename in local and remote, add with local treename
             } else if (remoteTreeNameComponents.contains(localComponent->name())) {
                 const QString remoteTreeName = remoteTreeNameComponents.value(localComponent->name());
                 const QString localTreeName = localComponent->value(scTreeName);
                 if (remoteTreeName != localTreeName) {
-                    delete allComponents.take(remoteTreeNameComponents.value(localComponent->name()));
+                    std::unique_ptr<QInstaller::Component> remoteComponent(
+                        allComponents.take(remoteTreeNameComponents.value(localComponent->name())));
+                    updateLocalComponent(*localComponent.get(), remoteComponent.get());
                 } else {
                     // 3. Component has same treename in local and remote, don't add the component again.
                     continue;
@@ -4674,6 +4679,17 @@ bool PackageManagerCore::fetchAllPackages(const PackagesList &remotes, const Loc
 
     emit finishAllComponentsReset(d->m_rootComponents);
     return true;
+}
+
+void PackageManagerCore::updateLocalComponent(Component &localComponent, Component *const remoteComponent)
+{
+    if (!remoteComponent)
+        return;
+
+    localComponent.setLocalTempPath(remoteComponent->localTempPath());
+    localComponent.setScriptHash(remoteComponent->scriptHash());
+    localComponent.setValue(scReleaseDate, remoteComponent->value(scReleaseDate));
+    localComponent.setValue(scVersion, remoteComponent->value(scVersion));
 }
 
 bool PackageManagerCore::fetchUpdaterPackages(const PackagesList &remotes, const LocalPackagesMap &locals)
