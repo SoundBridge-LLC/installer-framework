@@ -300,8 +300,8 @@ void KDUpdater::FileDownloader::archiveDownloadTaskFinished()
                     item.insert(TaskRole::SourceFile, sourceUrl);
                     item.insert(TaskRole::TargetFile, targetUrl);
                     failedItems.append(item);
-                    qCWarning(QInstaller::lcInstallerInstallLog) << tr("Hash verification while "
-                        "downloading %1. This can be a temporary error, retrying.\n\n"
+                    qCWarning(QInstaller::lcInstallerInstallLog) << tr("Hash verification error while "
+                        "downloading %1. This can be a temporary error, retrying download.\n\n"
                         "Expected: %2 \nDownloaded: %3").arg(item.source(),
                         QString::fromLatin1(expectedChecksum), QString::fromLatin1(checksum));
                 } else {
@@ -319,8 +319,14 @@ void KDUpdater::FileDownloader::archiveDownloadTaskFinished()
             if (d->m_retryCount <= 0) {
                 setDownloadAborted(QInstaller::DownloadError, tr("Cannot verify Hash"));
             } else {
+                m_shaDownloadResult.clear();
+                m_archiveDownloadResult.clear();
                 resetFileItems();
                 addFileItems(failedItems);
+                for (const FileTaskItem &item : std::as_const(failedItems)) {
+                    QFileInfo fi(item.target());
+                    emit retryFileDownload(fi.fileName());
+                }
                 doDownload(DownloadType::ChecksumFile);
             }
         }

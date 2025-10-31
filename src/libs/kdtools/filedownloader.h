@@ -99,6 +99,7 @@ Q_SIGNALS:
     void fileDownloaded(const QString &fileName, const QString &componentName);
     void networkDisconnected();
     void sha1DownloadFinished();
+    void retryFileDownload(const QString &fileName);
 
 public Q_SLOT:
     void setProgress(quint64 bytesReceived);

@@ -54,6 +54,7 @@ DownloadArchivesJob::DownloadArchivesJob(PackageManagerCore *core, const QString
     , m_progressChangedTimerId(0)
     , m_currentDownloaded(0)
     , m_totalAmount(0)
+    , m_retryDownload(false)
 {
     setCapabilities(Cancelable);
     setObjectName(objectName);
@@ -136,12 +137,22 @@ void DownloadArchivesJob::timerEvent(QTimerEvent *event)
     if (event->timerId() == m_progressChangedTimerId) {
         killTimer(m_progressChangedTimerId);
         m_progressChangedTimerId = 0;
-        if (totalAmount() > 0)
-            emit progressChanged(double(processedAmount()) / double(totalAmount()));
+
         quint64 currentDownloaded = 0;
         for (auto i = m_downloaders.cbegin(), end = m_downloaders.cend(); i != end; ++i)
             currentDownloaded += i.value()->bytesReceived();
         setProcessedAmount(currentDownloaded);
+
+        // processedAmount might excess totalAmount if sha mismatch is detected
+        // and some packages are refetched.
+        if (totalAmount() != 0 && double(processedAmount()) > totalAmount()) {
+            if (m_retryDownload)
+                emit downloadStatusChanged(tr("Redownloading packages due to previous verification errors."));
+            return;
+        }
+        if (totalAmount() > 0)
+            emit progressChanged(double(processedAmount()) / double(totalAmount()));
+
         onDownloadStatusChanged(currentDownloaded);
     }
 }
@@ -243,6 +254,13 @@ void DownloadArchivesJob::fileDownloaded(const QString &fileName, const QString 
                                .arg(fileName, componentName));
 }
 
+void DownloadArchivesJob::retryFileDownload(const QString &fileName)
+{
+    m_retryDownload = true;
+    emit outputTextChanged(tr("Hash verification error while downloading %1. "
+                              "This can be a temporary error, retrying download.").arg(fileName));
+}
+
 void DownloadArchivesJob::downloadCompleted()
 {
     // Wait for all downloaders to complete
@@ -335,6 +353,8 @@ void DownloadArchivesJob::setupDownloaders()
                 this, &DownloadArchivesJob::registerFile, Qt::QueuedConnection);
         connect(i.value(), &FileDownloader::fileDownloaded,
                 this, &DownloadArchivesJob::fileDownloaded, Qt::QueuedConnection);
+        connect(i.value(), &FileDownloader::retryFileDownload,
+                this, &DownloadArchivesJob::retryFileDownload, Qt::QueuedConnection);
         connect(i.value(), &FileDownloader::downloadCompleted,
                 this, &DownloadArchivesJob::downloadCompleted, Qt::QueuedConnection);
         connect(i.value(), &FileDownloader::networkDisconnected,

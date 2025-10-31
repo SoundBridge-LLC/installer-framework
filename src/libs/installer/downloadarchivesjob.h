@@ -73,6 +73,7 @@ public Q_SLOTS:
     void registerFile(const QInstaller::FileTaskItem &item);
     void fileDownloaded(const QString &fileName, const QString &componentName);
     void setTotalProcessedAmount();
+    void retryFileDownload(const QString &fileName);
 
 protected Q_SLOTS:
     void downloadCompleted();
@@ -99,6 +100,7 @@ private:
     QElapsedTimer m_totalDownloadSpeedTimer;
     quint64 m_currentDownloaded;
     quint64 m_totalAmount;
+    bool m_retryDownload;
 };
 
 } // namespace QInstaller
