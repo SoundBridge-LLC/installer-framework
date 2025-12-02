@@ -213,8 +213,6 @@ void Downloader::onReadyRead()
                 emit progressChanged(progress);
             } else {
                 int progress = m_finished * 100;
-                for (const auto &pair : m_downloads)
-                    progress += pair.second->observer->progressValue();
                 m_futureInterface->setProgressValueAndText(progress / m_items.count(),
                     data.observer->progressText());
             }
