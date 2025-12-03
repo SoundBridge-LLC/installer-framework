@@ -3301,10 +3301,40 @@ void PackageManagerCorePrivate::deferredRename(const QString &oldName, const QSt
     }
     QProcessWrapper::startDetached2(newName, arguments);
 #elif defined Q_OS_MACOS
-    // In macos oldName is the name of the maintenancetool we got from repository
-    // It might be extracted to a folder to avoid overlapping with running maintenancetool
-    // Here, ditto renames it to newName (and possibly moves from the subfolder).
-    if (oldName != newName) {
+    if (isUpdater()) {
+        QDir updaterDir(getAppBundlePath());
+        updaterDir.cdUp();
+        const QString &updaterName = updaterDir.path() + QDir::separator() + scMaintenanceToolUpdater;
+
+        if (QFile::exists(updaterName)) {
+            QStringList arguments;
+            const QString &restartStr = restart ? scTrue : scFalse;
+            arguments.append(QLatin1String("--") + CommandLineOptions::scUpdateMt);
+            arguments.append(QString(oldName + QLatin1String(",")
+                                     + newName + QLatin1String(",")
+                                     + QString::number(QCoreApplication::applicationPid()) + QLatin1String(",")
+                                     + restartStr));
+            if (restart) {
+                // Restart with same command line arguments as first executable
+                arguments.append(QLatin1String("--") + CommandLineOptions::scMtArguments);
+                QStringList mtArguments = QCoreApplication::arguments();
+                mtArguments.removeFirst(); // Remove program name
+                arguments.append(mtArguments.join(QLatin1String(" ")));
+            }
+            QProcessWrapper wrapper;
+            bool isStarted = wrapper.startDetached2(updaterName, arguments);
+
+            if (!isStarted) {
+                qCWarning(QInstaller::lcInstallerInstallLog()) << "Could not start " << updaterName
+                    << " with arguments: " << arguments
+                    << " for maintenance tool update: ";
+            }
+        } else {
+            qCWarning(QInstaller::lcInstallerInstallLog) << "Cannot update maintenancetool."
+                << updaterName << " does not exist.";
+            SelfRestarter::setRestartOnQuit(restart);
+        }
+    } else if (isInstaller() && oldName != newName) {
         //1. Rename/move maintenancetool
         QProcessWrapper process;
         process.start(QLatin1String("ditto"), QStringList() << oldName << newName);
@@ -3318,20 +3348,21 @@ void PackageManagerCorePrivate::deferredRename(const QString &oldName, const QSt
         QString targetDirectoryPath = QDir::cleanPath(targetDir());
 
         //Make sure there is subdirectory in the targetdir so we don't delete the installation
-        if (subDirectoryPath.startsWith(targetDirectoryPath) && subDirectoryPath != targetDirectoryPath)
+        if (subDirectoryPath.startsWith(targetDirectoryPath) && subDirectoryPath != targetDirectoryPath) {
+            // Remove immutability and clear extended attribute from maintennacetool app bundle
+            // otherwise the remove might fail in privileged folder
+            m_core->execute(QLatin1String("chflags"), QStringList() << QLatin1String("-R") << QLatin1String("nouchg") << oldName);
+            m_core->execute(QLatin1String("/bin/rm"), QStringList() << QLatin1String("-rf") << oldName);
             subDirectory.removeRecursively();
-    }
+        }
 
-    //3. If new maintenancetool name differs from original, remove the original maintenance tool
-    if (!isInstaller()) {
-        QString currentAppBundlePath = getAppBundlePath();
-        if (currentAppBundlePath != newName) {
-            QDir oldBundlePath(currentAppBundlePath);
-            oldBundlePath.removeRecursively();
+        //3. Remove updater
+        QFile updaterFile(targetDir() + QDir::separator() + scMaintenanceToolUpdater);
+        if (!updaterFile.remove()) {
+            qCWarning(QInstaller::lcDeveloperBuild()) << "Could not remove " << updaterFile.fileName()
+                                                      << updaterFile.errorString();
         }
     }
-    SelfRestarter::setRestartOnQuit(restart);
-
 #elif defined Q_OS_LINUX
     QFile::remove(newName);
     QFile::rename(oldName, newName);

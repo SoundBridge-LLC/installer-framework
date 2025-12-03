@@ -33,6 +33,7 @@
 #include "lockfile.h"
 
 #include <QString>
+#include <QCoreApplication>
 
 class KDTOOLS_EXPORT RunOnceChecker
 {
@@ -48,7 +49,7 @@ public:
     explicit RunOnceChecker(const QString &filename = QString());
     ~RunOnceChecker();
 
-    bool isRunning(RunOnceChecker::ConditionFlags flags);
+    bool isRunning(RunOnceChecker::ConditionFlags flags, const QString &appPath = QCoreApplication::applicationFilePath());
 
 private:
     KDUpdater::LockFile m_lockfile;

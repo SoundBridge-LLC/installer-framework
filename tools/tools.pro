@@ -7,3 +7,6 @@ SUBDIRS += \
     devtool \
     repocompare \
     checksumgenerator
+
+macos:
+    SUBDIRS += updater

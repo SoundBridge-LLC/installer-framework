@@ -265,6 +265,16 @@ CommandLineParser::CommandLineParser()
     cleanupUpdateOnly.setFlags(QCommandLineOption::HiddenFromHelp);
     addOption(cleanupUpdateOnly);
 
+    QCommandLineOption mtUpdate(CommandLineOptions::scUpdateMt);
+    mtUpdate.setValueName(QLatin1String("arguments"));
+    mtUpdate.setFlags(QCommandLineOption::HiddenFromHelp);
+    addOption(mtUpdate);
+
+    QCommandLineOption mtArguments(CommandLineOptions::scMtArguments);
+    mtArguments.setValueName(QLatin1String("arguments"));
+    mtArguments.setFlags(QCommandLineOption::HiddenFromHelp);
+    addOption(mtArguments);
+
     // Deprecated options
     QCommandLineOption deprecatedUpdater(CommandLineOptions::scDeprecatedUpdater);
     deprecatedUpdater.setFlags(QCommandLineOption::HiddenFromHelp);

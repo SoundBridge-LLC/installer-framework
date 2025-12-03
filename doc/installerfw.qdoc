@@ -2116,8 +2116,10 @@
 
     In Linux and in Windows the \c installerbase executable from Qt Installer
     Framework's installation folder, or in macOS the \MT app bundle,
-    should be copied to the component's data directory. For signed \MT,
-    sign the \c installerbase, or \MT app bundle. If you generated the
+    should be copied to the component's data directory. macOS also needs a helper
+    application for updating the \MT. The helper application can be found in the \c bin
+    -folder and should be placed next to the \MT in the component's data directory.
+    For a signed \MT, sign the \c installerbase, or the \MT app bundle. If you generated the
     \c update.rcc in the \l{Compiling the Update Resource} step, copy that to
     the data directory as well. The meta directory should contain a \c package.xml
     file with the package information elements of your choice. However, it is a
@@ -2131,6 +2133,19 @@
     \note If you are providing an update for an existing \MT component, copy and overwrite the
     existing files with the updated content to the package directory and increase the value of the
     \c <Version> element in the \c package.xml file.
+
+    Package directory structure:
+    \code
+    ├─── packages
+    ├───── qt.tools.maintenance
+    │   ├─── data
+    │   ├───── MaintenanceTool.app (only in macos)
+    │   ├───── maintenanceToolUpdater (only in macos)
+    │   ├───── installerbase(.exe) (windows/linux)
+    │   ├─── meta
+    │   ├───── installscript.qs
+    │   ├───── package.xml
+    \endcode
 
     The meta directory should also contain an installation script that tells the installer that
     there are replacements for the default \c installerbase and update resource files. A minimal

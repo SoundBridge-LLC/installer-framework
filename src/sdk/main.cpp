@@ -61,7 +61,7 @@
 #define SHA "Installer Framework SHA1: " QUOTE(_GIT_SHA1_)
 static const char PLACEHOLDER[32] = "MY_InstallerCreateDateTime_MY";
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN || defined Q_OS_MACOS
 static void cleanupUpdate(const CommandLineParser &parser, bool *exit)
 {
     QString cleanupPath;
@@ -80,8 +80,9 @@ static void cleanupUpdate(const CommandLineParser &parser, bool *exit)
     if (cleanupOption.isEmpty())
         return;
 
-    // Since Windows does not support that the maintenance tool deletes itself we
+    // Windows does not support that the maintenance tool deletes itself we
     // remove the old executable here after update (as the new maintenance tool).
+    // In macos we delete the updater which has updated newer version of maintenance tool.
     if (!cleanupPath.isEmpty()) {
         QFile fileToRemove(cleanupPath);
         // Give up after 120 seconds if the old process has not exited and released the file
@@ -199,7 +200,7 @@ int main(int argc, char *argv[])
         return help ? EXIT_SUCCESS : EXIT_FAILURE;
     }
 
-#ifdef Q_OS_WIN
+#if defined Q_OS_WIN || defined Q_OS_MACOS
     {
         bool exit = false;
         cleanupUpdate(parser, &exit);

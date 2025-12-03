@@ -86,12 +86,12 @@ private:
     QString m_name;
 };
 
-bool RunOnceChecker::isRunning(RunOnceChecker::ConditionFlags flags)
+bool RunOnceChecker::isRunning(RunOnceChecker::ConditionFlags flags, const QString &appPath)
 {
     if (flags.testFlag(ConditionFlag::ProcessList)) {
         const QList<ProcessInfo> allProcesses = runningProcesses();
         const int count = std::count_if(allProcesses.constBegin(), allProcesses.constEnd(),
-            ProcessnameEquals(QCoreApplication::applicationFilePath()));
+            ProcessnameEquals(appPath));
         return (count > 1);
     }
 

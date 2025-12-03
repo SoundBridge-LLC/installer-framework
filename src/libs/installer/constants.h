@@ -179,6 +179,8 @@ static const QLatin1String scPageListPixmap("PageListPixmap");
 static const QLatin1String scAliasDefinitionsFile("AliasDefinitionsFile");
 const char scRelocatable[] = "@RELOCATABLE_PATH@";
 
+static const QLatin1String scMaintenanceToolUpdater("maintenanceToolUpdater");
+
 const quint64 scEstimatedMaintenancetoolSize = 56 * 1024 * 1024LL; // MT size is approximately 56 MB
 const quint64 scRecommendedMaxSize = 50 * 1024 * 1024 * 1024LL;
 
@@ -302,6 +304,8 @@ static const QLatin1String scMaxConcurrentOperationsLong("max-concurrent-operati
 static const QLatin1String scCleanupUpdate("cleanup-update");
 static const QLatin1String scCleanupUpdateOnly("cleanup-update-only");
 static const QLatin1String scLanguage("lang");
+static const QLatin1String scUpdateMt("update-maintenancetool");
+static const QLatin1String scMtArguments("maintenancetool-arguments");
 
 // Deprecated options, provided only for backward compatibility
 static const QLatin1String scDeprecatedUpdater("updater");
