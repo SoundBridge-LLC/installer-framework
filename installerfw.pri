@@ -99,6 +99,7 @@ win32 {
     warning("Resource compiler '$$RCC' not found.")
 }
 win32-g++*:QMAKE_CXXFLAGS += -Wno-attributes
+win32:msvc: QMAKE_LFLAGS += /DEPENDENTLOADFLAG:0x800
 macx:QMAKE_CXXFLAGS += -fvisibility=hidden -fvisibility-inlines-hidden
 
 INCLUDEPATH += \
