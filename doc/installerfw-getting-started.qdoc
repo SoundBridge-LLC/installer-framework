@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2024 The Qt Company Ltd.
+** Copyright (C) 2025 The Qt Company Ltd.
 ** Contact: https://www.qt.io/licensing/
 **
 ** This file is part of the Qt Installer Framework.
@@ -92,8 +92,8 @@
     \section1 Supported Compilers
 
     You can compile the Qt Installer Framework with Microsoft Visual Studio
-    2019 and newer, GCC 9 and newer, and Clang 13.0.0 and newer. Currently, the
-    tested combination for Windows is Qt 6.6.0 with MSVC 2019 (Windows 10).
+    2022 and newer, GCC 10 and newer, and Clang 15.0.0 and newer. Currently, the
+    tested combination for Windows is Qt 6.9.1 with MSVC 2022 (Windows 11).
 
     \section1 Configuring Qt
 
@@ -103,7 +103,7 @@
     against OpenSSL libraries, see \l{http://doc.qt.io/qt-6/ssl.html}{SSL
     Import and Export Restrictions}.
 
-    The supported Qt version is 6.6.0.
+    The supported Qt version is 6.9.1.
 
     Get Qt sources:
     \code
@@ -125,7 +125,7 @@
     Use the following configuration options for Linux:
 
     \code
-    configure -prefix $PWD/qtbase -release -static -accessibility -qt-zlib -qt-libpng -qt-libjpeg -qt-pcre -no-glib -no-cups -no-sql-sqlite -no-feature-gssapi -no-qml-debug -no-opengl -no-egl -no-xinput2 -no-sm -no-icu -nomake examples -nomake tests -no-libudev -bundled-xcb-xinput -qt-harfbuzz -qt-doubleconversion
+    configure -prefix $PWD/qtbase -release -static -accessibility -qt-zlib -qt-libpng -qt-libjpeg -qt-pcre -no-glib -no-cups -no-sql-sqlite -no-feature-gssapi -no-qml-debug -no-opengl -no-egl -no-sm -no-icu -nomake examples -nomake tests -no-libudev -bundled-xcb-xinput -qt-harfbuzz -qt-doubleconversion
     \endcode
 
     \section2 Configuring Qt for macOS
