@@ -1,3 +1,24 @@
+4.11.0
+- Fix mac maintenance tool update (QTIFW-3759)
+- Fix potential DLL hijacking in Windows (QTIFW-2445)
+- Fix script usage for local installed packages (QTIFW-3884)
+- Fix component calculating in CLI mode (QTIFW-3873)
+- Change default button in finished -page (QTIFW-3858)
+- Build IFW binaries as universal in macOS
+- Build IFW binaries with Qt 6.9.1
+- Improve CLI input handling (QTIFW-3764)
+- Inform about metadata download fail (QTIFW-3829)
+- Improve lock acquisition error message for better clarity (QTIFW-3459)
+- Convert missing backup error into warning during undo (QTIFW-3290)
+- Support parallel data download (QTIFW-1151
+- Fix variable replace (QTIFW-2945)
+- Fix repository action handling (QTIFW-3730)
+- Add possibility to add warning labels from script (QTIFW-3555)
+- Add warning about space usage (QTIFW-3740)
+- Add possibility to add text to LiceseAgreementPage (QTIFW-3626)
+- Fix warning text on installation folder selection (QTIFW-3644)
+- Check component name syntax in repogen and binarycreator (QTIFW-3823)
+
 4.10.0
 - 3rdparty: remove bundled LZMA SDK (QTIFW-3819)
 - 3rdparty: patch libarchive to use GetTempPath2 when available
