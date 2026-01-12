@@ -509,7 +509,7 @@ typedef uint64_t uintmax_t;
 #define HAVE_ERRNO_H 1
 
 /* Define to 1 if you have the <expat.h> header file. */
-#define HAVE_EXPAT_H 1
+/* #undef HAVE_EXPAT_H */
 
 /* Define to 1 if you have the <ext2fs/ext2_fs.h> header file. */
 /* #undef HAVE_EXT2FS_EXT2_FS_H */

@@ -29,6 +29,7 @@ HEADERS += $$PWD/archive.h \
     $$PWD/archive_pathmatch.h \
     $$PWD/archive_platform.h \
     $$PWD/archive_platform_acl.h \
+    $$PWD/archive_platform_stat.h \
     $$PWD/archive_platform_xattr.h \
     $$PWD/archive_ppmd_private.h \
     $$PWD/archive_ppmd8_private.h \
@@ -40,6 +41,7 @@ HEADERS += $$PWD/archive.h \
     $$PWD/archive_read_private.h \
     $$PWD/archive_string.h \
     $$PWD/archive_string_composition.h \
+    $$PWD/archive_time_private.h \
     $$PWD/archive_write_disk_private.h \
     $$PWD/archive_write_private.h \
     $$PWD/archive_write_set_format_private.h \
@@ -66,6 +68,7 @@ SOURCES += $$PWD/archive_acl.c \
     $$PWD/archive_pathmatch.c \
     $$PWD/archive_ppmd8.c \
     $$PWD/archive_ppmd7.c \
+    $$PWD/archive_parse_date.c \
     $$PWD/archive_random.c \
     $$PWD/archive_rb.c \
     $$PWD/archive_read.c \
@@ -116,6 +119,7 @@ SOURCES += $$PWD/archive_acl.c \
     $$PWD/archive_read_support_format_zip.c \
     $$PWD/archive_string.c \
     $$PWD/archive_string_sprintf.c \
+    $$PWD/archive_time.c \
     $$PWD/archive_util.c \
     $$PWD/archive_version_details.c \
     $$PWD/archive_virtual.c \
