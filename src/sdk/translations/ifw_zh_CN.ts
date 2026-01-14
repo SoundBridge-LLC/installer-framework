@@ -77,33 +77,6 @@
     </message>
 </context>
 <context>
-    <name>ExtractCallbackImpl</name>
-    <message>
-        <source>Cannot retrieve path of archive item %1.</source>
-        <translation>无法检索存档项 %1 的路径。</translation>
-    </message>
-    <message>
-        <source>Cannot remove already existing symlink %1.</source>
-        <translation>无法移除已存在的符号链接 %1。</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>无法打开文件“%1”进行写入：%2</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at &quot;%1&quot;. Another one is already existing.</source>
-        <translation>无法在“%1”处创建符号链接。 已存在另一个符号链接。</translation>
-    </message>
-    <message>
-        <source>Cannot read symlink target from file &quot;%1&quot;.</source>
-        <translation>无法从文件“%1”中读取符号链接目标。</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at %1: %2</source>
-        <translation>无法在 %1 创建符号链接：%2</translation>
-    </message>
-</context>
-<context>
     <name>InstallerBase</name>
     <message>
         <source>Unable to start installer</source>
@@ -167,16 +140,16 @@
         <translation>无法打开文件“%1”进行写入：%2</translation>
     </message>
     <message>
-        <source>Cannot find backup file for &quot;%1&quot;.</source>
-        <translation>找不到“%1”的备份文件。</translation>
-    </message>
-    <message>
         <source>Cannot restore backup file for &quot;%1&quot;.</source>
         <translation>无法还原“%1”的备份文件。</translation>
     </message>
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>无法还原“%1”的备份文件：%2</translation>
+    </message>
+    <message>
+        <source>Warning: Cannot find backup file for &quot;%1&quot;. Undo will be skipped.</source>
+        <translation>警告：无法找到 &quot;%1&quot; 的备份文件。撤销操作将被跳过。</translation>
     </message>
 </context>
 <context>
@@ -215,123 +188,6 @@
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>无法还原“%1”的备份文件：%2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::FileDownloader</name>
-    <message>
-        <source>Download finished.</source>
-        <translation>下载完成。</translation>
-    </message>
-    <message>
-        <source>Cryptographic hashes do not match.</source>
-        <translation>加密哈希不匹配。</translation>
-    </message>
-    <message>
-        <source>Download canceled.</source>
-        <translation>下载已取消。</translation>
-    </message>
-    <message>
-        <source>%1 of %2</source>
-        <translation>%1/%2</translation>
-    </message>
-    <message>
-        <source>%1 downloaded.</source>
-        <translation>%1 已下载。</translation>
-    </message>
-    <message>
-        <source>(%1/sec)</source>
-        <translation>(%1/秒)</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s), </source>
-        <translation>
-            <numerusform>%n 天， </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s), </source>
-        <translation>
-            <numerusform>%n 小时， </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n 分钟，</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n 秒</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source> - %1%2%3%4 remaining.</source>
-        <translation> - 剩余 %1%2%3%4。</translation>
-    </message>
-    <message>
-        <source> - unknown time remaining.</source>
-        <translation> - 剩余时间未知。</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::HttpDownloader</name>
-    <message>
-        <source>Cannot download %1. Writing to file &quot;%2&quot; failed: %3</source>
-        <translation>无法下载 %1。 写入文件“%2”失败：%3</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create file &quot;%2&quot;: %3</source>
-        <translation>无法下载 %1。 无法创建文件“%2”：%3</translation>
-    </message>
-    <message>
-        <source>%1 at %2</source>
-        <translation>%1，%2</translation>
-    </message>
-    <message>
-        <source>Authentication request canceled.</source>
-        <translation>身份验证请求已取消。</translation>
-    </message>
-    <message>
-        <source>Secure Connection Failed</source>
-        <translation>安全连接失败</translation>
-    </message>
-    <message>
-        <source>There was an error during connection to: %1.</source>
-        <translation>连接到该内容时出现错误：%1。</translation>
-    </message>
-    <message>
-        <source>This could be a problem with the server&apos;s configuration, or it could be someone trying to impersonate the server.</source>
-        <translation>此问题可能与服务器的配置相关，或者有人正在尝试模拟服务器。</translation>
-    </message>
-    <message>
-        <source>If you have connected to this server successfully in the past or trust this server, the error may be temporary and you can try again.</source>
-        <translation>如果您之前已成功连接到此服务器或信任此服务器，则此错误可能为暂时错误，可重试。</translation>
-    </message>
-    <message>
-        <source>Try again</source>
-        <translation>重试</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create directory for &quot;%2&quot;</source>
-        <translation>无法下载%1。无法为“%2”创建目录</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::LocalFileDownloader</name>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for reading: %2</source>
-        <translation>无法打开文件“%1”进行读取：%2</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>无法打开文件“%1”进行写入：%2</translation>
-    </message>
-    <message>
-        <source>Writing to file &quot;%1&quot; failed: %2</source>
-        <translation>写入文件“%1”失败：%2</translation>
     </message>
 </context>
 <context>
@@ -397,13 +253,6 @@
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>无法还原“%1”的备份文件：%2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::ResourceFileDownloader</name>
-    <message>
-        <source>Cannot read resource file &quot;%1&quot;: %2</source>
-        <translation>无法读取资源文件“%1”：%2</translation>
     </message>
 </context>
 <context>
@@ -473,10 +322,6 @@
         <translation>正在从更新源下载 Updates.xml。</translation>
     </message>
     <message>
-        <source>Cannot download package source %1 from &quot;%2&quot;.</source>
-        <translation>无法从“%2”下载包源 %1。</translation>
-    </message>
-    <message>
         <source>Updates.xml file(s) downloaded from update sources.</source>
         <translation>已从更新源下载 Updates.xml 文件。</translation>
     </message>
@@ -525,81 +370,6 @@
     </message>
 </context>
 <context>
-    <name>Lib7z</name>
-    <message>
-        <source>Internal code: %1</source>
-        <translation>内部代码：%1</translation>
-    </message>
-    <message>
-        <source>Not enough memory</source>
-        <translation>内存不足</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>错误：%1</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve property %1 for item %2.</source>
-        <translation>无法检索项目 %2 的属性 %1。</translation>
-    </message>
-    <message>
-        <source>Property %1 for item %2 not of type VT_FILETIME but %3.</source>
-        <translation>项目 %2 的属性 %1 不是 VT_FILETIME 类型，而是 %3。</translation>
-    </message>
-    <message>
-        <source>Cannot convert UTC file time to system time.</source>
-        <translation>无法将 UTC 文件时间转换为系统时间。</translation>
-    </message>
-    <message>
-        <source>Cannot load codecs.</source>
-        <translation>无法加载编解码器。</translation>
-    </message>
-    <message>
-        <source>Cannot open archive &quot;%1&quot;.</source>
-        <translation>无法打开存档“%1”。</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve number of items in archive.</source>
-        <translation>无法检索存档中的项目数。</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve path of archive item &quot;%1&quot;.</source>
-        <translation>无法检索存档项“%1”的路径。</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1).</source>
-        <translation>捕获到未知异常(%1)。</translation>
-    </message>
-    <message>
-        <source>Cannot create temporary file: %1</source>
-        <translation>无法创建临时文件：%1</translation>
-    </message>
-    <message>
-        <source>Unsupported archive type.</source>
-        <translation>不支持的存档类型。</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;</source>
-        <translation>无法创建存档“%1”</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;: %2</source>
-        <translation>无法创建存档“%1”：%2</translation>
-    </message>
-    <message>
-        <source>Cannot remove old archive &quot;%1&quot;: %2</source>
-        <translation>无法移除旧存档“%1”：%2</translation>
-    </message>
-    <message>
-        <source>Cannot rename temporary archive &quot;%1&quot; to &quot;%2&quot;: %3</source>
-        <translation>无法将临时存档“%1”重命名为“%2”：%3</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1)</source>
-        <translation>捕获到未知异常(%1)</translation>
-    </message>
-</context>
-<context>
     <name>LocalPackageHub</name>
     <message>
         <source>%1 contains invalid content: %2</source>
@@ -633,12 +403,16 @@
         <translation>无法写入 PID 来锁定文件“%1”：%2</translation>
     </message>
     <message>
-        <source>Cannot obtain the lock for file &quot;%1&quot;: %2</source>
-        <translation>无法获取文件“%1”的锁定：%2</translation>
-    </message>
-    <message>
         <source>Cannot release the lock for file &quot;%1&quot;: %2</source>
         <translation>无法释放文件“%1”的锁定：%2</translation>
+    </message>
+    <message>
+        <source>Cannot obtain the lock for &quot;%1&quot;: %2.
+This likely means another instance of the installer is already running.
+Please close any other installer sessions and try again.</source>
+        <translation>无法获取 &quot;%1&quot; 的锁：%2。
+这可能意味着另一个安装程序实例已经在运行。
+请关闭其他安装程序会话后重试。</translation>
     </message>
 </context>
 <context>
@@ -1089,32 +863,6 @@
 <context>
     <name>QInstaller::DownloadArchivesJob</name>
     <message>
-        <source>Canceled</source>
-        <translation>已取消</translation>
-    </message>
-    <message>
-        <source>Downloading hash signature failed.</source>
-        <translation>哈希签名下载失败。</translation>
-    </message>
-    <message>
-        <source>Download Error</source>
-        <translation>下载错误</translation>
-    </message>
-    <message>
-        <source>Cannot download archive %1: %2</source>
-        <translation>无法下载存档 %1：%2</translation>
-    </message>
-    <message>
-        <source>Cannot fetch archives: %1
-Error while loading %2</source>
-        <translation>无法获取存档：%1
-加载 %2 时出现错误</translation>
-    </message>
-    <message>
-        <source>Downloading archive &quot;%1&quot; for component %2.</source>
-        <translation>正在下载组件 %2 的存档“%1”。</translation>
-    </message>
-    <message>
         <source>Scheme %1 not supported (URL: %2).</source>
         <translation>不支持方案 %1 (URL：%2)。</translation>
     </message>
@@ -1163,33 +911,24 @@ Error while loading %2</source>
         <translation> - 剩余时间未知。</translation>
     </message>
     <message>
-        <source>Archive: </source>
-        <translation>存档：</translation>
+        <source>Download canceled.</source>
+        <translation>下载已取消。</translation>
     </message>
     <message>
-        <source>Total: </source>
-        <translation>总计：</translation>
+        <source>Redownloading packages due to previous verification errors.</source>
+        <translation>由于先前的验证错误，正在重新下载软件包。</translation>
     </message>
     <message>
-        <source>Retry count (%1) exceeded</source>
-        <translation>超过重试次数(%1)</translation>
+        <source>Downloading: </source>
+        <translation>正在下载：</translation>
     </message>
     <message>
-        <source>Hash verification while downloading failed. This is a temporary error, please retry.
-
-Expected: %1 
-Downloaded: %2</source>
-        <translation>下载时的哈希验证失败。 此错误为临时错误，请重试。
-预期的：%1
-已下载：%2</translation>
+        <source>Archive &quot;%1&quot; downloaded for component %2.</source>
+        <translation>组件 %2 的归档 &quot;%1&quot; 已下载。</translation>
     </message>
     <message>
-        <source>Cannot verify Hash
-Expected: %1 
-Downloaded: %2</source>
-        <translation>无法验证哈希
-预期的：%1
-已下载：%2</translation>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.</source>
+        <translation>下载 %1 时发生哈希验证错误。这可能是临时错误，正在重试下载。</translation>
     </message>
 </context>
 <context>
@@ -1229,14 +968,6 @@ Downloaded: %2</source>
         <extracomment>%1 is a sentence describing the error</extracomment>
         <translatorcomment>%1 is a sentence describing the error</translatorcomment>
         <translation>下载“%1”时出现未知的网络错误。</translation>
-    </message>
-    <message>
-        <source>Network transfers canceled.</source>
-        <translation>网络转移已取消。</translation>
-    </message>
-    <message>
-        <source>Pause and resume not supported by network transfers.</source>
-        <translation>网络传输不支持中止和恢复。</translation>
     </message>
     <message>
         <source>Invalid source URL &quot;%1&quot;: %2</source>
@@ -1341,10 +1072,6 @@ Downloaded: %2</source>
         <translation>立即运行 %1。</translation>
     </message>
     <message>
-        <source>Click %1 to close the %2 Setup.</source>
-        <translation>点击%1来关闭%2设置。</translation>
-    </message>
-    <message>
         <source>You find your installation in this location on your computer:</source>
         <translation>您可以在您的电脑的这个位置找到您的安装：</translation>
     </message>
@@ -1371,6 +1098,10 @@ Downloaded: %2</source>
     <message>
         <source>%1 installation was unsuccessful.</source>
         <translation>%1安装程序没有成功。</translation>
+    </message>
+    <message>
+        <source>Select %1 to close the %2 Setup.</source>
+        <translation>选择 %1 以关闭 %2 安装程序。</translation>
     </message>
 </context>
 <context>
@@ -1686,10 +1417,6 @@ Do you want to continue?</source>
         <translation>路径或安装目录包含非 ASCII 字符。 目前尚不支持此内容! 请选择不同的路径或安装目录。</translation>
     </message>
     <message>
-        <source>As the install directory is completely deleted, installing in %1 is forbidden.</source>
-        <translation>由于安装路径已被完全删除，因此无法在 %1 中安装。</translation>
-    </message>
-    <message>
         <source>The path you have entered is too long, please make sure to specify a valid path.</source>
         <translation>输入的路径过长，请确保指定的路径有效。</translation>
     </message>
@@ -1824,6 +1551,10 @@ Do you want to continue?</source>
     <message>
         <source>Created installer will use %1 of disk space.</source>
         <translation>创建的安装程序将使用%1的磁盘空间。</translation>
+    </message>
+    <message>
+        <source>As the install directory is completely deleted on uninstall, installing in %1 is forbidden.</source>
+        <translation>由于卸载时安装目录会被完全删除，因此禁止在 %1 安装。</translation>
     </message>
 </context>
 <context>
@@ -3104,6 +2835,10 @@ or accept the elevation of access rights if being asked.</source>
         <source>Space exceeds the supported executable size %1 in Windows</source>
         <translation>所需空间超过了Windows下所支持的可执行文件大小%1</translation>
     </message>
+    <message>
+        <source>Space required on your hard drive is more than %1</source>
+        <translation>硬盘上所需的空间超过 %1。</translation>
+    </message>
 </context>
 <context>
     <name>ComponentSummaryForm</name>
@@ -3167,6 +2902,30 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Could not terminate process &quot;%1&quot;</source>
         <translation>无法终止进程“%1”</translation>
+    </message>
+</context>
+<context>
+    <name>KDUpdater::FileDownloader</name>
+    <message>
+        <source>Missing proxy credentials.</source>
+        <translation>缺少代理凭据。</translation>
+    </message>
+    <message>
+        <source>Unknown exception during download.</source>
+        <translation>下载过程中出现未知异常。</translation>
+    </message>
+    <message>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.
+
+Expected: %2 
+Downloaded: %3</source>
+        <translation>下载 %1 时发生哈希验证错误。这可能是临时错误，正在重试下载。
+预期：%2
+已下载：%3</translation>
+    </message>
+    <message>
+        <source>Cannot verify Hash</source>
+        <translation>无法验证哈希</translation>
     </message>
 </context>
 </TS>
