@@ -859,32 +859,6 @@
 <context>
     <name>QInstaller::DownloadArchivesJob</name>
     <message>
-        <source>Canceled</source>
-        <translation>취소됨</translation>
-    </message>
-    <message>
-        <source>Downloading hash signature failed.</source>
-        <translation>해시 서명을 다운로드하지 못했습니다.</translation>
-    </message>
-    <message>
-        <source>Download Error</source>
-        <translation>다운로드 오류</translation>
-    </message>
-    <message>
-        <source>Cannot download archive %1: %2</source>
-        <translation>%1 아카이브를 다운로드할 수 없음: %2</translation>
-    </message>
-    <message>
-        <source>Cannot fetch archives: %1
-Error while loading %2</source>
-        <translation>아카이브를 가져올 수 없음: %1
-%2 로드 중 오류 발생</translation>
-    </message>
-    <message>
-        <source>Downloading archive &quot;%1&quot; for component %2.</source>
-        <translation>구성요소 %2용 아카이브 &quot;%1&quot; 다운로드 중입니다.</translation>
-    </message>
-    <message>
         <source>Scheme %1 not supported (URL: %2).</source>
         <translation>%1 스킴을 지원하지 않습니다(URL: %2).</translation>
     </message>
@@ -933,34 +907,24 @@ Error while loading %2</source>
         <translation> - 남은 시간: 알 수 없음</translation>
     </message>
     <message>
-        <source>Archive: </source>
-        <translation>아카이브:</translation>
+        <source>Download canceled.</source>
+        <translation>다운로드가 취소되었습니다.</translation>
     </message>
     <message>
-        <source>Total: </source>
-        <translation>총계:</translation>
+        <source>Redownloading packages due to previous verification errors.</source>
+        <translation>이전 검증 오류로 인해 패키지를 다시 다운로드하고 있습니다.</translation>
     </message>
     <message>
-        <source>Retry count (%1) exceeded</source>
-        <translation>재시도 회수(%1) 초과</translation>
+        <source>Downloading: </source>
+        <translation>다운로드 중:</translation>
     </message>
     <message>
-        <source>Hash verification while downloading failed. This is a temporary error, please retry.
-
-Expected: %1 
-Downloaded: %2</source>
-        <translation>다운로드 중에 해시를 검증하지 못했습니다. 일시적인 오류이니 다시 시도하십시오.
-
-예상 해시값: %1
-다운로드 해시값: %2</translation>
+        <source>Archive &quot;%1&quot; downloaded for component %2.</source>
+        <translation>컴포넌트 %2용 아카이브 &quot;%1&quot;이(가) 다운로드되었습니다.</translation>
     </message>
     <message>
-        <source>Cannot verify Hash
-Expected: %1 
-Downloaded: %2</source>
-        <translation>해시를 검증할 수 없음
-예상 해시값: %1
-다운로드 해시값: %2</translation>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.</source>
+        <translation>%1 다운로드 중 해시 검증 오류가 발생했습니다. 일시적인 오류일 수 있으며, 다운로드를 다시 시도합니다.</translation>
     </message>
 </context>
 <context>
@@ -996,14 +960,6 @@ Downloaded: %2</source>
         <source>Unknown network error while downloading &quot;%1&quot;.</source>
         <extracomment>%1 is a sentence describing the error</extracomment>
         <translation>&quot;%1&quot; 다운로드 중에 네트워크 오류 발생:</translation>
-    </message>
-    <message>
-        <source>Network transfers canceled.</source>
-        <translation>네트워크 전송이 취소되었습니다.</translation>
-    </message>
-    <message>
-        <source>Pause and resume not supported by network transfers.</source>
-        <translation>네트워크 전송은 일시 중지하거나 다시 시작할 수 없습니다.</translation>
     </message>
     <message>
         <source>Invalid source URL &quot;%1&quot;: %2</source>
@@ -1208,81 +1164,6 @@ Downloaded: %2</source>
     </message>
 </context>
 <context>
-    <name>Lib7z</name>
-    <message>
-        <source>Internal code: %1</source>
-        <translation>내부 코드: %1</translation>
-    </message>
-    <message>
-        <source>Not enough memory</source>
-        <translation>메모리 부족</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>오류: %1</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve property %1 for item %2.</source>
-        <translation>항목 %2에 대한 %1 속성을 검색할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Property %1 for item %2 not of type VT_FILETIME but %3.</source>
-        <translation>항목 %2에 대한 %1 속성은 VT_FILETIME 유형이 아니라 %3입니다.</translation>
-    </message>
-    <message>
-        <source>Cannot convert UTC file time to system time.</source>
-        <translation>UTC 파일 시간을 시스템 시간으로 변환할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot load codecs.</source>
-        <translation>코덱을 로드할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot open archive &quot;%1&quot;.</source>
-        <translation>&quot;%1&quot; 아카이브를 열 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve number of items in archive.</source>
-        <translation>아카이브의 항목 개수를 검색할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve path of archive item &quot;%1&quot;.</source>
-        <translation>아카이브 항목 &quot;%1&quot;의 경로를 검색할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1).</source>
-        <translation>알 수 없는 예외가 발생했습니다(%1).</translation>
-    </message>
-    <message>
-        <source>Cannot create temporary file: %1</source>
-        <translation>임시 파일을 생성할 수 없음: %1</translation>
-    </message>
-    <message>
-        <source>Unsupported archive type.</source>
-        <translation>아카이브 유형이 지원되지 않습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;</source>
-        <translation>&quot;%1&quot; 아카이브를 생성할 수 없음</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;: %2</source>
-        <translation>&quot;%1&quot; 아카이브를 생성할 수 없음: %2</translation>
-    </message>
-    <message>
-        <source>Cannot remove old archive &quot;%1&quot;: %2</source>
-        <translation>이전 아카이브 &quot;%1&quot; 제거 불가: %2</translation>
-    </message>
-    <message>
-        <source>Cannot rename temporary archive &quot;%1&quot; to &quot;%2&quot;: %3</source>
-        <translation>임시 아카이브 &quot;%1&quot;의 이름을 &quot;%2&quot;(으)로 변경할 수 없음: %3</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1)</source>
-        <translation>알 수 없는 예외 발생(%1)</translation>
-    </message>
-</context>
-<context>
     <name>DirectoryGuard</name>
     <message>
         <source>Path &quot;%1&quot; exists but is not a directory.</source>
@@ -1291,33 +1172,6 @@ Downloaded: %2</source>
     <message>
         <source>Cannot create directory &quot;%1&quot;.</source>
         <translation>&quot;1%&quot; 디렉터리를 생성할 수 없습니다.</translation>
-    </message>
-</context>
-<context>
-    <name>ExtractCallbackImpl</name>
-    <message>
-        <source>Cannot retrieve path of archive item %1.</source>
-        <translation>아카이브 항목 &quot;%1&quot;의 경로를 검색할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot remove already existing symlink %1.</source>
-        <translation>이미 존재하는 symlink %1을(를) 제거할 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>&quot;%1&quot; 파일을 쓰기 위해 열 수 없음: %2</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at &quot;%1&quot;. Another one is already existing.</source>
-        <translation>&quot;%1&quot;에서 symlink를 생성할 수 없습니다. 다른 symlink가 이미 있습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot read symlink target from file &quot;%1&quot;.</source>
-        <translation>파일 &quot;%1&quot;에서 symlink 대상을 읽을 수 없습니다.</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at %1: %2</source>
-        <translation>&quot;%1&quot;에서 symlink를 생성할 수 없음: %2</translation>
     </message>
 </context>
 <context>
@@ -1567,10 +1421,6 @@ Do you want to continue?</source>
         <translation>설치 경로 또는 디렉터리에 ASCII 문자가 아닌 문자가 포함되어 있습니다. 현재 이는 지원되지 않습니다! 다른 설치 경로나 디렉토리를 선택하십시오.</translation>
     </message>
     <message>
-        <source>As the install directory is completely deleted, installing in %1 is forbidden.</source>
-        <translation>설치 경로가 완전히 삭제되었으므로 %1에 설치할 수 없습니다.</translation>
-    </message>
-    <message>
         <source>The path you have entered is too long, please make sure to specify a valid path.</source>
         <translation>입력하신 경로가 너무 깁니다. 유효한 경로를 지정하십시오.</translation>
     </message>
@@ -1697,6 +1547,10 @@ Do you want to continue?</source>
     <message>
         <source>Created installer will use %1 of disk space.</source>
         <translation>생성된 설치 프로그램이 %1 디스크 공간을 사용할 것입니다.</translation>
+    </message>
+    <message>
+        <source>As the install directory is completely deleted on uninstall, installing in %1 is forbidden.</source>
+        <translation>설치 디렉터리가 제거 시 완전히 삭제되므로 %1에 설치하는 것은 금지되어 있습니다.</translation>
     </message>
 </context>
 <context>
@@ -2212,10 +2066,6 @@ Please copy the installer to a local drive</source>
         <translation>지금 %1을(를) 실행하십시오.</translation>
     </message>
     <message>
-        <source>Click %1 to close the %2 Setup.</source>
-        <translation>%2 설정을 닫기 위해 %1을(를) 클릭하십시오.</translation>
-    </message>
-    <message>
         <source>You find your installation in this location on your computer:</source>
         <translation>컴퓨터의 이 위치에서 설치파일을 찾을 수 있습니다.</translation>
     </message>
@@ -2242,6 +2092,10 @@ Please copy the installer to a local drive</source>
     <message>
         <source>%1 installation was unsuccessful.</source>
         <translation>%1 설치가 실패했습니다.</translation>
+    </message>
+    <message>
+        <source>Select %1 to close the %2 Setup.</source>
+        <translation>%2 설치 프로그램을 닫으려면 %1을(를) 선택하십시오.</translation>
     </message>
 </context>
 <context>
@@ -2441,130 +2295,6 @@ or accept the elevation of access rights if being asked.</source>
     </message>
 </context>
 <context>
-    <name>KDUpdater::FileDownloader</name>
-    <message>
-        <source>Download finished.</source>
-        <translation>다운로드가 완료되었습니다.</translation>
-    </message>
-    <message>
-        <source>Cryptographic hashes do not match.</source>
-        <translation>암호화된 해시가 일치하지 않습니다.</translation>
-    </message>
-    <message>
-        <source>Download canceled.</source>
-        <translation>다운로드가 취소되었습니다.</translation>
-    </message>
-    <message>
-        <source>%1 of %2</source>
-        <translation>%1/%2</translation>
-    </message>
-    <message>
-        <source>%1 downloaded.</source>
-        <translation>%1 다운로드가 완료되었습니다.</translation>
-    </message>
-    <message>
-        <source>(%1/sec)</source>
-        <translation>(%1/초)</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s), </source>
-        <translation>
-            <numerusform>%n일, </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s), </source>
-        <translation>
-            <numerusform>%n시간, </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n분</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n초</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source> - %1%2%3%4 remaining.</source>
-        <translation> - 남은 시간: %1%2%3%4</translation>
-    </message>
-    <message>
-        <source> - unknown time remaining.</source>
-        <translation> - 남은 시간: 알 수 없음</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::LocalFileDownloader</name>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for reading: %2</source>
-        <translation>&quot;%1&quot; 파일을 읽기 위해 열 수 없음: %2</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>&quot;%1&quot; 파일을 쓰기 위해 열 수 없음: %2</translation>
-    </message>
-    <message>
-        <source>Writing to file &quot;%1&quot; failed: %2</source>
-        <translation>&quot;%1&quot; 파일에 쓰기 실패: %2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::ResourceFileDownloader</name>
-    <message>
-        <source>Cannot read resource file &quot;%1&quot;: %2</source>
-        <translation>&quot;%1&quot; 리소스 파일을 읽을 수 없음: %2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::HttpDownloader</name>
-    <message>
-        <source>Cannot download %1. Writing to file &quot;%2&quot; failed: %3</source>
-        <translation>%1을(를) 다운로드할 수 없습니다. &quot;%2&quot; 파일에 쓰기 실패: %3</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create file &quot;%2&quot;: %3</source>
-        <translation>%1을(를) 다운로드할 수 없습니다. &quot;%2&quot; 파일을 생성할 수 없음: %3</translation>
-    </message>
-    <message>
-        <source>%1 at %2</source>
-        <translation>%2의 %1</translation>
-    </message>
-    <message>
-        <source>Authentication request canceled.</source>
-        <translation>인증 요청이 취소되었습니다.</translation>
-    </message>
-    <message>
-        <source>Secure Connection Failed</source>
-        <translation>보안 연결 실패</translation>
-    </message>
-    <message>
-        <source>There was an error during connection to: %1.</source>
-        <translation>다음에 연결 중 오류 발생: %1.</translation>
-    </message>
-    <message>
-        <source>This could be a problem with the server&apos;s configuration, or it could be someone trying to impersonate the server.</source>
-        <translation>서버 구성에 문제가 있거나 타인이 서버를 가장하는 것으로 보입니다.</translation>
-    </message>
-    <message>
-        <source>If you have connected to this server successfully in the past or trust this server, the error may be temporary and you can try again.</source>
-        <translation>이전에 이 서버에 성공적으로 연결한 적이 있거나 이 서버를 신뢰하는 경우에는 일시적인 오류일 수 있으며, 다시 시도할 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Try again</source>
-        <translation>다시 시도하기</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create directory for &quot;%2&quot;</source>
-        <translation>%1을(를) 다운로드 할 수 없음. &quot;%2&quot;을(를) 위한 디렉터리를 생성할 수 없음.</translation>
-    </message>
-</context>
-<context>
     <name>Job</name>
     <message>
         <source>Canceled</source>
@@ -2605,12 +2335,16 @@ or accept the elevation of access rights if being asked.</source>
         <translation>&quot;%1&quot; 파일을 잠그기 위해 PID를 쓸 수 없음: %2</translation>
     </message>
     <message>
-        <source>Cannot obtain the lock for file &quot;%1&quot;: %2</source>
-        <translation>&quot;%1&quot; 파일을 위한 잠금을 수행할 수 없음: %2</translation>
-    </message>
-    <message>
         <source>Cannot release the lock for file &quot;%1&quot;: %2</source>
         <translation>&quot;%1&quot; 파일을 위한 잠금을 해제할 수 없음: %2</translation>
+    </message>
+    <message>
+        <source>Cannot obtain the lock for &quot;%1&quot;: %2.
+This likely means another instance of the installer is already running.
+Please close any other installer sessions and try again.</source>
+        <translation>&quot;%1&quot;에 대한 잠금을 획득할 수 없습니다: %2.
+다른 설치 프로그램이 이미 실행 중일 수 있습니다.
+다른 설치 프로그램 세션을 모두 닫고 다시 시도하십시오.</translation>
     </message>
 </context>
 <context>
@@ -2663,10 +2397,6 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Downloading Updates.xml from update sources.</source>
         <translation>업데이트 소스에서 Updates.xml을 다운로드합니다.</translation>
-    </message>
-    <message>
-        <source>Cannot download package source %1 from &quot;%2&quot;.</source>
-        <translation>&quot;%2&quot;에서 패키지 소스(%1)를 다운로드할 수 없습니다.</translation>
     </message>
     <message>
         <source>Updates.xml file(s) downloaded from update sources.</source>
@@ -2783,16 +2513,16 @@ or accept the elevation of access rights if being asked.</source>
         <translation>&quot;%1&quot; 파일을 쓰기 위해 열 수 없음: %2</translation>
     </message>
     <message>
-        <source>Cannot find backup file for &quot;%1&quot;.</source>
-        <translation>&quot;%1&quot;의 백업 파일을 찾을 수 없음:</translation>
-    </message>
-    <message>
         <source>Cannot restore backup file for &quot;%1&quot;.</source>
         <translation>&quot;%1&quot;의 백업 파일을 복원할 수 없음:</translation>
     </message>
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>&quot;%1&quot;의 백업 파일을 복원할 수 없음: %2</translation>
+    </message>
+    <message>
+        <source>Warning: Cannot find backup file for &quot;%1&quot;. Undo will be skipped.</source>
+        <translation>경고: &quot;%1&quot; 백업 파일을 찾을 수 없습니다. 실행 취소를 생략합니다.</translation>
     </message>
 </context>
 <context>
@@ -3100,6 +2830,10 @@ or accept the elevation of access rights if being asked.</source>
         <source>Space exceeds the supported executable size %1 in Windows</source>
         <translation>공간이 Windows에서 지원되는 실행 파일 크기 %1을(를) 초과합니다</translation>
     </message>
+    <message>
+        <source>Space required on your hard drive is more than %1</source>
+        <translation>하드 드라이브에 필요한 공간이 %1보다 많습니다.</translation>
+    </message>
 </context>
 <context>
     <name>ComponentSummaryForm</name>
@@ -3163,6 +2897,30 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Could not terminate process &quot;%1&quot;</source>
         <translation>&amp;quot;%1&amp;quot; 프로세스를 종료할 수 없습니다</translation>
+    </message>
+</context>
+<context>
+    <name>KDUpdater::FileDownloader</name>
+    <message>
+        <source>Missing proxy credentials.</source>
+        <translation>프록시 자격 증명이 누락되었습니다.</translation>
+    </message>
+    <message>
+        <source>Unknown exception during download.</source>
+        <translation>다운로드 중에 알 수 없는 예외가 발생했습니다.</translation>
+    </message>
+    <message>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.
+
+Expected: %2 
+Downloaded: %3</source>
+        <translation>%1 다운로드 중 해시 검증 오류가 발생했습니다. 일시적인 오류일 수 있으며, 다운로드를 다시 시도합니다.
+예상: %2
+다운로드됨: %3</translation>
+    </message>
+    <message>
+        <source>Cannot verify Hash</source>
+        <translation>해시를 확인할 수 없습니다</translation>
     </message>
 </context>
 </TS>
