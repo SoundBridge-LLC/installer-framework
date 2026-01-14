@@ -77,33 +77,6 @@
     </message>
 </context>
 <context>
-    <name>ExtractCallbackImpl</name>
-    <message>
-        <source>Cannot retrieve path of archive item %1.</source>
-        <translation>Не удалось определить путь элемента архива %1.</translation>
-    </message>
-    <message>
-        <source>Cannot remove already existing symlink %1.</source>
-        <translation>Не удалось удалить существующую символьную ссылку %1.</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>Невозможно открыть файл «%1» на запись: %2</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at &quot;%1&quot;. Another one is already existing.</source>
-        <translation>Не удалось создать символьную ссылку «%1». Ссылка уже существует.</translation>
-    </message>
-    <message>
-        <source>Cannot read symlink target from file &quot;%1&quot;.</source>
-        <translation>Не удалось прочитать цель символьной ссылки из файла «%1».</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at %1: %2</source>
-        <translation>Не удалось создать символьную ссылку %1: %2</translation>
-    </message>
-</context>
-<context>
     <name>InstallerBase</name>
     <message>
         <source>Unable to start installer</source>
@@ -167,16 +140,16 @@
         <translation>Не удалось открыть файл «%1» на запись: %2</translation>
     </message>
     <message>
-        <source>Cannot find backup file for &quot;%1&quot;.</source>
-        <translation>Не удалось найти резервную копию «%1».</translation>
-    </message>
-    <message>
         <source>Cannot restore backup file for &quot;%1&quot;.</source>
         <translation>Не удалось восстановить резервную копию «%1».</translation>
     </message>
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>Не удалось восстановить резервную копию «%1»: %2</translation>
+    </message>
+    <message>
+        <source>Warning: Cannot find backup file for &quot;%1&quot;. Undo will be skipped.</source>
+        <translation>Предупреждение: Не удается найти файл резервной копии для &quot;%1&quot;. Операция отмены будет пропущена.</translation>
     </message>
 </context>
 <context>
@@ -215,131 +188,6 @@
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>Не удалось восстановить резервную копию «%1»: %2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::FileDownloader</name>
-    <message>
-        <source>Download finished.</source>
-        <translation>Загрузка завершена.</translation>
-    </message>
-    <message>
-        <source>Cryptographic hashes do not match.</source>
-        <translation>Хеш-суммы не совпадают.</translation>
-    </message>
-    <message>
-        <source>Download canceled.</source>
-        <translation>Загрузка отменена.</translation>
-    </message>
-    <message>
-        <source>%1 of %2</source>
-        <translation>%1 из %2</translation>
-    </message>
-    <message>
-        <source>%1 downloaded.</source>
-        <translation>загружено %1.</translation>
-    </message>
-    <message>
-        <source>(%1/sec)</source>
-        <translation>(%1/с)</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s), </source>
-        <translation>
-            <numerusform>%n день, </numerusform>
-            <numerusform>%n дня, </numerusform>
-            <numerusform>%n дней, </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s), </source>
-        <translation>
-            <numerusform>%n час, </numerusform>
-            <numerusform>%n часа, </numerusform>
-            <numerusform>%n часов, </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n минута</numerusform>
-            <numerusform>%n минуты</numerusform>
-            <numerusform>%n минут</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n секунда</numerusform>
-            <numerusform>%n секунды</numerusform>
-            <numerusform>%n секунд</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source> - %1%2%3%4 remaining.</source>
-        <translation> - осталось %1%2%3%4.</translation>
-    </message>
-    <message>
-        <source> - unknown time remaining.</source>
-        <translation> - время окончания загрузки неизвестно.</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::HttpDownloader</name>
-    <message>
-        <source>%1 at %2</source>
-        <translation>%1 в %2</translation>
-    </message>
-    <message>
-        <source>Authentication request canceled.</source>
-        <translation>Запрос на аутентификацию отменён.</translation>
-    </message>
-    <message>
-        <source>Secure Connection Failed</source>
-        <translation>Сбой безопасного соединения</translation>
-    </message>
-    <message>
-        <source>There was an error during connection to: %1.</source>
-        <translation>Возникла ошибка подключения к: %1.</translation>
-    </message>
-    <message>
-        <source>This could be a problem with the server&apos;s configuration, or it could be someone trying to impersonate the server.</source>
-        <translation>Это возможно или из-за проблем с настройкой сервера, или из-за попытки злоумышленника подменить сервер.</translation>
-    </message>
-    <message>
-        <source>If you have connected to this server successfully in the past or trust this server, the error may be temporary and you can try again.</source>
-        <translation>Если вы раньше успешно подключались к этому серверу или доверяете ему, то ошибка может быть временной, и вы можете повторить ещё раз.</translation>
-    </message>
-    <message>
-        <source>Try again</source>
-        <translation>Повторить</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Writing to file &quot;%2&quot; failed: %3</source>
-        <translation>Невозможно загрузить «%1»: Не удалось записать в файл «%2»: %3</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create file &quot;%2&quot;: %3</source>
-        <translation>Невозможно загрузить «%1». Не удалось создать «%2»: %3</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create directory for &quot;%2&quot;</source>
-        <translation>Невозможно загрузить %1. Невозможно создать каталог для &quot;%2&quot;</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::LocalFileDownloader</name>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for reading: %2</source>
-        <translation>Не удалось открыть файл «%1» на чтение: %2</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>Не удалось открыть файл «%1» на запись: %2</translation>
-    </message>
-    <message>
-        <source>Writing to file &quot;%1&quot; failed: %2</source>
-        <translation>Не удалось записать в «%1»: %2</translation>
     </message>
 </context>
 <context>
@@ -405,13 +253,6 @@
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>Не удалось восстановить резервную копию «%1»: %2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::ResourceFileDownloader</name>
-    <message>
-        <source>Cannot read resource file &quot;%1&quot;: %2</source>
-        <translation>Невозможно прочитать файл ресурсов «%1»: %2</translation>
     </message>
 </context>
 <context>
@@ -494,10 +335,6 @@
         <source>No package sources set for this application.</source>
         <translation>Исходники пакета не заданы для этого приложения.</translation>
     </message>
-    <message>
-        <source>Cannot download package source %1 from &quot;%2&quot;.</source>
-        <translation>Не удалось загрузить исходник пакета «%1» из «%2».</translation>
-    </message>
 </context>
 <context>
     <name>KDUpdater::UpdatesInfoData</name>
@@ -535,81 +372,6 @@
     </message>
 </context>
 <context>
-    <name>Lib7z</name>
-    <message>
-        <source>Unknown exception caught (%1)</source>
-        <translation>Возникло неизвестное исключение (%1)</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>Ошибка: %1</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve property %1 for item %2.</source>
-        <translation>Не удалось получить свойство %1 для элемента %2.</translation>
-    </message>
-    <message>
-        <source>Property %1 for item %2 not of type VT_FILETIME but %3.</source>
-        <translation>Свойство %1 элемента %2 относится не к типу VT_FILETIME, а к %3.</translation>
-    </message>
-    <message>
-        <source>Cannot convert UTC file time to system time.</source>
-        <translation>Не удалось преобразовать UTC время файла в системное время.</translation>
-    </message>
-    <message>
-        <source>Cannot load codecs.</source>
-        <translation>Не удалось загрузить кодеки.</translation>
-    </message>
-    <message>
-        <source>Cannot open archive &quot;%1&quot;.</source>
-        <translation>Не удалось открыть архив «%1».</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve number of items in archive.</source>
-        <translation>Не удалось определить количество элементов архива.</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve path of archive item &quot;%1&quot;.</source>
-        <translation>Не удалось определить путь элемента архива «%1».</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1).</source>
-        <translation>Возникло неизвестное исключение (%1).</translation>
-    </message>
-    <message>
-        <source>Cannot create temporary file: %1</source>
-        <translation>Не удалось создать временный файл: %1</translation>
-    </message>
-    <message>
-        <source>Unsupported archive type.</source>
-        <translation>Неподдерживаемый тип архива.</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;</source>
-        <translation>Не удалось создать архив «%1»</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;: %2</source>
-        <translation>Не удалось создать архив «%1»: %2</translation>
-    </message>
-    <message>
-        <source>Cannot remove old archive &quot;%1&quot;: %2</source>
-        <translation>Не удалось удалить старый архив «%1»: %2</translation>
-    </message>
-    <message>
-        <source>Cannot rename temporary archive &quot;%1&quot; to &quot;%2&quot;: %3</source>
-        <translation>Не удалось переименовать старый архив «%1» в «%2»: %3</translation>
-    </message>
-    <message>
-        <source>Internal code: %1</source>
-        <translation>внутренний код ошибки: %1</translation>
-    </message>
-    <message>
-        <source>Not enough memory</source>
-        <translation>недостаточно памяти</translation>
-    </message>
-</context>
-<context>
     <name>LocalPackageHub</name>
     <message>
         <source>%1 contains invalid content: %2</source>
@@ -643,12 +405,16 @@
         <translation>Не удалось записать PID в файл блокировки «%1»: %2</translation>
     </message>
     <message>
-        <source>Cannot obtain the lock for file &quot;%1&quot;: %2</source>
-        <translation>Не удалось заблокировать файл «%1»: %2</translation>
-    </message>
-    <message>
         <source>Cannot release the lock for file &quot;%1&quot;: %2</source>
         <translation>Не удалось разблокировать файл «%1»: %2</translation>
+    </message>
+    <message>
+        <source>Cannot obtain the lock for &quot;%1&quot;: %2.
+This likely means another instance of the installer is already running.
+Please close any other installer sessions and try again.</source>
+        <translation>Невозможно получить блокировку для &quot;%1&quot;: %2.
+Это, вероятно, означает, что другая копия установщика уже запущена.
+Пожалуйста, закройте все другие сеансы установщика и попробуйте снова.</translation>
     </message>
 </context>
 <context>
@@ -1154,32 +920,6 @@
 <context>
     <name>QInstaller::DownloadArchivesJob</name>
     <message>
-        <source>Canceled</source>
-        <translation>Отменено</translation>
-    </message>
-    <message>
-        <source>Downloading hash signature failed.</source>
-        <translation>Не удалось загрузить хеш-сигнатуру.</translation>
-    </message>
-    <message>
-        <source>Download Error</source>
-        <translation>Ошибка загрузки</translation>
-    </message>
-    <message>
-        <source>Cannot fetch archives: %1
-Error while loading %2</source>
-        <translation>Невозможно получить архивы :%1
-Ошибка в процессе загрузки %2</translation>
-    </message>
-    <message>
-        <source>Cannot download archive %1: %2</source>
-        <translation>Не удалось загрузить архив «%1»: %2</translation>
-    </message>
-    <message>
-        <source>Downloading archive &quot;%1&quot; for component %2.</source>
-        <translation>Загрузка архива «%1» для компонента «%2».</translation>
-    </message>
-    <message>
         <source>Scheme %1 not supported (URL: %2).</source>
         <translation>Схема %1 не поддерживается (URL: %2).</translation>
     </message>
@@ -1236,42 +976,28 @@ Error while loading %2</source>
         <translation> - время окончания загрузки неизвестно.</translation>
     </message>
     <message>
-        <source>Archive: </source>
-        <translation>Архив: </translation>
+        <source>Download canceled.</source>
+        <translation>Загрузка отменена.</translation>
     </message>
     <message>
-        <source>Total: </source>
-        <translation>Всего: </translation>
+        <source>Redownloading packages due to previous verification errors.</source>
+        <translation>Повторная загрузка пакетов из-за предыдущих ошибок проверки.</translation>
     </message>
     <message>
-        <source>Retry count (%1) exceeded</source>
-        <translation>Превышено количество (%1) повторов</translation>
+        <source>Downloading: </source>
+        <translation>Загрузка:</translation>
     </message>
     <message>
-        <source>Hash verification while downloading failed. This is a temporary error, please retry.
-
-Expected: %1 
-Downloaded: %2</source>
-        <translation>Не удалось проверить целостность хеша в процессе загрузки. Пожалуйста, повторите операцию.
-
-ожидалось: %1
-загружено: %2</translation>
+        <source>Archive &quot;%1&quot; downloaded for component %2.</source>
+        <translation>Архив &quot;%1&quot; загружен для компонента %2.</translation>
     </message>
     <message>
-        <source>Cannot verify Hash
-Expected: %1 
-Downloaded: %2</source>
-        <translation>Невозможно проверить хеш
-ожидалось: %1
-загружено: %2</translation>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.</source>
+        <translation>Ошибка проверки хэша при загрузке %1. Это может быть временная ошибка, повторная попытка загрузки.</translation>
     </message>
 </context>
 <context>
     <name>QInstaller::Downloader</name>
-    <message>
-        <source>Pause and resume not supported by network transfers.</source>
-        <translation>Приостановка и продолжение не поддерживаются сетевыми протоколами.</translation>
-    </message>
     <message>
         <source>Target file &quot;%1&quot; already exists but is not a file.</source>
         <translation>«%1» уже существует, но не является файлом.</translation>
@@ -1303,10 +1029,6 @@ Downloaded: %2</source>
         <source>Unknown network error while downloading &quot;%1&quot;.</source>
         <extracomment>%1 is a sentence describing the error</extracomment>
         <translation>Возникла неизвестная ошибка сети во время загрузки «%1».</translation>
-    </message>
-    <message>
-        <source>Network transfers canceled.</source>
-        <translation>Сетевые передачи отменены.</translation>
     </message>
     <message>
         <source>Invalid source URL &quot;%1&quot;: %2</source>
@@ -1441,10 +1163,6 @@ Downloaded: %2</source>
         <translation>Запустить %1 сейчас.</translation>
     </message>
     <message>
-        <source>Click %1 to close the %2 Setup.</source>
-        <translation>Нажмите %1 для завершения %2 настройки.</translation>
-    </message>
-    <message>
         <source>You find your installation in this location on your computer:</source>
         <translation>Вы найдете вашу установку в этом месте на вашем компьютере: </translation>
     </message>
@@ -1471,6 +1189,10 @@ Downloaded: %2</source>
     <message>
         <source>%1 installation was unsuccessful.</source>
         <translation>%1 установка не удалась.</translation>
+    </message>
+    <message>
+        <source>Select %1 to close the %2 Setup.</source>
+        <translation>Выберите %1, чтобы закрыть установку %2.</translation>
     </message>
 </context>
 <context>
@@ -1776,10 +1498,6 @@ Do you want to continue?</source>
         <translation>В строке пути или в имени каталога установки содержится символ, не относящийся к ASCII. В настоящее время такие символы не поддерживаются. Выберите другой путь или каталог установки.</translation>
     </message>
     <message>
-        <source>As the install directory is completely deleted, installing in %1 is forbidden.</source>
-        <translation>Установка в %1 запрещена, так как каталог установки полностью удалён.</translation>
-    </message>
-    <message>
         <source>The path you have entered is too long, please make sure to specify a valid path.</source>
         <translation>Введённый путь слишком длинный, введите корректный путь.</translation>
     </message>
@@ -1926,6 +1644,10 @@ Do you want to continue?</source>
     <message>
         <source>Created installer will use %1 of disk space.</source>
         <translation>Созданный установщик займет %1 дискового пространства.</translation>
+    </message>
+    <message>
+        <source>As the install directory is completely deleted on uninstall, installing in %1 is forbidden.</source>
+        <translation>Поскольку каталог установки полностью удаляется при удалении, установка в %1 запрещена.</translation>
     </message>
 </context>
 <context>
@@ -3131,6 +2853,10 @@ or accept the elevation of access rights if being asked.</source>
         <source>Space exceeds the supported executable size %1 in Windows</source>
         <translation>Превышен допустимый размер исполняемого файла %1 для Windows</translation>
     </message>
+    <message>
+        <source>Space required on your hard drive is more than %1</source>
+        <translation>Требуемое место на жестком диске превышает %1.</translation>
+    </message>
 </context>
 <context>
     <name>ComponentSummaryForm</name>
@@ -3194,6 +2920,30 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Could not terminate process &quot;%1&quot;</source>
         <translation>Не удалось завершить процесс &quot;%1&quot;</translation>
+    </message>
+</context>
+<context>
+    <name>KDUpdater::FileDownloader</name>
+    <message>
+        <source>Missing proxy credentials.</source>
+        <translation>Прокси-серверу требуется аутентификация.</translation>
+    </message>
+    <message>
+        <source>Unknown exception during download.</source>
+        <translation>Возникло неизвестное исключение во время загрузки.</translation>
+    </message>
+    <message>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.
+
+Expected: %2 
+Downloaded: %3</source>
+        <translation>Ошибка проверки хэша при загрузке %1. Это может быть временная ошибка, повторная попытка загрузки.
+Ожидалось: %2
+Загружено: %3</translation>
+    </message>
+    <message>
+        <source>Cannot verify Hash</source>
+        <translation>Невозможно проверить хэш</translation>
     </message>
 </context>
 </TS>
