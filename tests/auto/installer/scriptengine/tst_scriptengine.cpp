@@ -1,30 +1,7 @@
-/**************************************************************************
-**
-** Copyright (C) 2023 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the Qt Installer Framework.
-**
-** $QT_BEGIN_LICENSE:GPL-EXCEPT$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** GNU General Public License Usage
-** Alternatively, this file may be used under the terms of the GNU
-** General Public License version 3 as published by the Free Software
-** Foundation with exceptions as appearing in the file LICENSE.GPL3-EXCEPT
-** included in the packaging of this file. Please review the following
-** information to ensure the GNU General Public License requirements will
-** be met: https://www.gnu.org/licenses/gpl-3.0.html.
-**
-** $QT_END_LICENSE$
-**
-**************************************************************************/
+/* Copyright (C) 2026 The Qt Company Ltd.
+ *
+ * SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only
+*/
 
 #include <component.h>
 #include <errors.h>
@@ -276,9 +253,9 @@ private slots:
         setExpectedScriptOutput("function receive()");
 
 #if QT_VERSION >= QT_VERSION_CHECK(5,12,0)
-        QTest::ignoreMessage(QtWarningMsg, "<Unknown File>:38: ReferenceError: foo is not defined");
+        QTest::ignoreMessage(QtWarningMsg, "<Unknown File>:15: ReferenceError: foo is not defined");
 #else
-        QTest::ignoreMessage(QtWarningMsg, ":38: ReferenceError: foo is not defined");
+        QTest::ignoreMessage(QtWarningMsg, ":15: ReferenceError: foo is not defined");
 #endif
         emiter.produceSignal();
 
@@ -450,7 +427,7 @@ private slots:
         } catch (const Error &error) {
             const QString debugMessage(
                 QString("Exception while loading the component script \"%1\": "
-                "ReferenceError: broken is not defined on line number: 33").arg(QDir::toNativeSeparators(":///data/component2.qs")));
+                "ReferenceError: broken is not defined on line number: 10").arg(QDir::toNativeSeparators(":///data/component2.qs")));
             QVERIFY2(debugMessage.contains(error.message()), "(ReferenceError: broken is not defined)");
         }
     }

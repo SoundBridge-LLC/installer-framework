@@ -1,3 +1,6 @@
+# Copyright (C) 2026 The Qt Company Ltd.
+# SPDX-License-Identifier: BSD-3-Clause
+
 !isEmpty(IFW_PRI_INCLUDED) {
     error("installerfw.pri already included")
 }
