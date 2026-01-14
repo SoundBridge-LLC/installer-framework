@@ -77,33 +77,6 @@
     </message>
 </context>
 <context>
-    <name>ExtractCallbackImpl</name>
-    <message>
-        <source>Cannot retrieve path of archive item %1.</source>
-        <translation>Konnte Pfad des Archivs %1 nicht feststellen.</translation>
-    </message>
-    <message>
-        <source>Cannot remove already existing symlink %1.</source>
-        <translation>Konnte existierende Verknüpfung (Symlink) %1 nicht entfernen.</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>Konnte Datei &quot;%1&quot; nicht öffnen: %2</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at &quot;%1&quot;. Another one is already existing.</source>
-        <translation>Konnte Verknüpfung (Symlink) &apos;%1&apos; nicht erstellen. Es existiert bereits eine an dieser Stelle.</translation>
-    </message>
-    <message>
-        <source>Cannot read symlink target from file &quot;%1&quot;.</source>
-        <translation>Konnte Ziel der Verknüpfung (Symlink) &apos;%1&apos; nicht lesen.</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at %1: %2</source>
-        <translation>Konnte Verknüpfung (Symlink) %1 nicht anlegen: %2</translation>
-    </message>
-</context>
-<context>
     <name>InstallerBase</name>
     <message>
         <source>Unable to start installer</source>
@@ -146,7 +119,7 @@
     </message>
     <message>
         <source>Recursion detected, component alias &quot;%1&quot; already added.</source>
-        <translation>Es wurde eine Rekursion festegestellt; der Alias &quot;%1&quot; wurde bereits hinzugefügt.</translation>
+        <translation>Es wurde eine Rekursion festgestellt; der Alias &quot;%1&quot; wurde bereits hinzugefügt.</translation>
     </message>
 </context>
 <context>
@@ -167,16 +140,16 @@
         <translation>Konnte Datei &quot;%1&quot; nicht zum Schreiben öffnen: %2</translation>
     </message>
     <message>
-        <source>Cannot find backup file for &quot;%1&quot;.</source>
-        <translation>Konnte Sicherungsdatei für &quot;%1&quot; nicht finden.</translation>
-    </message>
-    <message>
         <source>Cannot restore backup file for &quot;%1&quot;.</source>
         <translation>Konnte Datei &quot;%1&quot; nicht wiederherstellen.</translation>
     </message>
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>Konnte Datei &quot;%1&quot; nicht wiederherstellen: %2</translation>
+    </message>
+    <message>
+        <source>Warning: Cannot find backup file for &quot;%1&quot;. Undo will be skipped.</source>
+        <translation>Warnung: Die Sicherungsdatei für &quot;%1&quot; konnte nicht gefunden werden. Wiederherstellung wird übersprungen.</translation>
     </message>
 </context>
 <context>
@@ -215,127 +188,6 @@
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>Konnte Datei &quot;%1&quot; nicht wiederherstellen: %2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::FileDownloader</name>
-    <message>
-        <source>Download canceled.</source>
-        <translation>Herunterladen abgebrochen.</translation>
-    </message>
-    <message>
-        <source>Cryptographic hashes do not match.</source>
-        <translation>Prüfsummen stimmen nicht überein.</translation>
-    </message>
-    <message>
-        <source>Download finished.</source>
-        <translation>Heruntergeladen abgeschlossen.</translation>
-    </message>
-    <message>
-        <source>%1 of %2</source>
-        <translation>%1 von %2</translation>
-    </message>
-    <message>
-        <source>%1 downloaded.</source>
-        <translation>%1 heruntergeladen.</translation>
-    </message>
-    <message>
-        <source>(%1/sec)</source>
-        <translation>(%1/s)</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s), </source>
-        <translation>
-            <numerusform>%n Tag, </numerusform>
-            <numerusform>%n Tage, </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s), </source>
-        <translation>
-            <numerusform>%n Stunde, </numerusform>
-            <numerusform>%n Stunden, </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n Minute</numerusform>
-            <numerusform>%n Minuten</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n Sekunde</numerusform>
-            <numerusform>%n Sekunden</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source> - %1%2%3%4 remaining.</source>
-        <translation> - %1%2%3%4 verbleibend.</translation>
-    </message>
-    <message>
-        <source> - unknown time remaining.</source>
-        <translation> - verbleibende Zeit unbekannt.</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::HttpDownloader</name>
-    <message>
-        <source>Cannot download %1. Writing to file &quot;%2&quot; failed: %3</source>
-        <translation>Konnte %1 nicht herunterladen. Schreiben in Datei &apos;%2&apos; fehlgeschlagen: %3</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create file &quot;%2&quot;: %3</source>
-        <translation>Konnte %1 nicht herunterladen. Erstellen der Datei &quot;%2&quot; fehlgeschlagen: %3</translation>
-    </message>
-    <message>
-        <source>%1 at %2</source>
-        <translation>%1 auf %2</translation>
-    </message>
-    <message>
-        <source>Authentication request canceled.</source>
-        <translation>Authentifizierung abgebrochen.</translation>
-    </message>
-    <message>
-        <source>Secure Connection Failed</source>
-        <translation>Sichere Verbindung fehlgeschlagen</translation>
-    </message>
-    <message>
-        <source>There was an error during connection to: %1.</source>
-        <translation>Beim Aufbau der Verbindung zu &apos;%1&apos; ist ein Fehler aufgetreten.</translation>
-    </message>
-    <message>
-        <source>This could be a problem with the server&apos;s configuration, or it could be someone trying to impersonate the server.</source>
-        <translation>Dies kann ein Fehler in der Konfiguration sein oder es versucht jemand, diesen Server vorzutäuschen.</translation>
-    </message>
-    <message>
-        <source>If you have connected to this server successfully in the past or trust this server, the error may be temporary and you can try again.</source>
-        <translation>Wenn frühere Verbindungen zu diesem Server erfolgreich waren, kann dieser Fehler temporär sein und bei einem erneuten Versuch verschwinden.</translation>
-    </message>
-    <message>
-        <source>Try again</source>
-        <translation>Erneut versuchen</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create directory for &quot;%2&quot;</source>
-        <translation>Kann %1 nicht herunterladen. Es kann kein Verzeichnis für &quot;%2&quot; erstellt werden</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::LocalFileDownloader</name>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for reading: %2</source>
-        <translation>Konnte Datei &quot;%1&quot; nicht zum Lesen öffnen: %2</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>Konnte Zieldatei &quot;%1&quot; nicht zum Schreiben öffnen: %2</translation>
-    </message>
-    <message>
-        <source>Writing to file &quot;%1&quot; failed: %2</source>
-        <translation>Konnte Datei &quot;%1&quot; nicht zum Schreiben öffnen: %2</translation>
     </message>
 </context>
 <context>
@@ -401,13 +253,6 @@
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>Konnte Datei &quot;%1&quot; nicht wiederherstellen: %2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::ResourceFileDownloader</name>
-    <message>
-        <source>Cannot read resource file &quot;%1&quot;: %2</source>
-        <translation>Konnte Ressourcendatei &quot;%1&quot; nicht zum Lesen öffnen: %2</translation>
     </message>
 </context>
 <context>
@@ -478,10 +323,6 @@
         <translation>Datei Updates.xml wird von der Aktualisierungsquelle heruntergeladen.</translation>
     </message>
     <message>
-        <source>Cannot download package source %1 from &quot;%2&quot;.</source>
-        <translation>Konnte Aktualisierungen nicht von %1 (&apos;%2&apos;) herunterladen.</translation>
-    </message>
-    <message>
         <source>Updates.xml file(s) downloaded from update sources.</source>
         <translation>Datei Updates.xml von der Aktualisierungsquelle heruntergeladen.</translation>
     </message>
@@ -530,81 +371,6 @@
     </message>
 </context>
 <context>
-    <name>Lib7z</name>
-    <message>
-        <source>Internal code: %1</source>
-        <translation>Interner Fehlercode: %1</translation>
-    </message>
-    <message>
-        <source>Not enough memory</source>
-        <translation>nicht genug Speicher</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>Fehler: %1</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve property %1 for item %2.</source>
-        <translation>Konnte Eigenschaft %1 von %2 nicht erhalten.</translation>
-    </message>
-    <message>
-        <source>Property %1 for item %2 not of type VT_FILETIME but %3.</source>
-        <translation>Eigenschaft %1 von %2 ist nicht vom Typ VT_FILETIME, sondern vom Typ %3.</translation>
-    </message>
-    <message>
-        <source>Cannot convert UTC file time to system time.</source>
-        <translation>Kann nicht UTC Datei Zeit zur Systemzeit konvertieren.</translation>
-    </message>
-    <message>
-        <source>Cannot load codecs.</source>
-        <translation>Konnte Codecs nicht laden.</translation>
-    </message>
-    <message>
-        <source>Cannot open archive &quot;%1&quot;.</source>
-        <translation>Konnte Archiv &quot;%1&quot; nicht öffnen.</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve number of items in archive.</source>
-        <translation>Konnte Anzahl Dateien im Archiv nicht feststellen.</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve path of archive item &quot;%1&quot;.</source>
-        <translation>Konnte Pfad des Archivs &quot;%1&quot; nicht feststellen.</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1).</source>
-        <translation>Unbekannte Ausnahmebedingung (%1).</translation>
-    </message>
-    <message>
-        <source>Cannot create temporary file: %1</source>
-        <translation>Konnte temporäre Datei nicht anlegen: %1</translation>
-    </message>
-    <message>
-        <source>Unsupported archive type.</source>
-        <translation>Nicht unterstützter Archivtyp.</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;</source>
-        <translation>Konnte kein Archiv &quot;%1&quot; anlegen</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;: %2</source>
-        <translation>Konnte kein Archiv &quot;%1&quot; anlegen: %2</translation>
-    </message>
-    <message>
-        <source>Cannot remove old archive &quot;%1&quot;: %2</source>
-        <translation>Konnte altes Archiv &quot;%1&quot; nicht entfernen: %2</translation>
-    </message>
-    <message>
-        <source>Cannot rename temporary archive &quot;%1&quot; to &quot;%2&quot;: %3</source>
-        <translation>Konnte temporäres Archiv &quot;%1&quot; nicht in &quot;%2&quot; umbenennen: %3</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1)</source>
-        <translation>Unbekannter Ausnahmefehler (%1)</translation>
-    </message>
-</context>
-<context>
     <name>LocalPackageHub</name>
     <message>
         <source>%1 contains invalid content: %2</source>
@@ -638,12 +404,16 @@
         <translation>Konnte PID nicht in die Sperrdatei &quot;%1&quot; schreiben: %2</translation>
     </message>
     <message>
-        <source>Cannot obtain the lock for file &quot;%1&quot;: %2</source>
-        <translation>Konnte Sperre für Datei &apos;%1&apos; nicht anlegen: &apos;%2&apos;</translation>
-    </message>
-    <message>
         <source>Cannot release the lock for file &quot;%1&quot;: %2</source>
         <translation>Konnte Sperre für Datei &apos;%1&apos; nicht aufheben: &apos;%2&apos;</translation>
+    </message>
+    <message>
+        <source>Cannot obtain the lock for &quot;%1&quot;: %2.
+This likely means another instance of the installer is already running.
+Please close any other installer sessions and try again.</source>
+        <translation>Kann die Sperrdatei für &quot;%1&quot; nicht erhalten: %2.
+Dies bedeutet wahrscheinlich, dass eine andere Instanz des Installationsprogramms bereits läuft.
+Bitte schließen Sie alle anderen Installationssitzungen und versuchen Sie es erneut.</translation>
     </message>
 </context>
 <context>
@@ -1149,32 +919,6 @@
 <context>
     <name>QInstaller::DownloadArchivesJob</name>
     <message>
-        <source>Canceled</source>
-        <translation>Abgebrochen</translation>
-    </message>
-    <message>
-        <source>Downloading hash signature failed.</source>
-        <translation>Herunterladen der Prüfsumme fehlgeschlagen.</translation>
-    </message>
-    <message>
-        <source>Download Error</source>
-        <translation>Fehler beim Herunterladen</translation>
-    </message>
-    <message>
-        <source>Cannot download archive %1: %2</source>
-        <translation>Konnte Archiv %1 nicht herunterladen: %2</translation>
-    </message>
-    <message>
-        <source>Cannot fetch archives: %1
-Error while loading %2</source>
-        <translation>Konnte Archiv nicht laden. Fehler: %1
-Fehler beim Laden von %2</translation>
-    </message>
-    <message>
-        <source>Downloading archive &quot;%1&quot; for component %2.</source>
-        <translation>Archiv &apos;%1&apos; für Komponente %2 wird heruntergeladen.</translation>
-    </message>
-    <message>
         <source>Scheme %1 not supported (URL: %2).</source>
         <translation>Schema &quot;%1&quot; nicht unterstützt in &quot;%2&quot;.</translation>
     </message>
@@ -1227,34 +971,24 @@ Fehler beim Laden von %2</translation>
         <translation> - verbleibende Zeit unbekannt.</translation>
     </message>
     <message>
-        <source>Total: </source>
-        <translation>Total: </translation>
+        <source>Download canceled.</source>
+        <translation>Download abgebrochen.</translation>
     </message>
     <message>
-        <source>Archive: </source>
-        <translation>Archiv: </translation>
+        <source>Redownloading packages due to previous verification errors.</source>
+        <translation>Pakete werden aufgrund fehlgeschlagener Überprüfungen erneut heruntergeladen.</translation>
     </message>
     <message>
-        <source>Retry count (%1) exceeded</source>
-        <translation>Anzahl der Wiederholungen (%1) überschritten</translation>
+        <source>Downloading: </source>
+        <translation>Wird heruntergeladen: </translation>
     </message>
     <message>
-        <source>Hash verification while downloading failed. This is a temporary error, please retry.
-
-Expected: %1 
-Downloaded: %2</source>
-        <translation>Prüfsumme ungültig beim Herunterladen. Dies ist ein kurzzeitiger Fehler, bitte erneut versuchen.
-
-Erwartet: %1
-Heruntergeladen: %2</translation>
+        <source>Archive &quot;%1&quot; downloaded for component %2.</source>
+        <translation>Archiv &quot;%1&quot; für die Komponente %2 heruntergeladen.</translation>
     </message>
     <message>
-        <source>Cannot verify Hash
-Expected: %1 
-Downloaded: %2</source>
-        <translation>Prüfsumme konnte nicht geprüft werden
-Erwartet: %1
-Heruntergeladen: %2</translation>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.</source>
+        <translation>Fehler bei Verifikation der Prüfsumme während des Downloads von %1. Dies kann ein vorübergehender Fehler sein, der Download wird erneut versucht.</translation>
     </message>
 </context>
 <context>
@@ -1290,14 +1024,6 @@ Heruntergeladen: %2</translation>
         <source>Unknown network error while downloading &quot;%1&quot;.</source>
         <extracomment>%1 is a sentence describing the error</extracomment>
         <translation>Unbekannter Netzwerkfehler beim Herunterladen: &apos;%1&apos;.</translation>
-    </message>
-    <message>
-        <source>Network transfers canceled.</source>
-        <translation>Netwerkübertragung abgebrochen.</translation>
-    </message>
-    <message>
-        <source>Pause and resume not supported by network transfers.</source>
-        <translation>Pausieren und Fortsetzen werden bei Netzwerkübertragungen nicht unterstützt.</translation>
     </message>
     <message>
         <source>Invalid source URL &quot;%1&quot;: %2</source>
@@ -1428,14 +1154,6 @@ Heruntergeladen: %2</translation>
         <translation>Starte jetzt %1.</translation>
     </message>
     <message>
-        <source>Click %1 to close the %2 Setup.</source>
-        <translation>Klicken Sie auf %1, um das Einrichten von %2 abzuschließen.</translation>
-    </message>
-    <message>
-        <source>You will find your installation in this location on your computer:</source>
-        <translation>Die Installation befindet sich in:</translation>
-    </message>
-    <message>
         <source>%1 has now been uninstalled from your computer.</source>
         <translation>%1 wurde vom Computer deinstalliert.</translation>
     </message>
@@ -1458,6 +1176,14 @@ Heruntergeladen: %2</translation>
     <message>
         <source>%1 installation was unsuccessful.</source>
         <translation>Die Installation von %1 schlug fehl.</translation>
+    </message>
+    <message>
+        <source>Select %1 to close the %2 Setup.</source>
+        <translation>Wählen Sie %1, um die Installation von &quot;%2&quot; abzuschließen.</translation>
+    </message>
+    <message>
+        <source>You find your installation in this location on your computer:</source>
+        <translation>Sie finden Ihre Installation auf Ihrem Computer unter:</translation>
     </message>
 </context>
 <context>
@@ -1779,10 +1505,6 @@ Möchten Sie trotzdem fortsetzen?</translation>
         <translation>Der Pfad zum Installationsverzeichnis enthält Zeichen ausserhalb des ASCII-Zeichensatzes. Dies ist zur Zeit nicht unterstützt. Bitte wählen Sie einen anderen Pfad oder Installationsordner.</translation>
     </message>
     <message>
-        <source>As the install directory is completely deleted, installing in %1 is forbidden.</source>
-        <translation>Da das Installations-Verzeichnis komplett gelöscht wird, ist das Installieren in %1 verboten.</translation>
-    </message>
-    <message>
         <source>The path you have entered is too long, please make sure to specify a valid path.</source>
         <translation>Der von Ihnen eingegebene Pfad ist zu lang, bitte geben Sie einen gültigen Pfad ein.</translation>
     </message>
@@ -1913,6 +1635,10 @@ Möchten Sie trotzdem fortsetzen?</translation>
     <message>
         <source>Created installer will use %1 of disk space.</source>
         <translation>Der erstellte Installer wird %1 Festplattenplatz verwenden.</translation>
+    </message>
+    <message>
+        <source>As the install directory is completely deleted on uninstall, installing in %1 is forbidden.</source>
+        <translation>Da das Installationsverzeichnis beim Deinstallieren vollständig gelöscht wird, ist eine Installation in %1 nicht zulässig.</translation>
     </message>
 </context>
 <context>
@@ -3115,6 +2841,10 @@ or accept the elevation of access rights if being asked.</source>
         <source>Space exceeds the supported executable size %1 in Windows</source>
         <translation>Der Festplattenplatz übersteigt die unterstützte Größe ausführbarer Dateien auf Windows (%1)</translation>
     </message>
+    <message>
+        <source>Space required on your hard drive is more than %1</source>
+        <translation>Der für die Installation benötigte Speicherplatz auf Ihrer Festplatte beträgt mehr als %1</translation>
+    </message>
 </context>
 <context>
     <name>ComponentSummaryForm</name>
@@ -3178,6 +2908,31 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Could not terminate process &quot;%1&quot;</source>
         <translation>Der Prozess konnte nicht beendet werden &quot;%1&quot;</translation>
+    </message>
+</context>
+<context>
+    <name>KDUpdater::FileDownloader</name>
+    <message>
+        <source>Missing proxy credentials.</source>
+        <translation>Fehlende Proxy-Zugangsdaten.</translation>
+    </message>
+    <message>
+        <source>Unknown exception during download.</source>
+        <translation>Beim Herunterladen ist ein unbekannter Fehler aufgetreten.</translation>
+    </message>
+    <message>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.
+
+Expected: %2 
+Downloaded: %3</source>
+        <translation>Fehler bei der Verifikation der Prüfsumme während des Downloads von %1. Dies kann ein vorübergehender Fehler sein; der Download wird erneut versucht.
+
+Erwartet: %2
+Heruntergeladen: %3</translation>
+    </message>
+    <message>
+        <source>Cannot verify Hash</source>
+        <translation>Prüfsumme kann nicht verifiziert werden</translation>
     </message>
 </context>
 </TS>
