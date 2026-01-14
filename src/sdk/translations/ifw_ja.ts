@@ -77,33 +77,6 @@
     </message>
 </context>
 <context>
-    <name>ExtractCallbackImpl</name>
-    <message>
-        <source>Cannot retrieve path of archive item %1.</source>
-        <translation>アーカイブ アイテム %1 のパスを取得できません。</translation>
-    </message>
-    <message>
-        <source>Cannot remove already existing symlink %1.</source>
-        <translation>既存のシンボリック リンク %1 を削除できません。</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>書き込み用のファイル &quot;%1&quot; を開けません: %2</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at &quot;%1&quot;. Another one is already existing.</source>
-        <translation>&quot;%1&quot; でシンボリック リンクを作成できません。 すでに別のものが存在しています。</translation>
-    </message>
-    <message>
-        <source>Cannot read symlink target from file &quot;%1&quot;.</source>
-        <translation>ファイル &quot;%1&quot; からシンボリック リンク ターゲットを読み取れません。</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at %1: %2</source>
-        <translation>%1 でシンボリック リンクを作成できません: %2</translation>
-    </message>
-</context>
-<context>
     <name>InstallerBase</name>
     <message>
         <source>Unable to start installer</source>
@@ -167,16 +140,16 @@
         <translation>書き込み用のファイル &quot;%1&quot; を開けません: %2</translation>
     </message>
     <message>
-        <source>Cannot find backup file for &quot;%1&quot;.</source>
-        <translation>&quot;%1&quot; のバックアップ ファイルが見つかりません。</translation>
-    </message>
-    <message>
         <source>Cannot restore backup file for &quot;%1&quot;.</source>
         <translation>&quot;%1&quot; のバックアップ ファイルを復元できません。</translation>
     </message>
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>&quot;%1&quot; のバックアップ ファイルを復元できません: %2</translation>
+    </message>
+    <message>
+        <source>Warning: Cannot find backup file for &quot;%1&quot;. Undo will be skipped.</source>
+        <translation>警告: &quot;%1&quot; のバックアップファイルが見つかりません。元に戻す操作はスキップされます。</translation>
     </message>
 </context>
 <context>
@@ -215,123 +188,6 @@
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>&quot;%1&quot; のバックアップ ファイルを復元できません: %2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::FileDownloader</name>
-    <message>
-        <source>Download finished.</source>
-        <translation>ダウンロードが完了しました。</translation>
-    </message>
-    <message>
-        <source>Cryptographic hashes do not match.</source>
-        <translation>暗号ハッシュが一致していません。</translation>
-    </message>
-    <message>
-        <source>Download canceled.</source>
-        <translation>ダウンロードがキャンセルされました。</translation>
-    </message>
-    <message>
-        <source>%1 of %2</source>
-        <translation>%1/%2</translation>
-    </message>
-    <message>
-        <source>%1 downloaded.</source>
-        <translation>%1 がダウンロードされました。</translation>
-    </message>
-    <message>
-        <source>(%1/sec)</source>
-        <translation>(%1/秒)</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s), </source>
-        <translation>
-            <numerusform>%n 日、 </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s), </source>
-        <translation>
-            <numerusform>%n 時間、 </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n 分</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n 秒</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source> - %1%2%3%4 remaining.</source>
-        <translation>- 残り %1%2%3%4</translation>
-    </message>
-    <message>
-        <source> - unknown time remaining.</source>
-        <translation>- 残り時間不明</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::HttpDownloader</name>
-    <message>
-        <source>Cannot download %1. Writing to file &quot;%2&quot; failed: %3</source>
-        <translation>%1 をダウンロードできません。 ファイル &quot;%2&quot; への書き込みができませんでした: %3</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create file &quot;%2&quot;: %3</source>
-        <translation>%1 をダウンロードできません。 ファイル &quot;%2&quot; を作成できません: %3</translation>
-    </message>
-    <message>
-        <source>%1 at %2</source>
-        <translation>%2 の %1</translation>
-    </message>
-    <message>
-        <source>Authentication request canceled.</source>
-        <translation>認証リクエストがキャンセルされました。</translation>
-    </message>
-    <message>
-        <source>Secure Connection Failed</source>
-        <translation>セキュアな接続が失敗しました</translation>
-    </message>
-    <message>
-        <source>There was an error during connection to: %1.</source>
-        <translation>%1 への接続中にエラーが発生しました。</translation>
-    </message>
-    <message>
-        <source>This could be a problem with the server&apos;s configuration, or it could be someone trying to impersonate the server.</source>
-        <translation>サーバーの構成に問題があるか、誰かがサーバーを偽装しようとしている可能性があります。</translation>
-    </message>
-    <message>
-        <source>If you have connected to this server successfully in the past or trust this server, the error may be temporary and you can try again.</source>
-        <translation>これまでにこのサーバーへの接続に成功したことがある場合やこのサーバーが信頼できる場合は、一時的なエラーと思われるため、再試行してもかまいません。</translation>
-    </message>
-    <message>
-        <source>Try again</source>
-        <translation>再試行</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create directory for &quot;%2&quot;</source>
-        <translation>%1をダウンロードできません。&quot;%2&quot;のためディレクトリを作成することができません。</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::LocalFileDownloader</name>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for reading: %2</source>
-        <translation>読み取り用のファイル &quot;%1&quot; を開けません: %2</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>書き込み用のファイル &quot;%1&quot; を開けません: %2</translation>
-    </message>
-    <message>
-        <source>Writing to file &quot;%1&quot; failed: %2</source>
-        <translation>ファイル &quot;%1&quot; への書き込みができませんでした: %2</translation>
     </message>
 </context>
 <context>
@@ -397,13 +253,6 @@
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>&quot;%1&quot; のバックアップ ファイルを復元できません: %2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::ResourceFileDownloader</name>
-    <message>
-        <source>Cannot read resource file &quot;%1&quot;: %2</source>
-        <translation>リソース ファイル &quot;%1&quot; を読み取れません: %2</translation>
     </message>
 </context>
 <context>
@@ -473,10 +322,6 @@
         <translation>更新ソースから Updates.xml をダウンロードしています。</translation>
     </message>
     <message>
-        <source>Cannot download package source %1 from &quot;%2&quot;.</source>
-        <translation>&quot;%2&quot; からパッケージ ソース %1 をダウンロードできません。</translation>
-    </message>
-    <message>
         <source>Updates.xml file(s) downloaded from update sources.</source>
         <translation>更新ソースから Updates.xml ファイルがダウンロードされました。</translation>
     </message>
@@ -525,81 +370,6 @@
     </message>
 </context>
 <context>
-    <name>Lib7z</name>
-    <message>
-        <source>Internal code: %1</source>
-        <translation>内部コード: %1</translation>
-    </message>
-    <message>
-        <source>Not enough memory</source>
-        <translation>メモリが足りません</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>エラー: %1</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve property %1 for item %2.</source>
-        <translation>アイテム %2 のプロパティ %1 を取得できません。</translation>
-    </message>
-    <message>
-        <source>Property %1 for item %2 not of type VT_FILETIME but %3.</source>
-        <translation>アイテム %2 のプロパティ %1 のタイプは VT_FILETIME ではなく %3 です。</translation>
-    </message>
-    <message>
-        <source>Cannot convert UTC file time to system time.</source>
-        <translation>UTC ファイル時間をシステム時間に変換できません。</translation>
-    </message>
-    <message>
-        <source>Cannot load codecs.</source>
-        <translation>コーデックを読み込めません。</translation>
-    </message>
-    <message>
-        <source>Cannot open archive &quot;%1&quot;.</source>
-        <translation>アーカイブ &quot;%1&quot; を開けません。</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve number of items in archive.</source>
-        <translation>アーカイブ内のアイテムの数を取得できません。</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve path of archive item &quot;%1&quot;.</source>
-        <translation>アーカイブ アイテム &quot;%1&quot; のパスを取得できません。</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1).</source>
-        <translation>不明な例外が発生しました (%1)。</translation>
-    </message>
-    <message>
-        <source>Cannot create temporary file: %1</source>
-        <translation>一時ファイルを作成できません: %1</translation>
-    </message>
-    <message>
-        <source>Unsupported archive type.</source>
-        <translation>サポートされていないアーカイブ タイプです。</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;</source>
-        <translation>アーカイブ &quot;%1&quot; を作成できません</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;: %2</source>
-        <translation>アーカイブ &quot;%1&quot; を作成できません: %2</translation>
-    </message>
-    <message>
-        <source>Cannot remove old archive &quot;%1&quot;: %2</source>
-        <translation>古いアーカイブ &quot;%1&quot; を削除できません: %2</translation>
-    </message>
-    <message>
-        <source>Cannot rename temporary archive &quot;%1&quot; to &quot;%2&quot;: %3</source>
-        <translation>一時アーカイブの名前を &quot;%1&quot; から &quot;%2&quot; に変更できません: %3</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1)</source>
-        <translation>不明な例外が発生しました (%1)</translation>
-    </message>
-</context>
-<context>
     <name>LocalPackageHub</name>
     <message>
         <source>%1 contains invalid content: %2</source>
@@ -633,12 +403,16 @@
         <translation>PID をロック ファイル &quot;%1&quot; に書き込めません: %2</translation>
     </message>
     <message>
-        <source>Cannot obtain the lock for file &quot;%1&quot;: %2</source>
-        <translation>ファイル &quot;%1&quot; のロックを取得できません: %2</translation>
-    </message>
-    <message>
         <source>Cannot release the lock for file &quot;%1&quot;: %2</source>
         <translation>ファイル &quot;%1&quot; のロックを解除できません: %2</translation>
+    </message>
+    <message>
+        <source>Cannot obtain the lock for &quot;%1&quot;: %2.
+This likely means another instance of the installer is already running.
+Please close any other installer sessions and try again.</source>
+        <translation>&quot;%1&quot; のロックを取得できません: %2。
+これは、おそらくインストーラーの別のインスタンスがすでに実行中であることを意味します。
+他のインストーラーセッションをすべて閉じてから、再度お試しください。</translation>
     </message>
 </context>
 <context>
@@ -1089,32 +863,6 @@
 <context>
     <name>QInstaller::DownloadArchivesJob</name>
     <message>
-        <source>Canceled</source>
-        <translation>キャンセル</translation>
-    </message>
-    <message>
-        <source>Downloading hash signature failed.</source>
-        <translation>ハッシュ シグネチャをダウンロードできませんでした。</translation>
-    </message>
-    <message>
-        <source>Download Error</source>
-        <translation>ダウンロード エラー</translation>
-    </message>
-    <message>
-        <source>Cannot download archive %1: %2</source>
-        <translation>アーカイブ %1 をダウンロードできません: %2</translation>
-    </message>
-    <message>
-        <source>Cannot fetch archives: %1
-Error while loading %2</source>
-        <translation>アーカイブを取得できません: %1
-%2 の読み込み中にエラーが発生しました</translation>
-    </message>
-    <message>
-        <source>Downloading archive &quot;%1&quot; for component %2.</source>
-        <translation>コンポーネント %2 のアーカイブ &quot;%1&quot; をダウンロードしています。</translation>
-    </message>
-    <message>
         <source>Scheme %1 not supported (URL: %2).</source>
         <translation>スキーマ %1 はサポートされていません (URL: %2)。</translation>
     </message>
@@ -1163,29 +911,24 @@ Error while loading %2</source>
         <translation>- 残り時間不明</translation>
     </message>
     <message>
-        <source>Archive: </source>
-        <translation>アーカイブ</translation>
+        <source>Download canceled.</source>
+        <translation>ダウンロードがキャンセルされました。</translation>
     </message>
     <message>
-        <source>Total: </source>
-        <translation>合計</translation>
+        <source>Redownloading packages due to previous verification errors.</source>
+        <translation>以前の検証エラーにより、パッケージを再ダウンロードしています。</translation>
     </message>
     <message>
-        <source>Retry count (%1) exceeded</source>
-        <translation>再試行回数 (%1) を超えました</translation>
+        <source>Downloading: </source>
+        <translation>ダウンロード中:</translation>
     </message>
     <message>
-        <source>Hash verification while downloading failed. This is a temporary error, please retry.
-
-Expected: %1 
-Downloaded: %2</source>
-        <translation>ダウンロード中にハッシュを検証できませんでした。 これは一時的なエラーです。再試行してください。</translation>
+        <source>Archive &quot;%1&quot; downloaded for component %2.</source>
+        <translation>コンポーネント %2 のアーカイブ &quot;%1&quot; をダウンロードしました。</translation>
     </message>
     <message>
-        <source>Cannot verify Hash
-Expected: %1 
-Downloaded: %2</source>
-        <translation>ハッシュを検証できません</translation>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.</source>
+        <translation>%1 のダウンロード中にハッシュ検証エラーが発生しました。これは一時的なエラーの可能性があります。再試行しています。</translation>
     </message>
 </context>
 <context>
@@ -1221,14 +964,6 @@ Downloaded: %2</source>
         <source>Unknown network error while downloading &quot;%1&quot;.</source>
         <extracomment>%1 is a sentence describing the error</extracomment>
         <translation>&quot;%1&quot; のダウンロード中に不明なネットワーク エラーが発生しました。</translation>
-    </message>
-    <message>
-        <source>Network transfers canceled.</source>
-        <translation>ネットワーク転送がキャンセルされました。</translation>
-    </message>
-    <message>
-        <source>Pause and resume not supported by network transfers.</source>
-        <translation>ネットワーク転送では一時停止と再開ができません。</translation>
     </message>
     <message>
         <source>Invalid source URL &quot;%1&quot;: %2</source>
@@ -1332,10 +1067,6 @@ Downloaded: %2</source>
         <translation>今すぐ %1 を実行します。</translation>
     </message>
     <message>
-        <source>Click %1 to close the %2 Setup.</source>
-        <translation>%2 セットアップを閉じるには、%1 をクリックします。</translation>
-    </message>
-    <message>
         <source>You find your installation in this location on your computer:</source>
         <translation>インストールはコンピュータ上の次の場所にあります:</translation>
     </message>
@@ -1362,6 +1093,10 @@ Downloaded: %2</source>
     <message>
         <source>%1 installation was unsuccessful.</source>
         <translation>%1 のインストールに失敗しました。</translation>
+    </message>
+    <message>
+        <source>Select %1 to close the %2 Setup.</source>
+        <translation>%2 のセットアップを閉じるには %1 を選択してください。</translation>
     </message>
 </context>
 <context>
@@ -1677,10 +1412,6 @@ Do you want to continue?</source>
         <translation>パスまたはインストール ディレクトリに ASCII 以外の文字が含まれています。 この文字は現在サポートされていません。 別のパスまたはインストール ディレクトリを選択してください。</translation>
     </message>
     <message>
-        <source>As the install directory is completely deleted, installing in %1 is forbidden.</source>
-        <translation>インストール ディレクトリ全体が削除されるので、%1 へのインストールはできません。</translation>
-    </message>
-    <message>
         <source>The path you have entered is too long, please make sure to specify a valid path.</source>
         <translation>入力したパスは長すぎます。有効なパスを指定してください。</translation>
     </message>
@@ -1815,6 +1546,10 @@ Do you want to continue?</source>
     <message>
         <source>Created installer will use %1 of disk space.</source>
         <translation>作成されるインストーラーはディスク容量の %1 を使用します。</translation>
+    </message>
+    <message>
+        <source>As the install directory is completely deleted on uninstall, installing in %1 is forbidden.</source>
+        <translation>アンインストール時にインストールディレクトリが完全に削除されるため、%1 へのインストールは許可されていません。</translation>
     </message>
 </context>
 <context>
@@ -3095,6 +2830,10 @@ or accept the elevation of access rights if being asked.</source>
         <source>Space exceeds the supported executable size %1 in Windows</source>
         <translation>インストールしています</translation>
     </message>
+    <message>
+        <source>Space required on your hard drive is more than %1</source>
+        <translation>ハードディスクに必要な空き容量が %1 を超えています。</translation>
+    </message>
 </context>
 <context>
     <name>ComponentSummaryForm</name>
@@ -3158,6 +2897,30 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Could not terminate process &quot;%1&quot;</source>
         <translation>プロセスを中止できません &amp;quot;%1&amp;quot;</translation>
+    </message>
+</context>
+<context>
+    <name>KDUpdater::FileDownloader</name>
+    <message>
+        <source>Missing proxy credentials.</source>
+        <translation>プロキシ認証情報が見つかりません。</translation>
+    </message>
+    <message>
+        <source>Unknown exception during download.</source>
+        <translation>ダウンロード中に不明な例外が発生しました。</translation>
+    </message>
+    <message>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.
+
+Expected: %2 
+Downloaded: %3</source>
+        <translation>%1 のダウンロード中にハッシュ検証エラーが発生しました。これは一時的なエラーの可能性があります。再試行しています。
+期待値: %2
+ダウンロード済み: %3</translation>
+    </message>
+    <message>
+        <source>Cannot verify Hash</source>
+        <translation>ハッシュを確認できません</translation>
     </message>
 </context>
 </TS>
