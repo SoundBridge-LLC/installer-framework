@@ -855,32 +855,6 @@
 <context>
     <name>QInstaller::DownloadArchivesJob</name>
     <message>
-        <source>Canceled</source>
-        <translation>أُلغيت</translation>
-    </message>
-    <message>
-        <source>Downloading hash signature failed.</source>
-        <translation>فشل تنزيل توقيع التجزئة.</translation>
-    </message>
-    <message>
-        <source>Download Error</source>
-        <translation>خطأ في التنزيل</translation>
-    </message>
-    <message>
-        <source>Cannot download archive %1: %2</source>
-        <translation>لا يمكن تنزيل الأرشيف %1: %2</translation>
-    </message>
-    <message>
-        <source>Cannot fetch archives: %1
-Error while loading %2</source>
-        <translation>لا يمكن جلب الأرشيفات: %1
-خطأ أثناء تحميل %2</translation>
-    </message>
-    <message>
-        <source>Downloading archive &quot;%1&quot; for component %2.</source>
-        <translation>تنزيل الأرشيف &quot;%1&quot; للمكون %2.</translation>
-    </message>
-    <message>
         <source>Scheme %1 not supported (URL: %2).</source>
         <translation>الصيغة %1 غير مدعومة (الرابط: %2).</translation>
     </message>
@@ -949,35 +923,24 @@ Error while loading %2</source>
         <translation> - الوقت المتبقي غير معلوم.</translation>
     </message>
     <message>
-        <source>Archive: </source>
-        <translation>أرشيف: </translation>
+        <source>Download canceled.</source>
+        <translation>أُلغي التنزيل.</translation>
     </message>
     <message>
-        <source>Total: </source>
-        <translation>المجموع: </translation>
+        <source>Redownloading packages due to previous verification errors.</source>
+        <translation>تتم إعادة تنزيل الحزم بسبب أخطاء التحقق السابقة.</translation>
     </message>
     <message>
-        <source>Retry count (%1) exceeded</source>
-        <translation>تم تجاوز عدد مرات إعادة المحاولة (%1).
-</translation>
+        <source>Downloading: </source>
+        <translation>جارٍ التنزيل:</translation>
     </message>
     <message>
-        <source>Hash verification while downloading failed. This is a temporary error, please retry.
-
-Expected: %1 
-Downloaded: %2</source>
-        <translation>فشل التحقق من التجزئة أثناء التنزيل. هذا خطأ مؤقت، يرجى إعادة المحاولة.
-
-المتوقع: %1
-تم التنزيل: %2</translation>
+        <source>Archive &quot;%1&quot; downloaded for component %2.</source>
+        <translation>تم تنزيل الأرشيف «%1» للمكون %2.</translation>
     </message>
     <message>
-        <source>Cannot verify Hash
-Expected: %1 
-Downloaded: %2</source>
-        <translation>لا يمكن التحقق من التجزئة
-المتوقع: %1
-تم التنزيل: %2</translation>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.</source>
+        <translation>حدث خطأ في التحقق من التجزئة أثناء تنزيل %1. قد يكون هذا خطأ مؤقتًا، جارٍ إعادة محاولة التنزيل.</translation>
     </message>
 </context>
 <context>
@@ -1013,14 +976,6 @@ Downloaded: %2</source>
         <source>Unknown network error while downloading &quot;%1&quot;.</source>
         <extracomment>%1 is a sentence describing the error</extracomment>
         <translation>خطأ غير معروف في الشبكة أثناء تنزيل &quot;%1&quot;.</translation>
-    </message>
-    <message>
-        <source>Network transfers canceled.</source>
-        <translation>أُلغيت تحويلات الشبكة.</translation>
-    </message>
-    <message>
-        <source>Pause and resume not supported by network transfers.</source>
-        <translation>التوقف المؤقت والاستئناف غير مدعوم من قبل ناقلات الشبكة.</translation>
     </message>
     <message>
         <source>Invalid source URL &quot;%1&quot;: %2</source>
@@ -1235,81 +1190,6 @@ Downloaded: %2</source>
     </message>
 </context>
 <context>
-    <name>Lib7z</name>
-    <message>
-        <source>Internal code: %1</source>
-        <translation>الرمز الداخلي: %1</translation>
-    </message>
-    <message>
-        <source>Not enough memory</source>
-        <translation>لا توجد ذاكرة كافية</translation>
-    </message>
-    <message>
-        <source>Error: %1</source>
-        <translation>خطأ: %1</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve property %1 for item %2.</source>
-        <translation>لا يمكن الحصول على الخاصية %1 للعتصر %2.</translation>
-    </message>
-    <message>
-        <source>Property %1 for item %2 not of type VT_FILETIME but %3.</source>
-        <translation>الخاصية %1 للعنصر %2 ليست من نوع VT_FILETIME لكن %3.</translation>
-    </message>
-    <message>
-        <source>Cannot convert UTC file time to system time.</source>
-        <translation>لا يمكن تحويل التوقيت العالمي الموحد للملف إلى توقيت النظام.</translation>
-    </message>
-    <message>
-        <source>Cannot load codecs.</source>
-        <translation>لا يمكن تحميل برامج الترميز.</translation>
-    </message>
-    <message>
-        <source>Cannot open archive &quot;%1&quot;.</source>
-        <translation>لا يمكن فتح الأرشيف &quot;%1&quot;.</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve number of items in archive.</source>
-        <translation>لا يمكن الحصول على عدد العناصر في الأرشيف.</translation>
-    </message>
-    <message>
-        <source>Cannot retrieve path of archive item &quot;%1&quot;.</source>
-        <translation>لا يمكن الحصول على مسار عنصر الأرشيف &quot;%1&quot;.</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1).</source>
-        <translation>اكتُشف استثناء مجهول (%1).</translation>
-    </message>
-    <message>
-        <source>Cannot create temporary file: %1</source>
-        <translation>لا يمكن إنشاء الملف المؤقت: %1</translation>
-    </message>
-    <message>
-        <source>Unsupported archive type.</source>
-        <translation>نوع الأرشيف غير مدعوم.</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;</source>
-        <translation>لا يمكن إنشاء الأرشيف &quot;%1&quot;</translation>
-    </message>
-    <message>
-        <source>Cannot create archive &quot;%1&quot;: %2</source>
-        <translation>لا يمكن إنشاء الأرشيف &quot;%1&quot;: %2</translation>
-    </message>
-    <message>
-        <source>Cannot remove old archive &quot;%1&quot;: %2</source>
-        <translation>لا يمكن حذف الأرشيف القديم &quot;%1&quot;: %2</translation>
-    </message>
-    <message>
-        <source>Cannot rename temporary archive &quot;%1&quot; to &quot;%2&quot;: %3</source>
-        <translation>لا يمكن إعادة تسمية الأرشيف المؤقت &quot;%1&quot; إلى &quot;%2&quot;: %3</translation>
-    </message>
-    <message>
-        <source>Unknown exception caught (%1)</source>
-        <translation>اكتُشف استثناء مجهول (%1)</translation>
-    </message>
-</context>
-<context>
     <name>DirectoryGuard</name>
     <message>
         <source>Path &quot;%1&quot; exists but is not a directory.</source>
@@ -1318,33 +1198,6 @@ Downloaded: %2</source>
     <message>
         <source>Cannot create directory &quot;%1&quot;.</source>
         <translation>لا يمكن إنشاء المجلد &quot;%1&quot;.</translation>
-    </message>
-</context>
-<context>
-    <name>ExtractCallbackImpl</name>
-    <message>
-        <source>Cannot retrieve path of archive item %1.</source>
-        <translation>لا يمكن الحصول على مسار عنصر الأرشيف %1.</translation>
-    </message>
-    <message>
-        <source>Cannot remove already existing symlink %1.</source>
-        <translation>لا يمكن حذف الارتباط الموجود بالفعل %1.</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>لا يمكن فتح الملف &quot;%1&quot; للكتابة: %2</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at &quot;%1&quot;. Another one is already existing.</source>
-        <translation>لا يمكن إنشاء الارتباط في &quot;%1&quot;. ارتباط آخر موجود بالفعل.</translation>
-    </message>
-    <message>
-        <source>Cannot read symlink target from file &quot;%1&quot;.</source>
-        <translation>لا يمكن قراءة وجهة الارتباط من الملف &quot;%1&quot;.</translation>
-    </message>
-    <message>
-        <source>Cannot create symlink at %1: %2</source>
-        <translation>لا يمكن إنشاء الارتباط في %1: %2</translation>
     </message>
 </context>
 <context>
@@ -1615,10 +1468,6 @@ Do you want to continue?</source>
         <translation>المسار أو مجلد التثبيت لا يحتوي على محارف ASCII. هذا غير مدعوم حالياً يرجى اختيار مسار أو مجلد تثبيت مختلف.</translation>
     </message>
     <message>
-        <source>As the install directory is completely deleted, installing in %1 is forbidden.</source>
-        <translation>التثبيت في %1 محظور لأن مجلد التثبيت سيُمسح تماماً.</translation>
-    </message>
-    <message>
         <source>The path you have entered is too long, please make sure to specify a valid path.</source>
         <translation>المسار الذي أدخلته طويل جداً، يرجى التأكد من تخصيص مسار صالح.</translation>
     </message>
@@ -1749,6 +1598,10 @@ Do you want to continue?</source>
     <message>
         <source>Created installer will use %1 of disk space.</source>
         <translation>سيستخدم المثبت الذي تم إنشاؤه %1 من مساحة القرص.</translation>
+    </message>
+    <message>
+        <source>As the install directory is completely deleted on uninstall, installing in %1 is forbidden.</source>
+        <translation>نظرًا لأنه يتم حذف دليل التثبيت بالكامل عند إلغاء التثبيت، فإن التثبيت في %1 ممنوع.</translation>
     </message>
 </context>
 <context>
@@ -2264,10 +2117,6 @@ Please copy the installer to a local drive</source>
         <translation>شغل %1 الآن.</translation>
     </message>
     <message>
-        <source>Click %1 to close the %2 Setup.</source>
-        <translation>اضغط %1 لإغلاق الإعداد %2.</translation>
-    </message>
-    <message>
         <source>You find your installation in this location on your computer:</source>
         <translation>ستجد التثبيت الخاص بك في هذا الموقع على جهاز الكمبيوتر الخاص بك:</translation>
     </message>
@@ -2294,6 +2143,10 @@ Please copy the installer to a local drive</source>
     <message>
         <source>%1 installation was unsuccessful.</source>
         <translation>لم ينجح تثبيت %1.</translation>
+    </message>
+    <message>
+        <source>Select %1 to close the %2 Setup.</source>
+        <translation>اختر %1 لإغلاق برنامج إعداد %2.</translation>
     </message>
 </context>
 <context>
@@ -2485,150 +2338,6 @@ or accept the elevation of access rights if being asked.</source>
     </message>
 </context>
 <context>
-    <name>KDUpdater::FileDownloader</name>
-    <message>
-        <source>Download finished.</source>
-        <translation>انتهى التنزيل.</translation>
-    </message>
-    <message>
-        <source>Cryptographic hashes do not match.</source>
-        <translation>تجزئة التشفير لا تتطابق.</translation>
-    </message>
-    <message>
-        <source>Download canceled.</source>
-        <translation>أُلغي التنزيل.</translation>
-    </message>
-    <message>
-        <source>%1 of %2</source>
-        <translation>%1 من %2</translation>
-    </message>
-    <message>
-        <source>%1 downloaded.</source>
-        <translation>حُمّل %1.</translation>
-    </message>
-    <message>
-        <source>(%1/sec)</source>
-        <translation>(%1/ثانية)</translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s), </source>
-        <translation>
-            <numerusform>%n يوم(أيام)، </numerusform>
-            <numerusform>يوم، </numerusform>
-            <numerusform>يومان، </numerusform>
-            <numerusform>%n أيام، </numerusform>
-            <numerusform>%n يوم، </numerusform>
-            <numerusform>%n يوم، </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s), </source>
-        <translation>
-            <numerusform>%n ساعة(ساعات)، </numerusform>
-            <numerusform>ساعة، </numerusform>
-            <numerusform>ساعتان، </numerusform>
-            <numerusform>%n ساعات، </numerusform>
-            <numerusform>%n ساعة، </numerusform>
-            <numerusform>%n ساعة، </numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n minute(s)</source>
-        <translation>
-            <numerusform>%n دقيقة(دقائق)</numerusform>
-            <numerusform>دقيقة</numerusform>
-            <numerusform>دقيقتان</numerusform>
-            <numerusform>%n دقائق</numerusform>
-            <numerusform>%n دقيقة</numerusform>
-            <numerusform>%n دقيقة</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%n second(s)</source>
-        <translation>
-            <numerusform>%n ثانية(ثوان)</numerusform>
-            <numerusform>ثانية</numerusform>
-            <numerusform>ثانيتان</numerusform>
-            <numerusform>%n ثوان</numerusform>
-            <numerusform>%n ثانية</numerusform>
-            <numerusform>%n ثانية</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source> - %1%2%3%4 remaining.</source>
-        <translation> - يتبقى %1%2%3%4.</translation>
-    </message>
-    <message>
-        <source> - unknown time remaining.</source>
-        <translation> - الوقت المتبقي غير معلوم.</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::LocalFileDownloader</name>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for reading: %2</source>
-        <translation>لا يمكن فتح الملف &quot;%1&quot; للقراءة: %2</translation>
-    </message>
-    <message>
-        <source>Cannot open file &quot;%1&quot; for writing: %2</source>
-        <translation>لا يمكن فتح الملف &quot;%1&quot; للكتابة: %2</translation>
-    </message>
-    <message>
-        <source>Writing to file &quot;%1&quot; failed: %2</source>
-        <translation>فشلت الكتابة إلى الملف &quot;%1&quot;: %2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::ResourceFileDownloader</name>
-    <message>
-        <source>Cannot read resource file &quot;%1&quot;: %2</source>
-        <translation>لا يمكن قراءة ملف المصادر &quot;%1&quot;: %2</translation>
-    </message>
-</context>
-<context>
-    <name>KDUpdater::HttpDownloader</name>
-    <message>
-        <source>Cannot download %1. Writing to file &quot;%2&quot; failed: %3</source>
-        <translation>لا يمكن تنزيل %1. فشلت الكتابة إلى الملف &quot;%2&quot;: %3</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create file &quot;%2&quot;: %3</source>
-        <translation>لا يمكن تنزيل %1. لا يمكن إنشاء الملف &quot;%2&quot;: %3</translation>
-    </message>
-    <message>
-        <source>%1 at %2</source>
-        <translation>%1 في %2</translation>
-    </message>
-    <message>
-        <source>Authentication request canceled.</source>
-        <translation>أُلغي طلب المصادقة.</translation>
-    </message>
-    <message>
-        <source>Secure Connection Failed</source>
-        <translation>فشل الاتصال الآمن</translation>
-    </message>
-    <message>
-        <source>There was an error during connection to: %1.</source>
-        <translation>كان هناك خطأ أثناء الاتصال إلى: %1.</translation>
-    </message>
-    <message>
-        <source>This could be a problem with the server&apos;s configuration, or it could be someone trying to impersonate the server.</source>
-        <translation>يمكن أن يكون هذا مشكلة في إعدادات الخادم، أو شخص ما يحاول انتحال الخادم.</translation>
-    </message>
-    <message>
-        <source>If you have connected to this server successfully in the past or trust this server, the error may be temporary and you can try again.</source>
-        <translation>إن اتصلت بالخادم بنجاحٍ في الماضي أو أنك تثق بهذا الخادم، قد يكون الخطأ مؤقتاً ويمكنك المحاولة مرة أخرى.</translation>
-    </message>
-    <message>
-        <source>Try again</source>
-        <translation>حاول مرة آخرى</translation>
-    </message>
-    <message>
-        <source>Cannot download %1. Cannot create directory for &quot;%2&quot;</source>
-        <translation>لا يمكن تحميل %1. لا يمكن إنشاء دليل لـ &quot;%2&quot;</translation>
-    </message>
-</context>
-<context>
     <name>Job</name>
     <message>
         <source>Canceled</source>
@@ -2669,12 +2378,16 @@ or accept the elevation of access rights if being asked.</source>
         <translation>لا يمكن كتابة PID لإقفال الملف &quot;%1&quot;: %2</translation>
     </message>
     <message>
-        <source>Cannot obtain the lock for file &quot;%1&quot;: %2</source>
-        <translation>لا يمكن الحصول على القفل للملف &quot;%1&quot;: %2</translation>
-    </message>
-    <message>
         <source>Cannot release the lock for file &quot;%1&quot;: %2</source>
         <translation>لا يمكن فك القفل للملف &quot;%1&quot;: %2</translation>
+    </message>
+    <message>
+        <source>Cannot obtain the lock for &quot;%1&quot;: %2.
+This likely means another instance of the installer is already running.
+Please close any other installer sessions and try again.</source>
+        <translation>لا يمكن الحصول على القفل لـ &quot;%1&quot;: %2.
+من المحتمل أن نسخة أخرى من برنامج التثبيت قيد التشغيل بالفعل.
+يرجى إغلاق أي جلسات تثبيت أخرى ثم المحاولة مرة أخرى.</translation>
     </message>
 </context>
 <context>
@@ -2732,10 +2445,6 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Downloading Updates.xml from update sources.</source>
         <translation>جارٍ تنزيل ملف Updates.xml من مصادر التحديثات.</translation>
-    </message>
-    <message>
-        <source>Cannot download package source %1 from &quot;%2&quot;.</source>
-        <translation>لا يمكن تحميل مصدر الحزمة %1 من &quot;%2&quot;.</translation>
     </message>
     <message>
         <source>Updates.xml file(s) downloaded from update sources.</source>
@@ -2852,16 +2561,16 @@ or accept the elevation of access rights if being asked.</source>
         <translation>لا يمكن فتح الملف &quot;%1&quot; للكتابة: %2</translation>
     </message>
     <message>
-        <source>Cannot find backup file for &quot;%1&quot;.</source>
-        <translation>لا يمكن العثور على ملف النسخة الاحتياطية لـ &quot;%1&quot;.</translation>
-    </message>
-    <message>
         <source>Cannot restore backup file for &quot;%1&quot;.</source>
         <translation>لا يمكن استعادة ملف النسخة الاحتياطية لـ &quot;%1&quot;.</translation>
     </message>
     <message>
         <source>Cannot restore backup file for &quot;%1&quot;: %2</source>
         <translation>لا يمكن استعادة ملف النسخة الاحتياطية لـ &quot;%1&quot;: %2</translation>
+    </message>
+    <message>
+        <source>Warning: Cannot find backup file for &quot;%1&quot;. Undo will be skipped.</source>
+        <translation>تحذير: لا يمكن العثور على ملف النسخة الاحتياطية لـ &quot;%1&quot;. سيتم تخطي التراجع.</translation>
     </message>
 </context>
 <context>
@@ -3176,6 +2885,10 @@ or accept the elevation of access rights if being asked.</source>
         <source>Space exceeds the supported executable size %1 in Windows</source>
         <translation>المساحة تتجاوز حجم الملف القابل للتنفيذ المدعوم %1 في Windows</translation>
     </message>
+    <message>
+        <source>Space required on your hard drive is more than %1</source>
+        <translation>المساحة المطلوبة على محرك الأقراص أكثر من %1</translation>
+    </message>
 </context>
 <context>
     <name>ComponentSummaryForm</name>
@@ -3239,6 +2952,30 @@ or accept the elevation of access rights if being asked.</source>
     <message>
         <source>Could not terminate process &quot;%1&quot;</source>
         <translation>تعذر إنهاء العملية &amp;quot;%1&amp;quot;</translation>
+    </message>
+</context>
+<context>
+    <name>KDUpdater::FileDownloader</name>
+    <message>
+        <source>Missing proxy credentials.</source>
+        <translation>بيانات اعتماد الوكيل مفقودة.بيانات اعتماد الوكيل مفقودة.</translation>
+    </message>
+    <message>
+        <source>Unknown exception during download.</source>
+        <translation>حدث استثناء غير معروف أثناء التنزيل.</translation>
+    </message>
+    <message>
+        <source>Hash verification error while downloading %1. This can be a temporary error, retrying download.
+
+Expected: %2 
+Downloaded: %3</source>
+        <translation>حدث خطأ في التحقق من التجزئة أثناء تنزيل %1. قد يكون هذا خطأ مؤقتًا، جارٍ إعادة محاولة التنزيل.
+المتوقع: %2
+تم التنزيل: %3</translation>
+    </message>
+    <message>
+        <source>Cannot verify Hash</source>
+        <translation>لا يمكن التحقق من التجزئة</translation>
     </message>
 </context>
 </TS>
