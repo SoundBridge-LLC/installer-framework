@@ -8,5 +8,5 @@ SUBDIRS += \
     repocompare \
     checksumgenerator
 
-macos:
+macos: \
     SUBDIRS += updater
