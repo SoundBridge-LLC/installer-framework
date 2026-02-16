@@ -1,11 +1,12 @@
 4.11.0
+- 3rdparty: update libarchive sources to 3.8.5
 - Fix mac maintenance tool update (QTIFW-3759)
 - Fix potential DLL hijacking in Windows (QTIFW-2445)
 - Fix script usage for local installed packages (QTIFW-3884)
 - Fix component calculating in CLI mode (QTIFW-3873)
 - Change default button in finished -page (QTIFW-3858)
 - Build IFW binaries as universal in macOS
-- Build IFW binaries with Qt 6.9.1
+- Build IFW binaries with Qt 6.9.3
 - Improve CLI input handling (QTIFW-3764)
 - Inform about metadata download fail (QTIFW-3829)
 - Improve lock acquisition error message for better clarity (QTIFW-3459)
