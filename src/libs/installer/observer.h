@@ -38,6 +38,7 @@ public:
 
     QByteArray checkSum() const;
     void addCheckSumData(const QByteArray &data);
+    void resetCheckSumData();
 
     QByteArray expectedSha1() const;
     void setExpectedSha1(const QByteArray &data);

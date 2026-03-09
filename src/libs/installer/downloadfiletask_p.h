@@ -32,17 +32,20 @@ struct Data
     Data()
         : file(Q_NULLPTR)
         , observer(Q_NULLPTR)
+        , rangeRequestSent(false)
     {}
 
     Data(const FileTaskItem &fti)
         : taskItem(fti)
         , file(Q_NULLPTR)
         , observer(new FileTaskObserver(QCryptographicHash::Sha1))
+        , rangeRequestSent(false)
     {}
 
     FileTaskItem taskItem;
     std::unique_ptr<QFile> file;
     std::unique_ptr<FileTaskObserver> observer;
+    bool rangeRequestSent;
 };
 
 class Downloader : public QObject

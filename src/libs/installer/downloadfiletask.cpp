@@ -157,6 +157,23 @@ void Downloader::onReadyRead()
         return;
     }
 
+    // If we sent a Range request but the server responded with 200 (not 206),
+    // it doesn't support Range and is sending the full file from the beginning.
+    // Could be also proxy interference, but we have no way to detect that.
+    if (data.rangeRequestSent) {
+        data.rangeRequestSent = false;
+        const int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        if (statusCode == 200) {
+            qCDebug(QInstaller::lcServer) << "Download was resumed. Server does not support Range requests for"
+                << QUrl(data.taskItem.source()).fileName() << "- restarting download the file from beginning.";
+            data.file->seek(0);
+            data.file->resize(0);
+            data.observer->resetCheckSumData();
+            data.observer->setBytesTransfered(0);
+            data.observer->setBytesToTransfer(0);
+        }
+    }
+
     QByteArray buffer(32768, Qt::Uninitialized);
     while (reply->bytesAvailable()) {
 
@@ -204,8 +221,7 @@ void Downloader::onFinished()
         return;
 
     Data &data = *m_downloads[reply];
-    if (data.file)
-        data.file->close();
+
     const QString filename = data.file ? data.file->fileName() : QString();
     if (!m_futureInterface->isCanceled()) {
         if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
@@ -238,13 +254,22 @@ void Downloader::onFinished()
         }
     }
 
-    const QByteArray ba = reply->readAll();
-
-    if (!ba.isEmpty() && !filename.endsWith(QLatin1String(".sha1"))) {
-        data.observer->addSample(ba.size());
-        data.observer->addBytesTransfered(ba.size());
-        data.observer->addCheckSumData(ba);
+    // Drain any remaining data from the reply buffer that readyRead may not
+    // have delivered (the last chunk can arrive together with the finish signal)
+    if (data.file && data.file->isOpen() && reply->bytesAvailable() > 0) {
+        const QByteArray remaining = reply->readAll();
+        if (!remaining.isEmpty()) {
+            data.file->write(remaining);
+            data.observer->addBytesTransfered(remaining.size());
+            if (filename.endsWith(QLatin1String(".sha1")))
+                data.observer->setExpectedSha1(remaining);
+            else
+                data.observer->addCheckSumData(remaining);
+        }
     }
+
+    if (data.file)
+        data.file->close();
 
     // Expected checksum is read from file
     if (!data.observer->expectedSha1().isEmpty())
@@ -333,8 +358,11 @@ void Downloader::onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal)
     if (reply) {
         const Data &data = *m_downloads[reply];
         if (isDownloadResumed()) {
-            data.observer->setBytesToTransfer(bytesTotal + data.observer->totalBytesDownloadedBeforeResume());
-            data.observer->setBytesTransfered(bytesReceived);
+            // On resume, bytesReceived/bytesTotal are relative to the new
+            // QNetworkReply, not the overall download. Do NOT overwrite
+            // bytesTransfered — onReadyRead's addBytesTransfered keeps the
+            // correct running total across resumes.
+            data.observer->setBytesToTransfer(bytesTotal + data.observer->bytesTransfered());
         } else {
             data.observer->setBytesToTransfer(bytesTotal);
             data.observer->setBytesTransfered(bytesReceived);
@@ -494,14 +522,18 @@ void Downloader::resumeDownload()
         if (it->second->observer->downloadFinished()) {
             ++it;
         } else {
+            it->second->rangeRequestSent = false;
             it->second->observer->updateTotalBytesDownloadedBeforeResume();
 
             QNetworkRequest request(it->second->taskItem.source());
             request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::ManualRedirectPolicy);
             request.setAttribute(QNetworkRequest::Http2AllowedAttribute, false);
-            if (it->second->observer->bytesToTransfer() > 0) {
+            const qint64 transferred = it->second->observer->bytesTransfered();
+            const qint64 total = it->second->observer->bytesToTransfer();
+            if (transferred > 0 && total > 0 && transferred < total) {
                 request.setRawHeader(QByteArray("Range"), QString(QStringLiteral("bytes=%1-"))
-                    .arg(it->second->observer->bytesTransfered()).toLatin1());
+                    .arg(transferred).toLatin1());
+                it->second->rangeRequestSent = true;
             }
             QNetworkReply *reply = m_nam.get(request);
 

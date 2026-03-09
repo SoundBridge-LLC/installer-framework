@@ -103,6 +103,11 @@ void FileTaskObserver::addCheckSumData(const QByteArray &data)
     m_hash.addData(data);
 }
 
+void FileTaskObserver::resetCheckSumData()
+{
+    m_hash.reset();
+}
+
 QByteArray FileTaskObserver::expectedSha1() const
 {
     return m_expectedSha1;
