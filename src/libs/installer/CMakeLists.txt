@@ -407,7 +407,6 @@ endif()
 target_link_libraries(${PROJECT_NAME} PUBLIC
     ${common_link_libraries}
     7z
-    base::base
     vector-widgets::vector-widgets
     Qt5::Qml
     Qt5::Network

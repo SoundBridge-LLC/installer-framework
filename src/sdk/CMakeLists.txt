@@ -182,7 +182,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     ${common_link_libraries}
     7z
     installer
-    base::base
     vector-widgets::vector-widgets
     Qt5::UiTools
     Qt5::CorePrivate
